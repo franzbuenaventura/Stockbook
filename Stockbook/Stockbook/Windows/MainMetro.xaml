@@ -1,0 +1,267 @@
+﻿<Controls:MetroWindow  x:Class="Stockbook.MainMetro"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:Stockbook"
+        mc:Ignorable="d"
+        Title="Main" Height="720" Width="1280">
+    <Viewbox Stretch="Fill">
+        <Grid Height="690" Width="1274">
+            <TabControl x:Name="TabControl" Margin="0,0,-0.4,0.4">
+                <TabItem Header="Inventory">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="539*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Margin="0,0,0,0.4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="20*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22*"/>
+                                <ColumnDefinition Width="203*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="203*"/>
+                                <ColumnDefinition Width="89*"/>
+                                <ColumnDefinition Width="341*"/>
+                                <ColumnDefinition Width="49*"/>
+                                <ColumnDefinition Width="340*"/>
+                                <ColumnDefinition Width="22*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="Export_to_Excel" Content="Export to Excel" Grid.Column="3" Click="Export_to_Excel_Click" Grid.Row="1" FontSize="20"/>
+                            <ComboBox x:Name="PrincipalFilter" Grid.Column="6" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" RenderTransformOrigin="0.5,0.5" DropDownClosed="PrincipalFilter_DropDownClosed" Margin="48.4,0.4,0.4,0" Grid.Row="1" Grid.ColumnSpan="2" FontSize="14">
+                                <ComboBox.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform AngleX="-0.413"/>
+                                        <RotateTransform/>
+                                        <TranslateTransform X="-0.126"/>
+                                    </TransformGroup>
+                                </ComboBox.RenderTransform>
+                                <ComboBoxItem x:Name="All_Principal" Content="All Principal" Margin="0,0,8,0" d:LayoutOverrides="HorizontalAlignment"/>
+                            </ComboBox>
+                            <Button x:Name="Add_Product_Copy" Content="Add Product" Grid.Column="1" Click="Add_Product_Click" Grid.Row="1" FontSize="20"/>
+                            <ComboBox x:Name="LocationFilter" Grid.Column="5" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Margin="0.2,0.4,48.4,0" Grid.ColumnSpan="2" DropDownClosed="LocationFilter_DropDownClosed" FontSize="14">
+                                <ComboBox.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform AngleX="-0.413"/>
+                                        <RotateTransform/>
+                                        <TranslateTransform X="-0.126"/>
+                                    </TransformGroup>
+                                </ComboBox.RenderTransform>
+                                <ComboBoxItem x:Name="All_Principal2" Content="All Principal" Margin="0,0,8,0" d:LayoutOverrides="HorizontalAlignment"/>
+                            </ComboBox>
+                        </Grid>
+                        <DataGrid x:Name="DataGrid" IsTextSearchEnabled="True" AutoGenerateColumns="False" GridLinesVisibility="All" CanUserAddRows="False" CanUserDeleteRows="False" CellEditEnding="DataGrid_CellEditEnding" Margin="0" Grid.Row="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Location" SortDirection="Ascending"
+                                    Binding="{Binding Location}"/>
+                                <DataGridTextColumn Header="Principal"  
+                                    Binding="{Binding Principal}"/>
+                                <DataGridTextColumn Header="Category"
+                                    Binding="{Binding Category}"/>
+                                <DataGridTextColumn Header="Name"
+                                    Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Prod. Code"
+                                    Binding="{Binding ProdCode}"/>
+                                <DataGridTextColumn Header="Case Value"
+                                    Binding="{Binding CaseValue}"/>
+                                <DataGridTextColumn Header="Pack Value"
+                                    Binding="{Binding PackValue}"/>
+                                <DataGridTextColumn Header="Piece Value"
+                                    Binding="{Binding PieceValue}"/>
+                                <DataGridTextColumn Header="Case Balance"
+                                    Binding="{Binding CaseBalance}"/>
+                                <DataGridTextColumn Header="Pack Balance"
+                                    Binding="{Binding PackBalance}"/>
+                                <DataGridTextColumn Header="Piece Balance"
+                                    Binding="{Binding PieceBalance}"/>
+                                <DataGridTextColumn Header="Case To Packs"
+                                    Binding="{Binding CaseToPacks}"/>
+                                <DataGridTextColumn Header="Pack To Pieces"
+                                    Binding="{Binding PackToPieces}"/>
+                                <DataGridTemplateColumn Header="Delete">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button x:Name="Delete" Content="Delete" Click="Delete_Click"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="20*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22*"/>
+                                <ColumnDefinition Width="203*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="203*"/>
+                                <ColumnDefinition Width="89*"/>
+                                <ColumnDefinition Width="341*"/>
+                                <ColumnDefinition Width="49*"/>
+                                <ColumnDefinition Width="340*"/>
+                                <ColumnDefinition Width="22*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="CategoryFilter" Grid.Column="5" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" DropDownClosed="CategoryFilter_DropDownClosed" FontSize="14">
+                                <ComboBox.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform AngleX="-0.413"/>
+                                        <RotateTransform/>
+                                        <TranslateTransform X="-0.126"/>
+                                    </TransformGroup>
+                                </ComboBox.RenderTransform>
+                                <ComboBoxItem x:Name="All_Principal4" Content="All Principal" Margin="0,0,8,0" d:LayoutOverrides="HorizontalAlignment"/>
+                            </ComboBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Sales/Purchased" Height="50.473" VerticalAlignment="Top" FontSize="16">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="480*"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid x:Name="DataGrid1" IsTextSearchEnabled="True" AutoGenerateColumns="False" GridLinesVisibility="All" CanUserAddRows="False" CanUserDeleteRows="False" CellEditEnding="DataGrid1_CellEditEnding" Margin="0" Grid.Row="3">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Type"
+                                    Binding="{Binding TransactionType}"/>
+                                <DataGridTextColumn Header="Ref No."
+                                    Binding="{Binding RefNo}"/>
+                                <DataGridTextColumn Header="Particular"
+                                    Binding="{Binding Particular}"/>
+                                <DataGridTextColumn Header="Salesman"
+                                    Binding="{Binding SalesmanName}"/>
+                                <DataGridTextColumn Header="Principal List"
+                                    Binding="{Binding PrincipalList}"/>
+                                <DataGridTextColumn Header="Prod Count"
+                                    Binding="{Binding ItemCount}"/>
+                                <DataGridTextColumn Header="Add Date"
+                                    Binding="{Binding DateTransaction, StringFormat=MMMM dd yyyy}"/>
+                                <DataGridTemplateColumn Header="Details">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button x:Name="DetailsTrans" Content="Details" Click="DetailsTrans_Click"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Delete">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button x:Name="DeleteTrans" Content="Delete" Click="DeleteTrans_Click"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Export to Excel">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button x:Name="ExportTrans" Content="Export" Click="ExportTrans_Click"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Grid Margin="0,0,0,0.4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="20*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22*"/>
+                                <ColumnDefinition Width="190*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="190*"/>
+                                <ColumnDefinition Width="90*"/>
+                                <ColumnDefinition Width="346*"/>
+                                <ColumnDefinition Width="50*"/>
+                                <ColumnDefinition Width="345*"/>
+                                <ColumnDefinition Width="22*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="AddSales" Content="Add Sales" Grid.Row="1" Grid.Column="1" Click="AddSales_Click" FontSize="20"/>
+                            <Button x:Name="AddPurchased" Content="Add Purchased" Grid.Column="3" Grid.Row="1" Click="AddPurchased_Click" FontSize="20"/>
+                            <ComboBox x:Name="LocationFilterTrans" Grid.Column="7" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" Margin="0" Grid.Row="1" DropDownClosed="LocationFilterTrans_DropDownClosed" FontSize="14"/>
+                            <ComboBox x:Name="TransactionFilterTrans" Grid.Column="5" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Margin="0" DropDownClosed="TransactionFilterTrans_DropDownClosed" FontSize="14">
+                                <ComboBox.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform AngleX="-0.413"/>
+                                        <RotateTransform/>
+                                        <TranslateTransform X="-0.126"/>
+                                    </TransformGroup>
+                                </ComboBox.RenderTransform>
+                            </ComboBox>
+                        </Grid>
+                        <Grid Margin="0,48,0,0" Grid.RowSpan="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="20*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22*"/>
+                                <ColumnDefinition Width="190*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="190*"/>
+                                <ColumnDefinition Width="90*"/>
+                                <ColumnDefinition Width="346*"/>
+                                <ColumnDefinition Width="50*"/>
+                                <ColumnDefinition Width="345*"/>
+                                <ColumnDefinition Width="22*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="ExportGroup" Content="Export Group" Grid.Column="1" Click="ExportGroup_Click" Grid.ColumnSpan="3" Margin="98.6,0,97.6,0" Grid.Row="1" FontSize="20"/>
+                            <ComboBox x:Name="CategoryFilterTrans" Grid.Column="7" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" Margin="0" Grid.Row="1" DropDownClosed="CategoryFilterTrans_DropDownClosed" FontSize="14">
+                                <ComboBoxItem x:Name="All_Category1" Content="All Products" Margin="0,0,8,0" d:LayoutOverrides="HorizontalAlignment"/>
+                            </ComboBox>
+                            <ComboBox x:Name="PrincipalFilterTrans" Grid.Column="5" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" RenderTransformOrigin="0.5,0.5" Margin="0" Grid.Row="1" DropDownClosed="PrincipalFilterTrans_DropDownClosed" FontSize="14">
+                                <ComboBox.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform AngleX="-0.413"/>
+                                        <RotateTransform/>
+                                        <TranslateTransform X="-0.126"/>
+                                    </TransformGroup>
+                                </ComboBox.RenderTransform>
+                                <ComboBoxItem x:Name="All_Principal1" Content="All Principal" Margin="0,0,8,0" d:LayoutOverrides="HorizontalAlignment"/>
+                            </ComboBox>
+                        </Grid>
+                        <Grid Margin="0" Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="20*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22*"/>
+                                <ColumnDefinition Width="190*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="190*"/>
+                                <ColumnDefinition Width="90*"/>
+                                <ColumnDefinition Width="346*"/>
+                                <ColumnDefinition Width="50*"/>
+                                <ColumnDefinition Width="345*"/>
+                                <ColumnDefinition Width="22*"/>
+                            </Grid.ColumnDefinitions>
+                            <DatePicker x:Name="startDate" Margin="0" Grid.Column="5" Grid.Row="1" AutomationProperties.HelpText="Start Date" Controls:TextBoxHelper.HasText="True" Controls:TextBoxHelper.Watermark="Start Date Filter" FontSize="24" CalendarClosed="startDate_CalendarClosed"/>
+                            <DatePicker x:Name="endDate" Grid.Column="7" AutomationProperties.HelpText="Start Date" Controls:TextBoxHelper.HasText="True" Controls:TextBoxHelper.Watermark="End Date Filter" FontSize="24" Grid.Row="1" CalendarClosed="endDate_CalendarClosed"/>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <!--<TabItem Header="Logs"></TabItem>-->
+            </TabControl>
+        </Grid>
+    </Viewbox>
+</Controls:MetroWindow>
