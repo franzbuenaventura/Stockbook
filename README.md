@@ -8,31 +8,34 @@ I document all the process and updates in my blog: http://blog.franzbuenaventura
 Gathering Requirements 
 As the original software design for a specific company, all of the requirements are based on them and how their current application does it. Same with the GUI, I will make some changes for it to be less prones to error and more strict so no conflict or accidental deletion occurs.
 
-adasMust have: 
-	CRUD system for Inventory <.
-	CRUD system for Transactions
-	Reads and outputs Excel document for Invoice
-	Reads and outputs Excel document for Product Stock History
-	Reads and outputs Excel document for Transactions(Sales/Purchased)
-s	Database system using flat files
-	
-Should have:
-	Authentication System
-		CRUD system for Accounts
-		Account Roles (At least 2 for role in Account Creation)
-		GUI for Login, Logout & CRUD system for Accounts
-	Logging System
-		CRUD system and GUI for Logging
-			Implementation of events for user tracking
-		Basic encryption for flat files
-	Settings menu
-		Logo (What logo should be used)
-		Company Name (Will reflect on all the output templates)
-		Modify database folder (Adding support for network file share drives)
-	File lock to avoid conflict modifications
-	Fullscreen Lock
-	Daily/Weekly/Monthly Backup fil
-Could have:
-	Flexible template (More options on what it will output)
-	Advanced encryption for flat files
-	Online Backup System
+Must have:<br>
+	CRUD system for Inventory<br>
+	CRUD system for Transactions<br>
+	Reads and outputs Excel document for Invoice<br>
+	Reads and outputs Excel document for Product Stock History<br>
+	Reads and outputs Excel document for Transactions(Sales/Purchased)<br>
+	Basic GUI (Graphical User Interface)<br>
+	Database system using flat files<br>
+	<br>
+Should have:<br>
+	Authentication System<br>
+		CRUD system for Accounts<br>
+		Account Roles (At least 2 for role in Account Creation)<br>
+		GUI for Login, Logout & CRUD system for Accounts<br>
+	Logging System<br>
+		CRUD system and GUI for Logging<br>
+			Implementation of events for user tracking<br>
+		Basic encryption for flat files<br>
+	Settings menu<br>
+		Logo (What logo should be used)<br>
+		Company Name (Will reflect on all the output templates)<br>
+		Modify database folder (Adding support for network file share drives)<br>
+	File lock to avoid conflict modifications<br>
+	Fullscreen Lock<br>
+	Daily/Weekly/Monthly Backup files (Compress?)<br>
+	Unit Testing<br>
+	Documentation<br>
+<br>Could have:<br>
+	Flexible template (More options on what it will output)<br>
+	Advanced encryption for flat files<br>
+	Online Backup System<br>
