@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
+using Stockbook.Class;
 using Stockbook.Model;
 using Stockbook.Products;
 using Stockbook.Windows;
@@ -44,7 +45,7 @@ namespace Stockbook
         }
         private void InitializeProductsFilter(string newValueLocation = "",string newValuePrincipal = "", string newValueCategory = "")
         {
-            var listProducts = _db.GetAllProducts();
+            var listProducts = DbClass.ProductHelper.GetAllProducts();
             LocationFilter.ItemsSource = null;
             LocationFilter.Items.Clear();
             LocationFilter.Items.Add("All Location");
@@ -170,7 +171,7 @@ namespace Stockbook
                 if (MessageBox.Show("Are you want to Edit - " + prod.Name  +": "+ newValue+ " from "+oldValue+ " ?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     //prod = BalanceCaseToPackToPieces(e.Column.Header.ToString(), prod, oldValue);
-                    _db.EditProduct(prod);
+                    DbClass.ProductHelper.EditProduct(prod);
                     DataGrid.CommitEdit();
                     InitializeProducts();
                 }
@@ -182,7 +183,7 @@ namespace Stockbook
             var prod = ((FrameworkElement)sender).DataContext as Product; 
             if (MessageBox.Show("Are you want to Delete - " + prod.Name + "?" , "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                _db.DeleteProduct(prod.Id);
+                DbClass.ProductHelper.DeleteProduct(prod.Id);
             }
             InitializeProducts();
         }
@@ -238,7 +239,7 @@ namespace Stockbook
         }
         public void InitializeTransFilter(string newValueTransaction ="", string newValueLocation = "", string newValuePrincipal = "", string newValueCategory = "")
         {
-            var listTrans = _db.GetAllTransactions();
+            var listTrans = DbClass.TransactionHelper.GetAllTransactions();
             //List<Transaction> listProductsInTrans =
             //    listTrans.SelectMany(q => q.Transactions).ToList();
             //var listProd = listProductsInTrans.GroupBy(q => q.Product.Name).Select(s=>s.First()).Select(q=>q.Product).ToList();
@@ -349,9 +350,8 @@ namespace Stockbook
         private void ExportTrans_Click(object sender, RoutedEventArgs e)
         {
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
-            var trans = _db.GetTransaction(transView.Id);
-            var excel = new DbClass.ExcelInvoice();
-            excel.ExportTransactionInvoice(trans);
+            var trans = DbClass.TransactionHelper.GetTransaction(transView.Id);
+            ExcelHelper.ExcelInvoice.ExportTransactionInvoice(trans);
         }
         private void DeleteTrans_Click(object sender, RoutedEventArgs e)
         {
@@ -360,18 +360,18 @@ namespace Stockbook
             {
                     foreach (var trans in transView.Transactions)
                 {
-                        var prod = _db.GetProduct(trans.Product.Id);
+                        var prod = DbClass.ProductHelper.GetProduct(trans.Product.Id);
                         if (transView.TransactionType == "Purchased")
                         {
-                            _db.BalanceCasePackPiece(trans, prod, "Sales");
+                        DbClass.EtcHelper.BalanceCasePackPiece(trans, prod, "Sales");
                         }
                         else
                     {
-                        _db.BalanceCasePackPiece(trans, prod, "Purchased");
+                        DbClass.EtcHelper.BalanceCasePackPiece(trans, prod, "Purchased");
                     }
-                        _db.EditProduct(prod);
+                    DbClass.ProductHelper.EditProduct(prod);
                 }
-                _db.DeleteTransaction(transView.Id);
+                DbClass.TransactionHelper.DeleteTransaction(transView.Id);
             }
             InitializeTrans();
             InitializeProducts();
@@ -439,7 +439,7 @@ namespace Stockbook
         private void DetailsTrans_Click(object sender, RoutedEventArgs e)
         {
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
-            Details details = new Details(_db.GetTransaction(transView.Id));
+            Details details = new Details(DbClass.TransactionHelper.GetTransaction(transView.Id));
             details.Show();
         }
     }

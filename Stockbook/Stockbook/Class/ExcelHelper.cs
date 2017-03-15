@@ -2,348 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Media;
-using Newtonsoft.Json;
 using Stockbook.Model;
 using OfficeOpenXml;
 using Excel = Microsoft.Office.Interop.Excel;
 
-namespace Stockbook
+namespace Stockbook.Class
 {
-    class DbClass
+    public static class ExcelHelper
     {
-        #region Product
-        private string ProductFolder()
-        {
-            var temp = Environment.CurrentDirectory + @"\ProductsDb\";
-            Directory.CreateDirectory(temp);
-            return temp;
-        }
-        public void CreateProduct(Product prod)
-        { 
-            string tempName = prod.Id + " - " + prod.Name.Replace(".", "").Replace("/"," ");
-            string fileName = ProductFolder() + tempName + @".json";
-            prod.Id = tempName;
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-
-                using (StreamWriter sw = File.CreateText(fileName))
-                {
-                    sw.WriteLine(JsonConvert.SerializeObject(prod));
-                }
-
-                using (StreamReader sr = File.OpenText(fileName))
-                {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        Console.WriteLine(s);
-                    }
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
-            }
-        }
-        public int GenerateProductId()
-        {
-            int id = 1;
-            string fileName = ProductFolder() + "IdCounter" + @".json";
-            try
-            {
-                // Check if file already exists. If yes 
-                if (File.Exists(fileName))
-                {
-                    using (StreamReader sr = File.OpenText(fileName))
-                    {
-                        string s = "";
-                        while ((s = sr.ReadLine()) != null)
-                        {
-                            id = int.Parse(s);
-                        }
-                    }
-                }
-                //New File 
-                using (StreamWriter sw = File.CreateText(fileName))
-                {
-                    sw.WriteLine(id + 1);
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
-            }
-            return id;
-        }
-        public Product GetProduct(string fileName)
-        {
-            var sI = new Product();
-            fileName = ProductFolder() + fileName + @".json";
-            using (StreamReader sr = File.OpenText(fileName))
-            {
-                string s = "";
-                while ((s = sr.ReadLine()) != null)
-                {
-                    return JsonConvert.DeserializeObject<Product>(s);
-                }
-            }
-
-            return sI;
-        }
-        public void DeleteProduct(string fileName)
-        {
-            var temp = ProductFolder() + fileName + @".json";
-            if (File.Exists(temp))
-            {
-                try
-                {
-                    File.Delete(temp);
-                }
-                catch (IOException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
-
-        }
-        public List<Product> GetAllProducts()
-        {
-            var productList = new List<Product>();
-            string[] listFileLoc = Directory.GetFiles(ProductFolder());
-            foreach (var fileLoc in listFileLoc)
-            {
-                using (StreamReader sr = File.OpenText(fileLoc))
-                {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        if (!fileLoc.Contains("IdCounter"))
-                        {
-                            productList.Add(JsonConvert.DeserializeObject<Product>(s));
-                        }
-                    }
-                }
-            }
-            return productList;
-        }
-        public void EditProduct(Product product)
-        {
-            DeleteProduct(product.Id);
-            string fileName = ProductFolder() + product.Id + @".json";
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-
-                using (StreamWriter sw = File.CreateText(fileName))
-                {
-                    sw.WriteLine(JsonConvert.SerializeObject(product));
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
-            }
-        }
-        #endregion
-
-        #region Transaction 
-        private string TransactionFolder()
-        {
-            var temp = Environment.CurrentDirectory + @"\TransactionsDb\";
-            Directory.CreateDirectory(temp);
-            return temp;
-        }
-        public void CreateTransaction(TransactionOrder trans)
-        {
-            string tempName = trans.Id + " - " + trans.TransactionType.Replace(".", "").Replace("/", " ")+ " - " +trans.DateTransaction.ToShortDateString().Replace(".", "").Replace("/", " ");
-            string fileName = TransactionFolder() + tempName + @".json";
-            trans.Id = tempName;
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-
-                using (StreamWriter sw = File.CreateText(fileName))
-                {
-                    sw.WriteLine(JsonConvert.SerializeObject(trans));
-                }
-
-                using (StreamReader sr = File.OpenText(fileName))
-                {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        Console.WriteLine(s);
-                    }
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
-            }
-        }
-        public int GenerateTransactionId()
-        {
-            int id = 1;
-            string fileName = TransactionFolder() + "IdCounter" + @".json";
-            try
-            {
-                // Check if file already exists. If yes 
-                if (File.Exists(fileName))
-                {
-                    using (StreamReader sr = File.OpenText(fileName))
-                    {
-                        string s = "";
-                        while ((s = sr.ReadLine()) != null)
-                        {
-                            id = int.Parse(s);
-                        }
-                    }
-                }
-                //New File 
-                using (StreamWriter sw = File.CreateText(fileName))
-                {
-                    sw.WriteLine(id + 1);
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
-            }
-            return id;
-        }
-        public TransactionOrder GetTransaction(string fileName)
-        {
-            var sI = new TransactionOrder();
-            fileName = TransactionFolder() + fileName + @".json";
-            using (StreamReader sr = File.OpenText(fileName))
-            {
-                string s = "";
-                while ((s = sr.ReadLine()) != null)
-                {
-                    return JsonConvert.DeserializeObject<TransactionOrder>(s);
-                }
-            }
-
-            return sI;
-        }
-        public void DeleteTransaction(string fileName)
-        {
-            var temp = TransactionFolder() + fileName + @".json";
-            if (File.Exists(temp))
-            {
-                try
-                {
-                    File.Delete(temp);
-                }
-                catch (IOException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
-
-        }
-        public List<TransactionOrder> GetAllTransactions()
-        {
-            var transactionList = new List<TransactionOrder>();
-            string[] listFileLoc = Directory.GetFiles(TransactionFolder());
-            foreach (var fileLoc in listFileLoc)
-            {
-                using (StreamReader sr = File.OpenText(fileLoc))
-                {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        if (!fileLoc.Contains("IdCounter"))
-                        {
-                            transactionList.Add(JsonConvert.DeserializeObject<TransactionOrder>(s));
-                        }
-                    }
-                }
-            }
-            return transactionList;
-        }
-        public void EditTransaction(TransactionOrder transaction)
-        {
-            DeleteTransaction(transaction.Id);
-            string fileName = TransactionFolder() + transaction.Id + @".json";
-            try
-            {
-                if (File.Exists(fileName))
-                {
-                    File.Delete(fileName);
-                }
-
-                using (StreamWriter sw = File.CreateText(fileName))
-                {
-                    sw.WriteLine(JsonConvert.SerializeObject(transaction));
-                }
-            }
-            catch (Exception Ex)
-            {
-                Console.WriteLine(Ex.ToString());
-            }
-        }
-        #endregion
-
-        #region Etc
-
-        public Product BalanceCasePackPiece(Transaction trans, Product prod, string type = "Sales")
-        {
-            if (prod.PackToPieces > 0 && prod.CaseToPacks > 0)
-            { 
-                if (type == "Sales")
-                { 
-                    var tempTransaction = (trans.CaseTransact * prod.CaseToPacks + trans.PackTransact) * prod.PackToPieces + trans.PieceTransact;
-                    var tempTotalBalance = (prod.CaseBalance * prod.CaseToPacks + prod.PackBalance) * prod.PackToPieces + prod.PieceBalance;
-                    var finalBalance = tempTotalBalance - tempTransaction;
-                    prod.PieceBalance = finalBalance % prod.PackToPieces;
-                    prod.PackBalance = Math.Truncate(finalBalance / prod.PackToPieces);
-                    prod.CaseBalance = Math.Truncate(prod.PackBalance / prod.CaseToPacks);
-                    prod.PackBalance = prod.PackBalance % prod.CaseToPacks;
-
-                }
-                else if (type == "Purchased")
-                {
-                    var tempTransaction = (trans.CaseTransact * prod.CaseToPacks + trans.PackTransact) * prod.PackToPieces + trans.PieceTransact;
-                    var tempTotalBalance = (prod.CaseBalance * prod.CaseToPacks + prod.PackBalance) * prod.PackToPieces + prod.PieceBalance;
-                    var finalBalance = tempTotalBalance + tempTransaction;
-                    prod.PieceBalance = finalBalance % prod.PackToPieces;
-                    prod.PackBalance = Math.Truncate(finalBalance / prod.PackToPieces);
-                    prod.CaseBalance = Math.Truncate(prod.PackBalance / prod.CaseToPacks);
-                    prod.PackBalance = prod.PackBalance % prod.CaseToPacks;
-                }
-            }
-            else
-            {
-                if (type == "Sales")
-                {
-                    prod.CaseBalance -= trans.CaseTransact;
-                    prod.PackBalance -= trans.PackTransact;
-                    prod.PieceBalance -= trans.PieceTransact;
-                }
-                if (type == "Purchased")
-                {
-                    prod.CaseBalance += trans.CaseTransact;
-                    prod.PackBalance += trans.PackTransact;
-                    prod.PieceBalance += trans.PieceTransact;
-                }
-            }
-            return prod;
-        }
-
-        #endregion
-
         #region Excel 
         public class CreateExcelDoc
         {
@@ -379,9 +45,9 @@ namespace Stockbook
             {
                 worksheet.Cells[row, col] = htext;
                 workSheet_range = worksheet.get_Range(cell1, cell2);
-                workSheet_range.Merge(mergeColumns); 
+                workSheet_range.Merge(mergeColumns);
                 switch (b)
-                { 
+                {
                     case "YELLOW":
                         workSheet_range.Interior.Color = Excel.XlRgbColor.rgbYellow;
                         break;
@@ -403,7 +69,7 @@ namespace Stockbook
                 }
                 if (border)
                 {
-                workSheet_range.Borders.Color = Excel.XlRgbColor.rgbBlack;
+                    workSheet_range.Borders.Color = Excel.XlRgbColor.rgbBlack;
                 }
                 workSheet_range.Font.Bold = font;
                 workSheet_range.Font.Size = size;
@@ -457,7 +123,7 @@ namespace Stockbook
 
         public class ExcelInvoice
         {
-            public void ExportTransactionInvoice(TransactionOrder transOrder)
+            public static void ExportTransactionInvoice(TransactionOrder transOrder)
             {
                 Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
                 dlg.FileName = transOrder.DateTransaction.ToString("MMMMM dd yyyy") + " - " + transOrder.RefNo; // Default file name
@@ -503,7 +169,7 @@ namespace Stockbook
                                 unitTotal += tempTotal;
                                 if (transOrder.DiscountPercentage > 0)
                                 {
-                                    tempTotal = ((transOrder.DiscountPercentage/100) + 1)*tempTotal;
+                                    tempTotal = ((transOrder.DiscountPercentage / 100) + 1) * tempTotal;
                                 }
                                 billedTotal += tempTotal;
                                 worksheet.Cells["F" + i].Value = tempTotal;
@@ -548,15 +214,15 @@ namespace Stockbook
                         i++;
                         worksheet.Cells["B" + i].Value = "Vatable Sales";
                         worksheet.Cells["C" + i].Value = billedTotal * (decimal)0.88;
-                        worksheet.Cells["B" + (i+1)].Value = "12% VAT";
+                        worksheet.Cells["B" + (i + 1)].Value = "12% VAT";
                         worksheet.Cells["C" + (i + 1)].Value = billedTotal * (decimal)0.12;
-                        worksheet.Cells["B" + (i+2)].Value = "Total";
-                        worksheet.Cells["C" + (i+2)].Value = billedTotal;
+                        worksheet.Cells["B" + (i + 2)].Value = "Total";
+                        worksheet.Cells["C" + (i + 2)].Value = billedTotal;
 
                         worksheet.Cells["E" + i].Value = "Invoice Amt.:";
                         worksheet.Cells["F" + i].Value = unitTotal;
-                        worksheet.Cells["E" + (i+1)].Value = transOrder.DiscountPercentage + "% - Discount";
-                        worksheet.Cells["F" + (i+1)].Value = unitTotal * (transOrder.DiscountPercentage/100);
+                        worksheet.Cells["E" + (i + 1)].Value = transOrder.DiscountPercentage + "% - Discount";
+                        worksheet.Cells["F" + (i + 1)].Value = unitTotal * (transOrder.DiscountPercentage / 100);
                         worksheet.Cells["F" + (i + 2)].Value = billedTotal;
 
                         i += 6;
@@ -564,7 +230,7 @@ namespace Stockbook
                         worksheet.Cells["A" + (i + 2)].Value = "PRINT NAME & SIGNATURE";
                         worksheet.Cells["D" + i].Value = "DELIVERED BY/DATE";
                         worksheet.Cells["D" + (i + 2)].Value = "PRINT NAME & SIGNATURE";
-                        i+=3;
+                        i += 3;
                         worksheet.Cells["A" + i].Value = "CHECKED BY/DATE";
                         worksheet.Cells["A" + (i + 2)].Value = "PRINT NAME & SIGNATURE";
                         worksheet.Cells["D" + i].Value = "APPROVED BY";
@@ -574,7 +240,7 @@ namespace Stockbook
                     }
                 }
             }
-            private List<StockCard> OrderListToStockCard(List<TransactionOrder> transactionOrders, DateTime dateFrom, DateTime dateTo)
+            private static List<StockCard> OrderListToStockCard(List<TransactionOrder> transactionOrders, DateTime dateFrom, DateTime dateTo)
             {
                 var stockCards = new List<StockCard>();
                 List<Transaction> listProductsInTrans =
@@ -584,7 +250,7 @@ namespace Stockbook
                 foreach (var prod in listProd)
                 {
                     var db = new DbClass();
-                    
+
                     var temp = new StockCard();
                     var tempListTrans = new List<StockCardTransaction>();
                     temp.Description = prod.Name;
@@ -596,7 +262,7 @@ namespace Stockbook
                     tempProd = prod;
                     temp.DateFrom = dateFrom;
                     temp.DateTo = dateTo;
-                    foreach (var transOrder in transactionOrders.Where(q => q.Transactions.Exists(s => s.Product.Name == prod.Name)).ToList().OrderBy(k=>k.DateTransaction))
+                    foreach (var transOrder in transactionOrders.Where(q => q.Transactions.Exists(s => s.Product.Name == prod.Name)).ToList().OrderBy(k => k.DateTransaction))
                     {
                         var stockCardTrans = new StockCardTransaction();
                         stockCardTrans.Transaction = transOrder.TransactionType;
@@ -607,7 +273,7 @@ namespace Stockbook
                         stockCardTrans.Case = prodTemp.CaseTransact;
                         stockCardTrans.Pack = prodTemp.PackTransact;
                         stockCardTrans.Piece = prodTemp.PieceTransact;
-                        tempProd = db.BalanceCasePackPiece(prodTemp, tempProd, transOrder.TransactionType);
+                        tempProd = DbClass.EtcHelper.BalanceCasePackPiece(prodTemp, tempProd, transOrder.TransactionType);
                         stockCardTrans.CaseBalance = tempProd.CaseBalance;
                         stockCardTrans.PackBalance = tempProd.PackBalance;
                         stockCardTrans.PieceBalance = tempProd.PieceBalance;
@@ -621,7 +287,7 @@ namespace Stockbook
                 return stockCards;
             }
 
-            public void ExportTransactions(List<TransactionOrder> orderList, DateTime dateFrom, DateTime dateTo)
+            public static void ExportTransactions(List<TransactionOrder> orderList, DateTime dateFrom, DateTime dateTo)
             {
                 Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
                 dlg.FileName = DateTime.Now.ToString("MMMMM dd yyyy") + " - Stock Cards"; // Default file name
@@ -640,13 +306,13 @@ namespace Stockbook
                     }
                     using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
                     {
-                        var listStock = OrderListToStockCard(orderList,dateFrom,dateTo);
+                        var listStock = OrderListToStockCard(orderList, dateFrom, dateTo);
                         int worksheetNum = 1;
                         ExcelWorksheet worksheet;
-                        package.Workbook.Worksheets.FirstOrDefault(q=>q.Index == 1).Hidden = eWorkSheetHidden.VeryHidden;
+                        package.Workbook.Worksheets.FirstOrDefault(q => q.Index == 1).Hidden = eWorkSheetHidden.VeryHidden;
                         foreach (var list in listStock)
                         {
-                            worksheet = package.Workbook.Worksheets.Copy("Sheet1",list.Description);
+                            worksheet = package.Workbook.Worksheets.Copy("Sheet1", list.Description);
                             worksheet.Cells["A3"].Value = "LOCATION: " + list.Location;
                             worksheet.Cells["A4"].Value = "DATE: " + list.DateFrom.ToString("MMMM dd, yyyy") + " - " + list.DateTo.ToString("MMMM dd, yyyy");
                             worksheet.Cells["B5"].Value = list.Description;
@@ -678,7 +344,7 @@ namespace Stockbook
             }
 
 
-            public void ExportProducts(List<Product> prodLists, string location, string principal, string category)
+            public static void ExportProducts(List<Product> prodLists, string location, string principal, string category)
             {
                 Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
                 dlg.FileName = DateTime.Now.ToString("MMMMM dd yyyy") + " - Product Inventory Report"; // Default file name
@@ -687,29 +353,29 @@ namespace Stockbook
                 Nullable<bool> result = dlg.ShowDialog();
                 if (result == true)
                 {
-                string filename = dlg.FileName; 
-                FileInfo templateFile = new FileInfo(@"Product Template.xlsx"); 
-                FileInfo newFile = new FileInfo(filename);
-                if (newFile.Exists)
-                {
-                    newFile.Delete();
-                    newFile = new FileInfo(filename);
-                }
-                using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
-                {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                    string filename = dlg.FileName;
+                    FileInfo templateFile = new FileInfo(@"Product Template.xlsx");
+                    FileInfo newFile = new FileInfo(filename);
+                    if (newFile.Exists)
+                    {
+                        newFile.Delete();
+                        newFile = new FileInfo(filename);
+                    }
+                    using (ExcelPackage package = new ExcelPackage(newFile, templateFile))
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
                         worksheet.Cells["A3"].Value = "As of " + DateTime.Now.ToString("MMMM dd, yyyy");
                         worksheet.Cells["A4"].Value = "Location: " + location;
                         worksheet.Cells["A5"].Value = "Principal: " + principal;
                         worksheet.Cells["A6"].Value = "Category: " + category;
-                    int i = 9;
-                    decimal grandTotal=0;
-                    decimal subTotal=0;
-                    string tempCategory="";
-                    var categories = prodLists.Select(q => q.Category).Distinct().OrderBy(q=>q);
+                        int i = 9;
+                        decimal grandTotal = 0;
+                        decimal subTotal = 0;
+                        string tempCategory = "";
+                        var categories = prodLists.Select(q => q.Category).Distinct().OrderBy(q => q);
                         foreach (var cat in categories)
                         {
-                            foreach (var prod in prodLists.Where(q=>q.Category == cat))
+                            foreach (var prod in prodLists.Where(q => q.Category == cat))
                             {
                                 var caseVal = (prod.CaseValue * prod.CaseBalance);
                                 var packVal = (prod.PackValue * prod.PackBalance);
@@ -740,15 +406,16 @@ namespace Stockbook
                         }
                         i++;
                         worksheet.Cells["I" + i].Value = "Grandtotal:";
-                        worksheet.Cells["J" + i].Value = grandTotal; 
+                        worksheet.Cells["J" + i].Value = grandTotal;
                         worksheet.View.PageLayoutView = false;
-                    package.Save();
+                        package.Save();
                     }
                 }
             }
-             
+
         }
 
         #endregion
+
     }
 }

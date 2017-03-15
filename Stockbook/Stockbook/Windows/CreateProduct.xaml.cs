@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Stockbook.Class;
 using Stockbook.Model;
 
 namespace Stockbook.Products
@@ -20,7 +21,7 @@ namespace Stockbook.Products
 
         private void InitializeCreate()
         {
-            var listProducts = _db.GetAllProducts();
+            var listProducts = DbClass.ProductHelper.GetAllProducts();
            foreach (var item in listProducts.Select(q=>q.Location).Distinct())
             {
                 LocationInput.Items.Add(item);
@@ -34,7 +35,7 @@ namespace Stockbook.Products
             {
                 var prod = new Product
                 {
-                    Id = _db.GenerateProductId() + "",
+                    Id = DbClass.ProductHelper.GenerateProductId() + "",
                     Location = LocationInput.Text.Trim(),
                     Category = CategoryInput.Text.Trim(),
                     Principal = PrincipalInput.Text.Trim(),
@@ -49,7 +50,7 @@ namespace Stockbook.Products
                     PackToPieces = packPieces,
                     CaseToPacks = casePacks
                 };
-                _db.CreateProduct(prod);
+                ProductHelper.CreateProduct(prod);
             
             foreach (Window window in Application.Current.Windows)
             {
@@ -114,7 +115,7 @@ namespace Stockbook.Products
             if ((sender as ComboBox).SelectedItem != null)
             { 
                     var location = (sender as ComboBox).SelectedItem.ToString();
-                    var listProducts = _db.GetAllProducts();
+                    var listProducts = DbClass.ProductHelper.GetAllProducts();
                     PrincipalInput.ItemsSource = null;
                     PrincipalInput.Items.Clear();
                     CategoryInput.ItemsSource = null;
@@ -128,7 +129,7 @@ namespace Stockbook.Products
             if ((sender as ComboBox).SelectedItem != null)
             {
                 var principal = (sender as ComboBox).SelectedItem.ToString();
-                var listProducts = _db.GetAllProducts();
+                var listProducts = DbClass.ProductHelper.GetAllProducts();
                 CategoryInput.ItemsSource = null;
                 CategoryInput.Items.Clear();
                 CategoryInput.ItemsSource = listProducts.Where(q => q.Principal == principal).Select(q => q.Category).Distinct();

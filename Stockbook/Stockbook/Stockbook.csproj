@@ -76,7 +76,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Class\EtcHelper.cs" />
+    <Compile Include="Class\ExcelHelper.cs" />
+    <Compile Include="Class\ProductHelper.cs" />
+    <Compile Include="Class\TransactionHelper.cs" />
     <Compile Include="Model\Product.cs" />
+    <Compile Include="Model\StockCard.cs" />
+    <Compile Include="Model\StockCardTransaction.cs" />
+    <Compile Include="Model\Transaction.cs" />
+    <Compile Include="Model\TransactionOrder.cs" />
+    <Compile Include="Model\TransactionView.cs" />
     <Compile Include="Windows\CreateProduct.xaml.cs">
       <DependentUpon>CreateProduct.xaml</DependentUpon>
     </Compile>
@@ -96,7 +105,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbClass.cs" />
+    <Compile Include="Class\DbClass.cs" />
     <Page Include="Windows\CreateProduct.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

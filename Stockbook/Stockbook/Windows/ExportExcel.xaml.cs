@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Stockbook.Class;
 using Stockbook.Model;
 
 namespace Stockbook.Products
@@ -12,7 +13,6 @@ namespace Stockbook.Products
     /// </summary>
     public partial class ExportExcel : Window
     {
-        DbClass _db = new DbClass();
         private string _locationFilter = "All Location";
         private string _principalFilter = "All Principal";
         private string _categoryFilter = "All Category";
@@ -38,7 +38,7 @@ namespace Stockbook.Products
         #region Products
         private void InitializeProducts(string newValueLocation, string newValuePrincipal, string newValueCategory)
         {
-            var listProducts = _db.GetAllProducts();
+            var listProducts = DbClass.ProductHelper.GetAllProducts();
             PrincipalInput.Items.Clear();
             PrincipalInput.Items.Add("All Principal");
             CategoryInput.Items.Clear();
@@ -65,7 +65,7 @@ namespace Stockbook.Products
                 }
             } 
             //Filter Category
-            var categoryList = _db.GetAllProducts(); 
+            var categoryList = DbClass.ProductHelper.GetAllProducts(); 
              if (newValuePrincipal != "All Principal")
             {
                 categoryList = categoryList.Where(q => q.Principal == newValuePrincipal).ToList();
@@ -130,8 +130,7 @@ namespace Stockbook.Products
         }
         private void ExportProducts_Click(object sender, RoutedEventArgs e)
         {
-            DbClass.ExcelInvoice excel = new DbClass.ExcelInvoice();
-            excel.ExportProducts(prodList, LocationInput.Text, PrincipalInput.Text,CategoryInput.Text);
+            ExcelHelper.ExcelInvoice.ExportProducts(prodList, LocationInput.Text, PrincipalInput.Text,CategoryInput.Text);
         }
         #endregion
 
@@ -147,7 +146,7 @@ namespace Stockbook.Products
 
         private void InitializeTransactions(string newValLocation, string newValPrincipal, string newValCategory, string newValName, string newValType, string newValParticular, string newValSalesman)
         {
-            var listTrans = _db.GetAllTransactions();
+            var listTrans = DbClass.TransactionHelper.GetAllTransactions();
             PrincipalInputTrans.Items.Clear();
             PrincipalInputTrans.Items.Add("All Principal");
             CategoryInputTrans.Items.Clear();
@@ -363,7 +362,6 @@ namespace Stockbook.Products
         }
         private void ExportExcelTrans_Click(object sender, RoutedEventArgs e)
         {
-            DbClass.ExcelInvoice excel = new DbClass.ExcelInvoice();
             if (DateFrom.SelectedDate == null)
             {
                 DateFrom.SelectedDate = new DateTime(2000, 1, 1);
@@ -372,7 +370,7 @@ namespace Stockbook.Products
             {
                 DateTo.SelectedDate = DateTime.Now;
             }
-            excel.ExportTransactions(listTransactions, DateFrom.SelectedDate.Value, DateTo.SelectedDate.Value);
+            ExcelHelper.ExcelInvoice.ExportTransactions(listTransactions, DateFrom.SelectedDate.Value, DateTo.SelectedDate.Value);
         }
         #endregion
          

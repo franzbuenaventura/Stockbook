@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Stockbook.Class;
 using Stockbook.Model;
 
 namespace Stockbook.Products
@@ -14,7 +15,6 @@ namespace Stockbook.Products
     {
         private List<Transaction> transList = new List<Transaction>();
         private readonly string _transType;
-        private DbClass _db = new DbClass();
         private string _principalFilter = "";
         private string _categoryFilter = "";
         private string _locationFilter = "";
@@ -67,7 +67,7 @@ namespace Stockbook.Products
         private void SubmitCreate_Click(object sender, RoutedEventArgs e)
         {
             var prod =
-                _db.GetAllProducts()
+                DbClass.ProductHelper.GetAllProducts()
                     .FirstOrDefault(
                         q =>
                             q.Name == NameInput.Text && q.Principal == PrincipalInput.Text &&
@@ -127,7 +127,7 @@ namespace Stockbook.Products
         }
         private void InitializeTransactionFilter(string newValueLocation = "", string newValuePrincipal = "", string newValueCategory = "",  string newValueName="")
         {
-            var listProducts = _db.GetAllProducts();
+            var listProducts = DbClass.ProductHelper.GetAllProducts();
             LocationInput.Items.Clear();
             PrincipalInput.Items.Clear();
             CategoryInput.Items.Clear();
@@ -215,7 +215,7 @@ namespace Stockbook.Products
             {
                 var order = new TransactionOrder
                 {
-                    Id = _db.GenerateTransactionId() + "",
+                    Id = DbClass.TransactionHelper.GenerateTransactionId() + "",
                     TransactionType = _transType,
                     DateTransaction = DateTime.Now,
                     RefNo = RefIdInput.Text,
@@ -226,12 +226,12 @@ namespace Stockbook.Products
                     SalesmanName = SalesmanInput.Text,
                     Terms = terms
                 };
-                _db.CreateTransaction(order);
+                DbClass.TransactionHelper.CreateTransaction(order);
                 foreach (var trans in transList)
                 {
                     var prod = trans.Product;
-                    prod = _db.BalanceCasePackPiece(trans,prod,_transType);
-                    _db.EditProduct(prod);
+                    prod = DbClass.EtcHelper.BalanceCasePackPiece(trans,prod,_transType);
+                    DbClass.ProductHelper.EditProduct(prod);
                 }
 
                 foreach (Window window in Application.Current.Windows)
