@@ -19,6 +19,5 @@ namespace Stockbook.Class
 
         public static EtcHelper EtcHelper = new EtcHelper();
 
-
     }
 }

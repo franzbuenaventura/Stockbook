@@ -2,15 +2,17 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using MahApps.Metro.Controls;
 using Stockbook.Class;
 using Stockbook.Model;
+using Stockbook.Windows;
 
 namespace Stockbook.Products
 {
     /// <summary>
     /// Interaction logic for CreateProduct.xaml
     /// </summary>
-    public partial class CreateProduct : Window
+    public partial class CreateProduct : MetroWindow
     {
         private DbClass _db = new DbClass();
         public CreateProduct()

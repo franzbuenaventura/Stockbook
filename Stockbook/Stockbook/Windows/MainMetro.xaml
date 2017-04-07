@@ -1,12 +1,12 @@
-﻿<Controls:MetroWindow  x:Class="Stockbook.MainMetro"
+﻿<controls:MetroWindow  x:Class="Stockbook.Windows.MainMetro"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        xmlns:local="clr-namespace:Stockbook"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="Main" Height="720" Width="1280">
+        Title="Main" Height="720" Width="1280" BorderThickness="2" BorderBrush="#FFCECECE">
+
     <Viewbox Stretch="Fill">
         <Grid Height="690" Width="1274">
             <TabControl x:Name="TabControl" Margin="0,0,-0.4,0.4">
@@ -255,8 +255,8 @@
                                 <ColumnDefinition Width="345*"/>
                                 <ColumnDefinition Width="22*"/>
                             </Grid.ColumnDefinitions>
-                            <DatePicker x:Name="startDate" Margin="0" Grid.Column="5" Grid.Row="1" AutomationProperties.HelpText="Start Date" Controls:TextBoxHelper.HasText="True" Controls:TextBoxHelper.Watermark="Start Date Filter" FontSize="24" CalendarClosed="startDate_CalendarClosed"/>
-                            <DatePicker x:Name="endDate" Grid.Column="7" AutomationProperties.HelpText="Start Date" Controls:TextBoxHelper.HasText="True" Controls:TextBoxHelper.Watermark="End Date Filter" FontSize="24" Grid.Row="1" CalendarClosed="endDate_CalendarClosed"/>
+                            <DatePicker x:Name="startDate" Margin="0" Grid.Column="5" Grid.Row="1" AutomationProperties.HelpText="Start Date" controls:TextBoxHelper.HasText="True" controls:TextBoxHelper.Watermark="Start Date Filter" FontSize="24" CalendarClosed="startDate_CalendarClosed"/>
+                            <DatePicker x:Name="endDate" Grid.Column="7" AutomationProperties.HelpText="Start Date" controls:TextBoxHelper.HasText="True" controls:TextBoxHelper.Watermark="End Date Filter" FontSize="24" Grid.Row="1" CalendarClosed="endDate_CalendarClosed"/>
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -264,4 +264,5 @@
             </TabControl>
         </Grid>
     </Viewbox>
-</Controls:MetroWindow>
+</controls:MetroWindow>
+

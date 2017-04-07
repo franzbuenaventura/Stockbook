@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using MahApps.Metro.Controls;
 using Stockbook.Class;
 using Stockbook.Model;
 
-namespace Stockbook.Products
+namespace Stockbook.Windows
 {
     /// <summary>
     /// Interaction logic for ExportExcel.xaml
     /// </summary>
-    public partial class ExportExcel : Window
+    public partial class ExportExcel : MetroWindow
     {
         private string _locationFilter = "All Location";
         private string _principalFilter = "All Principal";

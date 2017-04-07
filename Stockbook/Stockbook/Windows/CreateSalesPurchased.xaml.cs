@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using MahApps.Metro.Controls;
 using Stockbook.Class;
 using Stockbook.Model;
 
-namespace Stockbook.Products
+namespace Stockbook.Windows
 {
     /// <summary>
     /// Interaction logic for CreateSalesPurchased.xaml
     /// </summary>
-    public partial class CreateSalesPurchased : Window
+    public partial class CreateSalesPurchased : MetroWindow
     {
         private List<Transaction> transList = new List<Transaction>();
         private readonly string _transType;

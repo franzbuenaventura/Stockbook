@@ -9,7 +9,7 @@ using Stockbook.Model;
 using Stockbook.Products;
 using Stockbook.Windows;
 
-namespace Stockbook
+namespace Stockbook.Windows
 { 
     public partial class MainMetro : MetroWindow
     {
