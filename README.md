@@ -17,6 +17,7 @@ As the original software design for a specific company, all of the requirements 
 - 	Basic GUI (Graphical User Interface)<br>
 - 	Database system using flat files<br>
 	<br>
+	
 <b>Should have:</b><br>
 - 	Authentication System<br>
 		- CRUD system for Accounts<br>
@@ -35,7 +36,8 @@ As the original software design for a specific company, all of the requirements 
 - 	Daily/Weekly/Monthly Backup files (Compress?)<br>
 - 	Unit Testing<br>
 - 	Documentation<br>
-<br>Could have:<br>
+
+<b>Could have:</b><br>
 -	Flexible template (More options on what it will output)<br>
 -	Advanced encryption for flat files<br>
 -	Online Backup System<br>
