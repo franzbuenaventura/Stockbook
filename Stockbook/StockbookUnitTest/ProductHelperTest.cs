@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace StockbookUnitTest
 {
     [TestClass]
-    public class UnitTest1
+    public class ProductHelperTest
     {
         [TestMethod]
         public void TestMethod1()

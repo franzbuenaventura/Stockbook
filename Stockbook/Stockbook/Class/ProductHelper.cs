@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
-using Stockbook.Model;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ProductHelper.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   Defines the ProductHelper type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace Stockbook.Class
 {
-   public class ProductHelper
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
+    using Newtonsoft.Json;
+
+    using Stockbook.Model;
+
+    public class ProductHelper
     {
         private static string ProductFolder()
         {
@@ -34,7 +45,7 @@ namespace Stockbook.Class
 
                 using (StreamReader sr = File.OpenText(fileName))
                 {
-                    string s = "";
+                    string s;
                     while ((s = sr.ReadLine()) != null)
                     {
                         Console.WriteLine(s);
