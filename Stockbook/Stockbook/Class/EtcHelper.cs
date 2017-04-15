@@ -5,7 +5,6 @@ namespace Stockbook.Class
 {
     public class EtcHelper
     {
-        #region Etc
 
         public Product BalanceCasePackPiece(Transaction trans, Product prod, string type = "Sales")
         {
@@ -51,6 +50,5 @@ namespace Stockbook.Class
             return prod;
         }
 
-        #endregion
     }
 }

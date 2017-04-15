@@ -8,7 +8,6 @@ namespace Stockbook.Class
 {
    public class ProductHelper
     {
-        #region Product
         private static string ProductFolder()
         {
             var temp = Environment.CurrentDirectory + @"\ProductsDb\";
@@ -149,6 +148,5 @@ namespace Stockbook.Class
                 Console.WriteLine(Ex.ToString());
             }
         }
-        #endregion
     }
 }

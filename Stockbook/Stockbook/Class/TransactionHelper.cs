@@ -9,7 +9,6 @@ namespace Stockbook.Class
     public class TransactionHelper
     {
 
-        #region Transaction 
         private string TransactionFolder()
         {
             var temp = Environment.CurrentDirectory + @"\TransactionsDb\";
@@ -149,6 +148,5 @@ namespace Stockbook.Class
                 Console.WriteLine(Ex.ToString());
             }
         }
-        #endregion
     }
 }

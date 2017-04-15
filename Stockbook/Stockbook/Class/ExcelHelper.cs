@@ -10,7 +10,6 @@ namespace Stockbook.Class
 {
     public static class ExcelHelper
     {
-        #region Excel 
         public class CreateExcelDoc
         {
             private Excel.Application app = null;
@@ -415,7 +414,6 @@ namespace Stockbook.Class
 
         }
 
-        #endregion
 
     }
 }
