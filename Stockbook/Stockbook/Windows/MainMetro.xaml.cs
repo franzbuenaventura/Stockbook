@@ -45,7 +45,7 @@ namespace Stockbook.Windows
         }
         private void InitializeProductsFilter(string newValueLocation = "",string newValuePrincipal = "", string newValueCategory = "")
         {
-            var listProducts = DbClass.ProductHelper.GetAllProducts();
+            var listProducts = Product.GetAllProducts();
             LocationFilter.ItemsSource = null;
             LocationFilter.Items.Clear();
             LocationFilter.Items.Add("All Location");
@@ -171,7 +171,7 @@ namespace Stockbook.Windows
                 if (MessageBox.Show("Are you want to Edit - " + prod.Name  +": "+ newValue+ " from "+oldValue+ " ?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     //prod = BalanceCaseToPackToPieces(e.Column.Header.ToString(), prod, oldValue);
-                    DbClass.ProductHelper.EditProduct(prod);
+                    Product.EditProduct(prod);
                     DataGrid.CommitEdit();
                     InitializeProducts();
                 }
@@ -183,7 +183,7 @@ namespace Stockbook.Windows
             var prod = ((FrameworkElement)sender).DataContext as Product; 
             if (MessageBox.Show("Are you want to Delete - " + prod.Name + "?" , "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                DbClass.ProductHelper.DeleteProduct(prod.Id);
+                Product.DeleteProduct(prod.Id);
             }
             InitializeProducts();
         }
@@ -360,7 +360,7 @@ namespace Stockbook.Windows
             {
                     foreach (var trans in transView.Transactions)
                 {
-                        var prod = DbClass.ProductHelper.GetProduct(trans.Product.Id);
+                        var prod = Product.GetProduct(trans.Product.Id);
                         if (transView.TransactionType == "Purchased")
                         {
                         DbClass.EtcHelper.BalanceCasePackPiece(trans, prod, "Sales");
@@ -369,7 +369,7 @@ namespace Stockbook.Windows
                     {
                         DbClass.EtcHelper.BalanceCasePackPiece(trans, prod, "Purchased");
                     }
-                    DbClass.ProductHelper.EditProduct(prod);
+                    Product.EditProduct(prod);
                 }
                 DbClass.TransactionHelper.DeleteTransaction(transView.Id);
             }

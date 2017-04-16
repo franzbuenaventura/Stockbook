@@ -13,7 +13,7 @@ namespace Stockbook.Class
 {
     public class DbClass
     {
-        public static ProductHelper ProductHelper = new ProductHelper();
+        public static Product Product = new Product();
 
         public static TransactionHelper TransactionHelper = new TransactionHelper();
 

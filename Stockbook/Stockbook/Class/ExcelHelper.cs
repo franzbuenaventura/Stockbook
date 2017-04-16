@@ -32,10 +32,7 @@ namespace Stockbook.Class
                 catch (Exception e)
                 {
                     Console.Write("Error");
-                }
-                finally
-                {
-                }
+                } 
             }
 
             public void createHeaders(int row, int col, string htext, string cell1,

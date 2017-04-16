@@ -77,7 +77,7 @@
     </ApplicationDefinition>
     <Compile Include="Class\EtcHelper.cs" />
     <Compile Include="Class\ExcelHelper.cs" />
-    <Compile Include="Class\ProductHelper.cs" />
+    <Compile Include="Class\Product.cs" />
     <Compile Include="Class\TransactionHelper.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\StockCard.cs" />

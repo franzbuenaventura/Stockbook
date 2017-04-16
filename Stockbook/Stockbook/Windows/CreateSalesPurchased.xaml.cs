@@ -68,7 +68,7 @@ namespace Stockbook.Windows
         private void SubmitCreate_Click(object sender, RoutedEventArgs e)
         {
             var prod =
-                DbClass.ProductHelper.GetAllProducts()
+                Product.GetAllProducts()
                     .FirstOrDefault(
                         q =>
                             q.Name == NameInput.Text && q.Principal == PrincipalInput.Text &&
@@ -128,7 +128,7 @@ namespace Stockbook.Windows
         }
         private void InitializeTransactionFilter(string newValueLocation = "", string newValuePrincipal = "", string newValueCategory = "",  string newValueName="")
         {
-            var listProducts = DbClass.ProductHelper.GetAllProducts();
+            var listProducts = Product.GetAllProducts();
             LocationInput.Items.Clear();
             PrincipalInput.Items.Clear();
             CategoryInput.Items.Clear();
@@ -232,7 +232,7 @@ namespace Stockbook.Windows
                 {
                     var prod = trans.Product;
                     prod = DbClass.EtcHelper.BalanceCasePackPiece(trans,prod,_transType);
-                    DbClass.ProductHelper.EditProduct(prod);
+                    Product.EditProduct(prod);
                 }
 
                 foreach (Window window in Application.Current.Windows)

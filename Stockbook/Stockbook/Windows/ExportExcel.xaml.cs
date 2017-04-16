@@ -39,7 +39,7 @@ namespace Stockbook.Windows
         #region Products
         private void InitializeProducts(string newValueLocation, string newValuePrincipal, string newValueCategory)
         {
-            var listProducts = DbClass.ProductHelper.GetAllProducts();
+            var listProducts = Product.GetAllProducts();
             PrincipalInput.Items.Clear();
             PrincipalInput.Items.Add("All Principal");
             CategoryInput.Items.Clear();
@@ -66,7 +66,7 @@ namespace Stockbook.Windows
                 }
             } 
             //Filter Category
-            var categoryList = DbClass.ProductHelper.GetAllProducts(); 
+            var categoryList = Product.GetAllProducts(); 
              if (newValuePrincipal != "All Principal")
             {
                 categoryList = categoryList.Where(q => q.Principal == newValuePrincipal).ToList();

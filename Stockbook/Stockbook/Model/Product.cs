@@ -1,6 +1,6 @@
 ﻿namespace Stockbook.Model
 {
-    public class Product
+    public class Product1
     {
         public string Id { get; set; }
         public string Location { get; set; }
