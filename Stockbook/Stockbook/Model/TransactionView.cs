@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Stockbook.Model
 {
+    using Stockbook.Class;
+
     public class TransactionView
     {
         public string Id { get; set; }

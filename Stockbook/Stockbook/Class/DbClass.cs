@@ -15,8 +15,6 @@ namespace Stockbook.Class
     {
         public static Product Product = new Product();
 
-        public static TransactionHelper TransactionHelper = new TransactionHelper();
-
         public static EtcHelper EtcHelper = new EtcHelper();
 
     }

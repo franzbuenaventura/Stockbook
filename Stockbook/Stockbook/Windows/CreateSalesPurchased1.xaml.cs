@@ -216,7 +216,6 @@ namespace Stockbook.Windows
             {
                 var order = new TransactionOrder
                 {
-                    Id = DbClass.TransactionHelper.GenerateTransactionId() + "",
                     TransactionType = _transType,
                     DateTransaction = DateTime.Now,
                     RefNo = RefIdInput.Text,
@@ -227,7 +226,7 @@ namespace Stockbook.Windows
                     SalesmanName = SalesmanInput.Text,
                     Terms = terms
                 };
-                DbClass.TransactionHelper.CreateTransaction(order);
+                TransactionOrder.CreateTransaction(order);
                 foreach (var trans in transList)
                 {
                     var prod = trans.Product;

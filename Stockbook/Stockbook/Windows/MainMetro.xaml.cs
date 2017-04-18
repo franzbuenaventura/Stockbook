@@ -239,7 +239,7 @@ namespace Stockbook.Windows
         }
         public void InitializeTransFilter(string newValueTransaction ="", string newValueLocation = "", string newValuePrincipal = "", string newValueCategory = "")
         {
-            var listTrans = DbClass.TransactionHelper.GetAllTransactions();
+            var listTrans = Class.TransactionOrder.GetAllTransactions();
             //List<Transaction> listProductsInTrans =
             //    listTrans.SelectMany(q => q.Transactions).ToList();
             //var listProd = listProductsInTrans.GroupBy(q => q.Product.Name).Select(s=>s.First()).Select(q=>q.Product).ToList();
@@ -350,7 +350,7 @@ namespace Stockbook.Windows
         private void ExportTrans_Click(object sender, RoutedEventArgs e)
         {
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
-            var trans = DbClass.TransactionHelper.GetTransaction(transView.Id);
+            var trans = Class.TransactionOrder.GetTransaction(transView.Id);
             ExcelHelper.ExcelInvoice.ExportTransactionInvoice(trans);
         }
         private void DeleteTrans_Click(object sender, RoutedEventArgs e)
@@ -371,7 +371,7 @@ namespace Stockbook.Windows
                     }
                     Product.EditProduct(prod);
                 }
-                DbClass.TransactionHelper.DeleteTransaction(transView.Id);
+                Class.TransactionOrder.DeleteTransaction(transView.Id);
             }
             InitializeTrans();
             InitializeProducts();
@@ -439,7 +439,7 @@ namespace Stockbook.Windows
         private void DetailsTrans_Click(object sender, RoutedEventArgs e)
         {
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
-            Details details = new Details(DbClass.TransactionHelper.GetTransaction(transView.Id));
+            Details details = new Details(TransactionOrder.GetTransaction(transView.Id));
             details.Show();
         }
     }

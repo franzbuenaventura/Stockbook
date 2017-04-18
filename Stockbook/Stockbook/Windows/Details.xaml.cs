@@ -5,6 +5,8 @@ using Stockbook.Model;
 
 namespace Stockbook.Windows
 {
+    using Stockbook.Class;
+
     /// <summary>
     /// Interaction logic for Details.xaml
     /// </summary>

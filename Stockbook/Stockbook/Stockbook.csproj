@@ -78,12 +78,10 @@
     <Compile Include="Class\EtcHelper.cs" />
     <Compile Include="Class\ExcelHelper.cs" />
     <Compile Include="Class\Product.cs" />
-    <Compile Include="Class\TransactionHelper.cs" />
-    <Compile Include="Model\Product.cs" />
+    <Compile Include="Class\TransactionOrder.cs" />
     <Compile Include="Model\StockCard.cs" />
     <Compile Include="Model\StockCardTransaction.cs" />
     <Compile Include="Model\Transaction.cs" />
-    <Compile Include="Model\TransactionOrder.cs" />
     <Compile Include="Model\TransactionView.cs" />
     <Compile Include="Windows\CreateProduct.xaml.cs">
       <DependentUpon>CreateProduct.xaml</DependentUpon>

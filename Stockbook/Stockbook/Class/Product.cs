@@ -253,7 +253,6 @@ namespace Stockbook.Class
             }
 
             return false;
-
         }
 
         /// <summary>
@@ -281,7 +280,7 @@ namespace Stockbook.Class
             var fileName = ProductFolder() + "IdCounter" + @".json";
             try
             {
-                // Check if file already exists. If yes 
+                // Check if file already exists. If yes then get the id and add increment of one.
                 if (File.Exists(fileName))
                 {
                     using (StreamReader sr = File.OpenText(fileName))

@@ -147,7 +147,7 @@ namespace Stockbook.Windows
 
         private void InitializeTransactions(string newValLocation, string newValPrincipal, string newValCategory, string newValName, string newValType, string newValParticular, string newValSalesman)
         {
-            var listTrans = DbClass.TransactionHelper.GetAllTransactions();
+            var listTrans = TransactionOrder.GetAllTransactions();
             PrincipalInputTrans.Items.Clear();
             PrincipalInputTrans.Items.Add("All Principal");
             CategoryInputTrans.Items.Clear();

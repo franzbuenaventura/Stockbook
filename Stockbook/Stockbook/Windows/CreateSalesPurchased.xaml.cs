@@ -16,10 +16,10 @@ namespace Stockbook.Windows
     {
         private List<Transaction> transList = new List<Transaction>();
         private readonly string _transType;
-        private string _principalFilter = "";
-        private string _categoryFilter = "";
-        private string _locationFilter = "";
-        private string _nameFilter = "";
+        private string _principalFilter = string.Empty;
+        private string _categoryFilter = string.Empty;
+        private string _locationFilter = string.Empty;
+        private string _nameFilter = string.Empty;
         public CreateSalesPurchased(string transType)
         {
             InitializeComponent();
@@ -87,12 +87,12 @@ namespace Stockbook.Windows
                 CaseInput.Text = "0";
                 PackInput.Text = "0";
                 PieceInput.Text = "0";
-                NameInput.Text = "";
+                NameInput.Text = string.Empty;
                 InitializeDataGrid();
             }
             else
             {
-                string errorMessage = "";
+                string errorMessage = string.Empty;
                 if (!decimal.TryParse(CaseInput.Text.Trim(), out Case))
                 {
                     errorMessage = "Case Input has invalid characters or no value was given";
@@ -211,12 +211,11 @@ namespace Stockbook.Windows
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
             decimal discount, terms;
-            string discountTemp = DiscountInput.Text.Replace("%","");
+            string discountTemp = DiscountInput.Text.Replace("%",string.Empty);
             if (!string.IsNullOrWhiteSpace(RefIdInput.Text) && !string.IsNullOrWhiteSpace(ParticularInput.Text) && !string.IsNullOrWhiteSpace(SalesmanInput.Text) && !string.IsNullOrWhiteSpace(AddressInput.Text) && decimal.TryParse(discountTemp.Trim(), out discount) && decimal.TryParse(TermsInput.Text.Trim(), out terms))
             {
                 var order = new TransactionOrder
                 {
-                    Id = DbClass.TransactionHelper.GenerateTransactionId() + "",
                     TransactionType = _transType,
                     DateTransaction = DateTime.Now,
                     RefNo = RefIdInput.Text,
@@ -227,7 +226,7 @@ namespace Stockbook.Windows
                     SalesmanName = SalesmanInput.Text,
                     Terms = terms
                 };
-                DbClass.TransactionHelper.CreateTransaction(order);
+                TransactionOrder.CreateTransaction(order);
                 foreach (var trans in transList)
                 {
                     var prod = trans.Product;
@@ -247,7 +246,7 @@ namespace Stockbook.Windows
             }
             else
             {
-            string errorMessage = ""; 
+            string errorMessage = string.Empty; 
              if (string.IsNullOrWhiteSpace(RefIdInput.Text))
             {
                 errorMessage = "No value was given in Ref No. Input";
