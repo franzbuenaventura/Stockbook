@@ -1,21 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Stockbook.Model;
-using OfficeOpenXml;
-using Excel = Microsoft.Office.Interop.Excel;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ExcelExport.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   Defines the ExcelExport type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace Stockbook.Class
 {
-    public static class ExcelHelper
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+
+    using Model;
+
+    using OfficeOpenXml;
+
+    using Excel = Microsoft.Office.Interop.Excel;
+
+    /// <summary>
+    /// The excel helper.
+    /// </summary>
+    public static class ExcelExport
     {
+        /// <summary>
+        /// The create excel doc.
+        /// </summary>
         public class CreateExcelDoc
         {
             private Excel.Application app = null;
             private Excel.Workbook workbook = null;
             private Excel.Worksheet worksheet = null;
             private Excel.Range workSheet_range = null;
+
             public CreateExcelDoc()
             {
                 createDoc();
@@ -90,33 +109,10 @@ namespace Stockbook.Class
                 workSheet_range.NumberFormat = format;
             }
         }
-        //public void ExportAllStudentsToExcel()
-        //{
-        //    var studentList = GetAllStudentInformationList();
-        //    CreateExcelDoc excell_app = new CreateExcelDoc();
-        //    creates the main header
-        //    excell_app.createHeaders(1, 1, "Children of Lourdes Academy", "A1", "A1", 2, "GRAY", true, 20, "n");
-        //    creates subheaders
-        //    excell_app.createHeaders(2, 1, "Name", "A2", "A2", 0, "GRAY", true, 14, "");
-        //    excell_app.createHeaders(2, 2, "Year Level", "B2", "B2", 0, "GRAY", true, 14, "");
-        //    excell_app.createHeaders(2, 3, "Contact Number", "C2", "C2", 0, "GRAY", true, 14, "");
-        //    excell_app.createHeaders(2, 4, "Tuition Fee Balance", "D2", "D2", 0, "GRAY", true, 14, "");
-        //    add Data to cells
-        //    int rowData = 3;
-        //    foreach (var student in studentList)
-        //    {
-        //        var tempCol = 1;
-        //        excell_app.addData(rowData, tempCol, student.Name, "A" + tempCol, "A" + tempCol, "");
-        //        tempCol++;
-        //        excell_app.addData(rowData, tempCol, student.YearLevel, "B" + tempCol, "B" + tempCol, "");
-        //        tempCol++;
-        //        excell_app.addData(rowData, tempCol, student.ContactNumber, "C" + tempCol, "C" + tempCol, "");
-        //        tempCol++;
-        //        excell_app.addData(rowData, tempCol, student.TuitionFeeBalance.ToString(), "D" + tempCol, "D" + tempCol, "#,##0");
-        //        rowData++;
-        //    }
-        //}
 
+        /// <summary>
+        /// The excel invoice.
+        /// </summary>
         public class ExcelInvoice
         {
             public static void ExportTransactionInvoice(TransactionOrder transOrder)
@@ -245,8 +241,6 @@ namespace Stockbook.Class
                 var tempProd = new Product();
                 foreach (var prod in listProd)
                 {
-                    var db = new DbClass();
-
                     var temp = new StockCard();
                     var tempListTrans = new List<StockCardTransaction>();
                     temp.Description = prod.Name;
@@ -269,7 +263,7 @@ namespace Stockbook.Class
                         stockCardTrans.Case = prodTemp.CaseTransact;
                         stockCardTrans.Pack = prodTemp.PackTransact;
                         stockCardTrans.Piece = prodTemp.PieceTransact;
-                        tempProd = DbClass.EtcHelper.BalanceCasePackPiece(prodTemp, tempProd, transOrder.TransactionType);
+                        tempProd = Product.BalanceCasePackPiece(prodTemp, tempProd, transOrder.TransactionType);
                         stockCardTrans.CaseBalance = tempProd.CaseBalance;
                         stockCardTrans.PackBalance = tempProd.PackBalance;
                         stockCardTrans.PieceBalance = tempProd.PieceBalance;

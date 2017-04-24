@@ -131,7 +131,7 @@ namespace Stockbook.Windows
         }
         private void ExportProducts_Click(object sender, RoutedEventArgs e)
         {
-            ExcelHelper.ExcelInvoice.ExportProducts(prodList, LocationInput.Text, PrincipalInput.Text,CategoryInput.Text);
+            ExcelExport.ExcelInvoice.ExportProducts(prodList, LocationInput.Text, PrincipalInput.Text,CategoryInput.Text);
         }
         #endregion
 
@@ -371,7 +371,7 @@ namespace Stockbook.Windows
             {
                 DateTo.SelectedDate = DateTime.Now;
             }
-            ExcelHelper.ExcelInvoice.ExportTransactions(listTransactions, DateFrom.SelectedDate.Value, DateTo.SelectedDate.Value);
+            ExcelExport.ExcelInvoice.ExportTransactions(listTransactions, DateFrom.SelectedDate.Value, DateTo.SelectedDate.Value);
         }
         #endregion
          

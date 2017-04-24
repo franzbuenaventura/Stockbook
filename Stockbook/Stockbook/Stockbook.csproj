@@ -75,8 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Class\EtcHelper.cs" />
-    <Compile Include="Class\ExcelHelper.cs" />
+    <Compile Include="Class\ExcelExport.cs" />
     <Compile Include="Class\Product.cs" />
     <Compile Include="Class\TransactionOrder.cs" />
     <Compile Include="Model\StockCard.cs" />
@@ -105,7 +104,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Class\DbClass.cs" />
+    <Compile Include="Windows\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
     <Page Include="Windows\CreateProduct.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -129,6 +130,10 @@
     <Page Include="Windows\MainMetro.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Framework;
-//Include the next line if using NUnit
+﻿//Include the next line if using NUnit
 
 //Include the next line if using VSTS
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,19 +7,23 @@ using NUnit.Framework;
 //This version for codeproject.com written by Carl Johansen.
 // email: carl at carljohansen dot co dot uk
 // web: www.carljohansen.co.uk
-//
 //Note:  This code is based on the AssertGraphPropertiesEqual method originally posted
 //       by Keith Brown (http://www.pluralsight.com/blogs/keith/archive/2005/06/01/9699.aspx).
-//
 //Revision History:
 //1.0   6-Jan-08    CarlJ   Initial version for codeproject.com
 //1.1   13-Jan-08   CarlJ   Introduced message parameter and removed redundant reporting of
 //                           actual and expected values.
 //1.11  13-Jan-08   CarlJ   Improved message format and clarified NUnit support.
 //////////////////////////////////////////////////////////////////////////////////////////////
-
 namespace StockbookTests.Class
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Reflection;
+
+    using NUnit.Framework;
+
     #region AssertPublicPropertiesEqual related stuff
 
     /// <summary>
@@ -65,6 +64,7 @@ namespace StockbookTests.Class
             {
                 return this._ignorePropertyName;
             }
+
             set
             {
                 this._ignorePropertyName = value;
@@ -104,7 +104,7 @@ namespace StockbookTests.Class
         /// <returns>If the specified property matches an item in the list, the method returns true.  Otherwise the method returns false.</returns>
         public bool IgnoreProperty(Type type, string propertyName)
         {
-            return (base.Find(delegate (PropertyComparisonExclusion item)
+            return this.Find(delegate (PropertyComparisonExclusion item)
             {
                 switch (item.TypeAction)
                 {
@@ -117,18 +117,17 @@ namespace StockbookTests.Class
                             {
                                 currType = currType.BaseType;
                             }
+
                             return currIgnoreItemIsRequiredType;
                         }
-                        else
-                        {
-                            return false;
-                        }
+
+                        return false;
                     case PropertyComparisonExclusionTypeAction.MatchExactType:
                         return (item.TargetType == type) && (item.IgnorePropertyName == propertyName);
                     default:
-                        return false; //this should never be reached.
+                        return false; // this should never be reached.
                 }
-            }) != null);
+            }) != null;
         }
     }
     #endregion
@@ -149,7 +148,7 @@ namespace StockbookTests.Class
             bool haveVisited = false;
             foreach (object currObject in visitedObjects)
             {
-                haveVisited = (currObject == (obj as object)); // This weird test forces the use of the base Object.Equals(), because we always want reference equality.
+                haveVisited = currObject == obj; // This weird test forces the use of the base Object.Equals(), because we always want reference equality.
                 if (haveVisited)
                     break;
             }
@@ -159,6 +158,7 @@ namespace StockbookTests.Class
                 visitedObjects.Push(obj);
                 havePushed = true;
             }
+
             return haveVisited;
         }
 
@@ -213,14 +213,15 @@ namespace StockbookTests.Class
 
         internal static void AssertPublicPropertiesEqual(object expected, object actual, string objectDescription, string message, IgnoreProperties ignoreProperties, Stack<object> visitedObjects)
         {
-            if (String.IsNullOrEmpty(objectDescription))
+            if (string.IsNullOrEmpty(objectDescription))
             {
                 objectDescription = "<object>";
             }
-            string assertMsg = (String.IsNullOrEmpty(objectDescription) ? String.Empty : "(Property: " + objectDescription + ")");
-            if (!String.IsNullOrEmpty(message))
+
+            string assertMsg = string.IsNullOrEmpty(objectDescription) ? string.Empty : "(Property: " + objectDescription + ")";
+            if (!string.IsNullOrEmpty(message))
             {
-                assertMsg += (assertMsg.Length > 0 ? " " : String.Empty) + message;
+                assertMsg += (assertMsg.Length > 0 ? " " : string.Empty) + message;
             }
 
             if ((expected == null) || (actual == null))
@@ -230,14 +231,15 @@ namespace StockbookTests.Class
             }
             else
             {
-                //Neither expected nor actual is null.
+                // Neither expected nor actual is null.
                 bool haveAddedToVisitedObjects;
                 if (StartVisit(expected, visitedObjects, out haveAddedToVisitedObjects))
-                    //Looks like the caller's original type contains a circular reference - we have already seen [expected].
+
+                    // Looks like the caller's original type contains a circular reference - we have already seen [expected].
                     return;
 
-                //Assert that expected and actual are of the same type.
-                Assert.AreSame(expected.GetType(), actual.GetType(), String.Format("Objects are not of the same type. {0}", assertMsg));
+                // Assert that expected and actual are of the same type.
+                Assert.AreSame(expected.GetType(), actual.GetType(), string.Format("Objects are not of the same type. {0}", assertMsg));
                 Type objectType = expected.GetType();
 
                 bool checkObjectPublicProperties = !(objectType.IsPrimitive || objectType.IsEnum || (expected is string) || expected is DateTime); // For these types there is no need to check the public properties.
@@ -245,7 +247,7 @@ namespace StockbookTests.Class
 
                 if (checkObjectPublicProperties)
                 {
-                    //See if the caller has supplied an ignore list.
+                    // See if the caller has supplied an ignore list.
                     bool hasIgnoreList = (ignoreProperties != null) && (ignoreProperties.Count > 0);
 
                     foreach (PropertyInfo currProperty in objectType.GetProperties())
@@ -256,23 +258,26 @@ namespace StockbookTests.Class
                         if (getterMethod != null)
                         {
                             bool isStaticProperty = getterMethod.IsStatic;
-                            bool isIndexedProperty = (getterMethod.GetParameters().Length > 0);
+                            bool isIndexedProperty = getterMethod.GetParameters().Length > 0;
 
                             if ((!isStaticProperty) && (!isIndexedProperty) && (!hasIgnoreList || !ignoreProperties.IgnoreProperty(objectType, currProperty.Name)))
                             {
-                                //This is not a static property, not an indexed property and it is not on the ignore list so check it.
+                                // This is not a static property, not an indexed property and it is not on the ignore list so check it.
                                 object expectedPropValue = currProperty.GetValue(expected, null);
                                 object actualPropValue = currProperty.GetValue(actual, null);
-                                string propertyDescription = (objectDescription == null) ? currProperty.Name : String.Format("{0}.{1}", objectDescription, currProperty.Name);
+                                string propertyDescription = (objectDescription == null) ? currProperty.Name : string.Format("{0}.{1}", objectDescription, currProperty.Name);
 
                                 AssertPublicPropertiesEqual(expectedPropValue, actualPropValue, propertyDescription, message, ignoreProperties, visitedObjects);
-                            } // is non-indexed and not on ignore list 
-                        } // has a Get method
-                    } // foreach property in object
+                            }
+ // is non-indexed and not on ignore list 
+                        }
+ // has a Get method
+                    }
+ // foreach property in object
 
                     if (typeof(IEnumerable).IsAssignableFrom(objectType))
                     {
-                        //Object is some kind of collection.  Enumerate through all the objects it contains.
+                        // Object is some kind of collection.  Enumerate through all the objects it contains.
                         IEnumerator it_e = ((IEnumerable)expected).GetEnumerator();
                         IEnumerator it_a = ((IEnumerable)actual).GetEnumerator();
                         int count = 0;
@@ -281,28 +286,33 @@ namespace StockbookTests.Class
                         {
                             if (moreItemsInExpected = it_e.MoveNext())
                             {
-                                Assert.IsTrue(it_a.MoveNext(), String.Format("Expected more items in collection; actual has only {0} item(s). {1}", count, assertMsg));
+                                Assert.IsTrue(it_a.MoveNext(), string.Format("Expected more items in collection; actual has only {0} item(s). {1}", count, assertMsg));
                                 count++;
-                                AssertPublicPropertiesEqual(it_e.Current, it_a.Current, String.Format("{0}[{1}]", objectDescription, count - 1), message, ignoreProperties, visitedObjects);
+                                AssertPublicPropertiesEqual(it_e.Current, it_a.Current, string.Format("{0}[{1}]", objectDescription, count - 1), message, ignoreProperties, visitedObjects);
                             }
                             else
                             {
-                                Assert.IsFalse(it_a.MoveNext(), String.Format("Expected {0} items in collection, but actual has more than that. {1}", count, assertMsg));
+                                Assert.IsFalse(it_a.MoveNext(), string.Format("Expected {0} items in collection, but actual has more than that. {1}", count, assertMsg));
                             }
-                        } // while there are more items in the enumeration
-                    } // object is enumerable                
-                } // check object's public properties
+                        }
+ // while there are more items in the enumeration
+                    }
+ // object is enumerable                
+                }
+ // check object's public properties
 
-                bool checkObjectValueEquality = (isValueTypeObjectWithoutRefProperties || (expected is string));
+                bool checkObjectValueEquality = isValueTypeObjectWithoutRefProperties || (expected is string);
                 if (checkObjectValueEquality)
                 {
                     Assert.AreEqual(expected, actual, assertMsg);
                 }
+
                 if (haveAddedToVisitedObjects)
                 {
                     EndVisit(visitedObjects);
                 }
-            } // object is not null
+            }
+ // object is not null
         }
     }
 }

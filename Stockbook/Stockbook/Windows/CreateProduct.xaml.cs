@@ -14,7 +14,6 @@ namespace Stockbook.Products
     /// </summary>
     public partial class CreateProduct : MetroWindow
     {
-        private DbClass _db = new DbClass();
         public CreateProduct()
         {
             InitializeComponent();

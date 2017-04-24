@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Transaction.cs" company="Franz Buenaventura">
+// <copyright file="TransactionOrder.cs" company="Franz Buenaventura">
 //   Author: Franz Justin Buenaventura
 //   Website: www.franzbuenaventura.com 
 //   License: GNU Affero General Public License v3.0
@@ -16,7 +16,6 @@ namespace Stockbook.Class
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Windows.Documents;
 
     using Newtonsoft.Json;
 
@@ -83,9 +82,14 @@ namespace Stockbook.Class
         /// <param name="transactionOrder">
         /// This is the transaction order that will be created and stored in the database
         /// </param>
-        public static void CreateTransaction(TransactionOrder transactionOrder)
+        /// <returns>
+        /// The <see cref="TransactionOrder"/> that has been created and stored.
+        /// </returns>
+        public static TransactionOrder CreateTransaction(TransactionOrder transactionOrder)
         {
-            var id = GenerateTransactionId() + " - " + transactionOrder.TransactionType.Replace(".", string.Empty).Replace("/", " ") + " - " + transactionOrder.DateTransaction.ToShortDateString().Replace(".", string.Empty).Replace("/", " ");
+            var id = GenerateTransactionId() + " - "
+                     + transactionOrder.TransactionType.Replace(".", string.Empty).Replace("/", " ") + " - "
+                     + transactionOrder.DateTransaction.ToShortDateString().Replace(".", string.Empty).Replace("/", " ");
             var path = TransactionFolder() + id + @".json";
             transactionOrder.Id = id;
             try
@@ -104,6 +108,8 @@ namespace Stockbook.Class
             {
                 Debug.WriteLine(e);
             }
+
+            return transactionOrder;
         }
 
         /// <summary>
@@ -118,13 +124,21 @@ namespace Stockbook.Class
         public static TransactionOrder GetTransaction(string transactionId)
         {
             var temp = TransactionFolder() + transactionId + @".json";
-            using (StreamReader sr = File.OpenText(temp))
+            try
             {
-                string transaction;
-                while ((transaction = sr.ReadLine()) != null)
+                using (StreamReader sr = File.OpenText(temp))
                 {
-                    return JsonConvert.DeserializeObject<TransactionOrder>(transaction);
+                    string transaction;
+                    while ((transaction = sr.ReadLine()) != null)
+                    {
+                        return JsonConvert.DeserializeObject<TransactionOrder>(transaction);
+                    }
                 }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
             }
 
             return null;
@@ -156,6 +170,25 @@ namespace Stockbook.Class
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Deletes all the transaction orders stored in the database
+        /// </summary>
+        /// <returns>
+        /// The <see cref="int"/> number of deleted items.
+        /// </returns>
+        public static int DeleteAllTransactions()
+        {
+            var prods = GetAllTransactions();
+            var count = 0;
+            foreach (var prod in prods)
+            {
+                DeleteTransaction(prod.Id);
+                count++;
+            }
+
+            return count;
         }
 
         /// <summary>
@@ -194,7 +227,7 @@ namespace Stockbook.Class
         /// <returns>
         /// It will return <see cref="bool"/>, true if its successful and false otherwise.
         /// </returns>
-        public bool EditTransaction(TransactionOrder transactionOrder)
+        public static bool EditTransaction(TransactionOrder transactionOrder)
         {
             DeleteTransaction(transactionOrder.Id);
             string fileName = TransactionFolder() + transactionOrder.Id + @".json";

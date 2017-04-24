@@ -230,7 +230,7 @@ namespace Stockbook.Windows
                 foreach (var trans in transList)
                 {
                     var prod = trans.Product;
-                    prod = DbClass.EtcHelper.BalanceCasePackPiece(trans,prod,_transType);
+                    prod = Product.BalanceCasePackPiece(trans,prod,_transType);
                     Product.EditProduct(prod);
                 }
 

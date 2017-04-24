@@ -4,7 +4,6 @@
 //   Website: www.franzbuenaventura.com 
 //   License: GNU Affero General Public License v3.0
 // </copyright>
-//  
 // <summary>
 //   Unit Test (NUnit) for Product Class in StockBook project. 
 // </summary>
@@ -29,12 +28,11 @@ namespace StockbookTests.Class
         [Test]
         public void CreateProductTest()
         {
-            var expectedResult = new Product { Name = "CreateProductTest" };
-            Product.CreateProduct(expectedResult);
-            var actualResult = Product.GetProduct(expectedResult.Id);
-            actualResult.CaseBalance = 0;
-            UnitTestingHelper.AssertPublicPropertiesEqual(expectedResult, actualResult);
-            Product.DeleteProduct(expectedResult.Id);
+            var actualResult = new Product { Name = "CreateProductTest" };
+            Product.CreateProduct(actualResult);
+            var expectedResult = Product.GetProduct(actualResult.Id);
+            UnitTestingHelper.AssertPublicPropertiesEqual(actualResult, expectedResult);
+            Product.DeleteProduct(actualResult.Id);
         }
 
         /// <summary>
@@ -43,23 +41,22 @@ namespace StockbookTests.Class
         [Test]
         public void GetProductTest()
         {
-            var expectedResult = new Product { Name = "GetProductTest" };
-            Product.CreateProduct(expectedResult);
-            var actualResult = Product.GetProduct(expectedResult.Id);
-            actualResult.CaseBalance = 0;
-            UnitTestingHelper.AssertPublicPropertiesEqual(expectedResult, actualResult);
-
+            var actualResult = new Product { Name = "GetProductTest" };
+            Product.CreateProduct(actualResult);
+            var expectedResult = Product.GetProduct(actualResult.Id);
+            UnitTestingHelper.AssertPublicPropertiesEqual(actualResult, expectedResult);
+            
             if (Product.GetProduct("DoesNotExist") != null)
             {
                 Assert.Fail("Product should not exist and must return null");
             }
 
-            if (Product.GetProduct(expectedResult.Id + " ") != null)
+            if (Product.GetProduct(actualResult.Id + " ") != null)
             {
                 Assert.Fail("Product must return null since the id is modified");
             }
 
-            Product.DeleteProduct(expectedResult.Id);
+            Product.DeleteProduct(actualResult.Id);
         }
 
         /// <summary>
@@ -68,10 +65,10 @@ namespace StockbookTests.Class
         [Test]
         public void DeleteProductTest()
         {
-            var expectedResult = new Product { Name = "DeleteProductTest" };
-            Product.CreateProduct(expectedResult);
-            Product.DeleteProduct(expectedResult.Id);
-            if (Product.GetProduct(expectedResult.Id) != null)
+            var actualResult = new Product { Name = "DeleteProductTest" };
+            Product.CreateProduct(actualResult);
+            Product.DeleteProduct(actualResult.Id);
+            if (Product.GetProduct(actualResult.Id) != null)
             {
                 Assert.Fail("Product should not exist and must return null");
             }
@@ -109,16 +106,11 @@ namespace StockbookTests.Class
         [Test]
         public void GetAllProductsTest()
         {
-            var actualResult = new Product { Name = "GetAllProductsTest" };
-            Product.CreateProduct(actualResult);
-            actualResult = new Product { Name = "GetAllProductsTest" };
-            Product.CreateProduct(actualResult);
-            actualResult = new Product { Name = "GetAllProductsTest" };
-            Product.CreateProduct(actualResult);
-            actualResult = new Product { Name = "GetAllProductsTest" };
-            Product.CreateProduct(actualResult);
-            actualResult = new Product { Name = "GetAllProductsTest" };
-            Product.CreateProduct(actualResult);
+            for (var i = 0; i < 5; i++)
+            {
+                var actualResult = new Product { Name = "GetAllProductsTest" };
+                Product.CreateProduct(actualResult);
+            }
 
             var prods = Product.GetAllProducts();
             var expectedResult = 5;
@@ -128,6 +120,60 @@ namespace StockbookTests.Class
             {
                 Product.DeleteProduct(temp.Id);
             }
+        }
+
+        /// <summary>
+        /// The balance case pack piece test on a Sales/Purchased transaction.
+        /// </summary>
+        [Test]
+        public void BalanceCasePackPieceTest()
+        {
+            var testProduct = new Product
+                                  {
+                                      Name = "BalanceCasePackPieceTest",
+                                      CaseBalance = 10,
+                                      PackBalance = 10,
+                                      PieceBalance = 10,
+                                      CaseToPacks = 5,
+                                      PackToPieces = 5
+                                  };
+            testProduct = Product.CreateProduct(testProduct);
+
+            var testTransaction = new Transaction { CaseTransact = 1, PackTransact = 20, PieceTransact = 20 };
+
+            var actualResult = Product.BalanceCasePackPiece(testTransaction, testProduct, "Purchased");
+            var expectedResult = new Product { CaseBalance = 18, PackBalance = 1, PieceBalance = 0 };
+
+            Assert.AreEqual(actualResult.CaseBalance, expectedResult.CaseBalance);
+            Assert.AreEqual(actualResult.PackBalance, expectedResult.PackBalance);
+            Assert.AreEqual(actualResult.PieceBalance, expectedResult.PieceBalance);
+
+
+            actualResult = Product.BalanceCasePackPiece(testTransaction, testProduct, "Sales");
+            expectedResult = new Product { CaseBalance = 12, PackBalance = 2, PieceBalance = 0 };
+
+            Assert.AreEqual(actualResult.CaseBalance, expectedResult.CaseBalance);
+            Assert.AreEqual(actualResult.PackBalance, expectedResult.PackBalance);
+            Assert.AreEqual(actualResult.PieceBalance, expectedResult.PieceBalance);
+
+            Product.DeleteProduct(testProduct.Id);
+        }
+
+        /// <summary>
+        /// Testing delete all products in database
+        /// </summary>
+        [Test]
+        public void DeleteAllProductsTest()
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                var actualResult = new Product { Name = "GetAllProductsTest" };
+                Product.CreateProduct(actualResult);
+            }
+
+            var prods = Product.GetAllProducts();
+            var expectedResult = Product.DeleteAllProducts();
+            Assert.AreEqual(expectedResult, prods.Count);
         }
     }
 }

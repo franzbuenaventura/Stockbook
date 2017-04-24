@@ -16,7 +16,9 @@ namespace Stockbook.Class
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-     
+
+    using Model;
+
     using Newtonsoft.Json;
 
     /// <summary>
@@ -50,7 +52,7 @@ namespace Stockbook.Class
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the prod code.
+        /// Gets or sets the product code.
         /// </summary>
         public string ProdCode { get; set; }
 
@@ -100,7 +102,10 @@ namespace Stockbook.Class
         /// <param name="prod">
         /// This is the product that will be created and stored in the database
         /// </param>
-        public static void CreateProduct(Product prod)
+        /// <returns>
+        /// The <see cref="Product"/> that was just been created.
+        /// </returns>
+        public static Product CreateProduct(Product prod)
         {
             // The final id of the product would be the Generated Product ID and Product name (Example: 1 - Koolaid)
             var tempName = GenerateProductId() + " - " + prod.Name.Replace(".", string.Empty).Replace("/", " ");
@@ -123,6 +128,8 @@ namespace Stockbook.Class
             {
                 Debug.WriteLine(e);
             }
+
+            return prod;
         }
 
         /// <summary>
@@ -185,6 +192,26 @@ namespace Stockbook.Class
             }
 
             return false;
+        }
+
+
+        /// <summary>
+        /// Deletes all the product stored in the database
+        /// </summary>
+        /// <returns>
+        /// The <see cref="int"/> number of deleted items.
+        /// </returns>
+        public static int DeleteAllProducts()
+        {
+            var prods = GetAllProducts();
+            var count = 0;
+            foreach (var prod in prods)
+            {
+                DeleteProduct(prod.Id);
+                count++;
+            }
+
+            return count;
         }
 
         /// <summary>
@@ -254,6 +281,72 @@ namespace Stockbook.Class
 
             return false;
         }
+
+        /// <summary>
+        /// The method updates the case/pack/piece of a stock after a transaction is made and returns the resulting product
+        /// </summary>
+        /// <param name="transaction">
+        /// The transaction that will modify the product stock balance
+        /// </param>
+        /// <param name="product">
+        /// The product that will be modified by transaction
+        /// </param>
+        /// <param name="transactionType">
+        /// The type of transaction to either add or subtract the balance of stock
+        /// </param>
+        /// <returns>
+        /// The <see cref="Product"/> that has been modified by transaction and got a balance case/pack/piece.
+        /// </returns>
+        public static Product BalanceCasePackPiece(Transaction transaction, Product product, string transactionType = "Sales")
+        {
+            if (product.PackToPieces > 0 && product.CaseToPacks > 0)
+            {
+                var tempTransaction = (transaction.CaseTransact * product.CaseToPacks + transaction.PackTransact) * product.PackToPieces + transaction.PieceTransact;
+                var tempTotalBalance = (product.CaseBalance * product.CaseToPacks + product.PackBalance) * product.PackToPieces + product.PieceBalance;
+                decimal finalBalance = 0;
+
+                switch (transactionType)
+                {
+                    case "Sales":
+                        {
+                             finalBalance = tempTotalBalance - tempTransaction;
+                        }
+
+                        break;
+                    case "Purchased":
+                        {
+                             finalBalance = tempTotalBalance + tempTransaction;
+                        }
+
+                        break;
+                }
+
+                product.PieceBalance = finalBalance % product.PackToPieces;
+                product.PackBalance = Math.Truncate(finalBalance / product.PackToPieces);
+                product.CaseBalance = Math.Truncate(product.PackBalance / product.CaseToPacks);
+                product.PackBalance = product.PackBalance % product.CaseToPacks;
+
+            }
+            else
+            {
+                switch (transactionType)
+                {
+                    case "Sales":
+                        product.CaseBalance -= transaction.CaseTransact;
+                        product.PackBalance -= transaction.PackTransact;
+                        product.PieceBalance -= transaction.PieceTransact;
+                        break;
+                    case "Purchased":
+                        product.CaseBalance += transaction.CaseTransact;
+                        product.PackBalance += transaction.PackTransact;
+                        product.PieceBalance += transaction.PieceTransact;
+                        break;
+                }
+            }
+
+            return product;
+        }
+
 
         /// <summary>
         /// Returns the absolute path of product folder and if it does not exist it will create a directory

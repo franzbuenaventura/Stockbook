@@ -5,6 +5,9 @@ namespace Stockbook.Model
 {
     using Stockbook.Class;
 
+    /// <summary>
+    /// The transaction.
+    /// </summary>
     public class Transaction
     {
         /// <summary>

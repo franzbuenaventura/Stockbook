@@ -127,7 +127,7 @@
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Sales/Purchased" Height="50.473" VerticalAlignment="Top" FontSize="16">
+                <TabItem Header="Sales/Purchased" Height="37" VerticalAlignment="Top" FontSize="16" Margin="0.333,0,0,0">
                     <Grid Background="#FFE5E5E5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50*"/>
@@ -262,6 +262,7 @@
                 </TabItem>
                 <!--<TabItem Header="Logs"></TabItem>-->
             </TabControl>
+            <Button x:Name="Setting" Content="Settings" Margin="1098,3,25,650" FontSize="20" Click="Setting_Click"/>
         </Grid>
     </Viewbox>
 </controls:MetroWindow>

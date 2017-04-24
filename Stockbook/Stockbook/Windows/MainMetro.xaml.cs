@@ -1,19 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using MahApps.Metro.Controls;
-using Stockbook.Class;
-using Stockbook.Model;
-using Stockbook.Products;
-using Stockbook.Windows;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MainMetro.xaml.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The main metro.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace Stockbook.Windows
-{ 
-    public partial class MainMetro : MetroWindow
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+
+    using Class;
+    using Model;
+    using Products;
+
+    /// <summary>
+    /// The main metro.
+    /// </summary>
+    public partial class MainMetro
     {
-        DbClass _db = new DbClass();
         public MainMetro()
         {
             InitializeComponent();
@@ -351,7 +361,7 @@ namespace Stockbook.Windows
         {
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
             var trans = Class.TransactionOrder.GetTransaction(transView.Id);
-            ExcelHelper.ExcelInvoice.ExportTransactionInvoice(trans);
+            ExcelExport.ExcelInvoice.ExportTransactionInvoice(trans);
         }
         private void DeleteTrans_Click(object sender, RoutedEventArgs e)
         {
@@ -363,11 +373,11 @@ namespace Stockbook.Windows
                         var prod = Product.GetProduct(trans.Product.Id);
                         if (transView.TransactionType == "Purchased")
                         {
-                        DbClass.EtcHelper.BalanceCasePackPiece(trans, prod, "Sales");
+                        Product.BalanceCasePackPiece(trans, prod, "Sales");
                         }
                         else
                     {
-                        DbClass.EtcHelper.BalanceCasePackPiece(trans, prod, "Purchased");
+                        Product.BalanceCasePackPiece(trans, prod, "Purchased");
                     }
                     Product.EditProduct(prod);
                 }
@@ -441,6 +451,12 @@ namespace Stockbook.Windows
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
             Details details = new Details(TransactionOrder.GetTransaction(transView.Id));
             details.Show();
+        }
+
+        private void Setting_Click(object sender, RoutedEventArgs e)
+        {
+            Settings settings = new Settings();
+            settings.Show();
         }
     }
 }

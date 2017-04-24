@@ -52,6 +52,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Class\ProductTests.cs" />
+    <Compile Include="Class\TransactionOrderTests.cs" />
     <Compile Include="Class\UnitTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
