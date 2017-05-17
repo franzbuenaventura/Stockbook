@@ -238,8 +238,8 @@ namespace Stockbook.Windows
                 {
                     if (window.Title == "Main")
                     {
-                        (window as MainMetro).InitializeTrans();
-                        (window as MainMetro).InitializeProducts();
+                        (window as MainMetro).InitializeTransView();
+                        (window as MainMetro).InitializeProductsView();
                     }
                 }
                 Close();

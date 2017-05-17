@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="Settings" Height="300" Width="300">
     <Grid>
-        <Button x:Name="ImportProducts" Content="Import Products" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Click="ImportProductsClick"/>
-        <Button x:Name="DeleteProducts" Content="Delete Products" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Width="113" Click="DeleteProductsClick"/>
-        <Button x:Name="ImportTransactions" Content="Import Transactions" HorizontalAlignment="Left" Margin="153,10,0,0" VerticalAlignment="Top" Width="130" Click="ImportTransactionsClick"/>
-        <Button x:Name="DeleteTransactions" Content="Import Transactions" HorizontalAlignment="Left" Margin="153,66,0,0" VerticalAlignment="Top" Width="130" Click="DeleteTransactionsClick"/>
+        <Button x:Name="RestoreDatabase" Content="Restore Database" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="113" Click="RestoreDatabaseClick" />
+        <Button x:Name="DeleteProducts" Content="Delete Products" HorizontalAlignment="Left" Margin="10,86,0,0" VerticalAlignment="Top" Width="113" Click="DeleteProductsClick"/>
+        <Button x:Name="DeleteTransactions" Content="Delete Transactions" HorizontalAlignment="Left" Margin="153,86,0,0" VerticalAlignment="Top" Width="130" Click="DeleteTransactionsClick"/>
+        <Button x:Name="BackupDatabase" Content="Backup Database" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Click="BackupDatabaseClick"  />
 
     </Grid>
 </controls:MetroWindow>

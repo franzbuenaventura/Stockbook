@@ -36,7 +36,7 @@ namespace Stockbook.Products
             {
                 var prod = new Product
                 {
-                    Id =  "",
+                    Id = "",
                     Location = LocationInput.Text.Trim(),
                     Category = CategoryInput.Text.Trim(),
                     Principal = PrincipalInput.Text.Trim(),
@@ -52,62 +52,55 @@ namespace Stockbook.Products
                     CaseToPacks = casePacks
                 };
                 Product.CreateProduct(prod);
-            
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window.Title == "Main")
-                {
-                    (window as MainMetro).InitializeProducts();
-                }
-                }
-                Close();
+                StockbookWindows.RefreshMainWindow();
+                this.Close();
             }
             else
             {
-                
-            string errorMessage = "";
-            if (!decimal.TryParse(CaseInput.Text.Trim(), out Case))
-            {
-                errorMessage = "Case Input has invalid characters or no value was given";
-            }
-            else if (!decimal.TryParse(PackInput.Text.Trim(), out pack))
-            {
-                errorMessage = "Pack Input has invalid characters or no value was given";
-            }
-            else if (!decimal.TryParse(PieceInput.Text.Trim(), out piece))
-            {
-                errorMessage = "Piece Input has invalid characters or no value was given";
-            }
-            else if (!decimal.TryParse(PackToPiece.Text.Trim(), out piece))
-            {
-                errorMessage = "Pack To Piece Input has invalid characters or no value was given";
-            }
-            else if (!decimal.TryParse(CaseToPack.Text.Trim(), out piece))
-            {
-                errorMessage = "Case To Pack Input has invalid characters or no value was given";
-            }
-            else if (string.IsNullOrWhiteSpace(LocationInput.Text))
-            {
-                errorMessage = "No value was given in Location Input";
-            }
-            else if (string.IsNullOrWhiteSpace(PrincipalInput.Text))
-            {
-                errorMessage = "No value was given in Principal Input";
-            }
-            else if (string.IsNullOrWhiteSpace(CategoryInput.Text))
-            {
-                errorMessage = "No value was given in Category Input";
-            }
-            else if (string.IsNullOrWhiteSpace(NameInput.Text))
-            {
-                errorMessage = "No value was given in Name Input";
-            }
-            else if (string.IsNullOrWhiteSpace(CodeInput.Text))
-            {
-                errorMessage = "No value was given in Code Input";
-            } 
-            MessageBox.Show("Error: " + errorMessage, "Error in Creating Transaction", MessageBoxButton.OK,
-                MessageBoxImage.Error);
+
+                string errorMessage = "";
+                if (!decimal.TryParse(CaseInput.Text.Trim(), out Case))
+                {
+                    errorMessage = "Case Input has invalid characters or no value was given";
+                }
+                else if (!decimal.TryParse(PackInput.Text.Trim(), out pack))
+                {
+                    errorMessage = "Pack Input has invalid characters or no value was given";
+                }
+                else if (!decimal.TryParse(PieceInput.Text.Trim(), out piece))
+                {
+                    errorMessage = "Piece Input has invalid characters or no value was given";
+                }
+                else if (!decimal.TryParse(PackToPiece.Text.Trim(), out piece))
+                {
+                    errorMessage = "Pack To Piece Input has invalid characters or no value was given";
+                }
+                else if (!decimal.TryParse(CaseToPack.Text.Trim(), out piece))
+                {
+                    errorMessage = "Case To Pack Input has invalid characters or no value was given";
+                }
+                else if (string.IsNullOrWhiteSpace(LocationInput.Text))
+                {
+                    errorMessage = "No value was given in Location Input";
+                }
+                else if (string.IsNullOrWhiteSpace(PrincipalInput.Text))
+                {
+                    errorMessage = "No value was given in Principal Input";
+                }
+                else if (string.IsNullOrWhiteSpace(CategoryInput.Text))
+                {
+                    errorMessage = "No value was given in Category Input";
+                }
+                else if (string.IsNullOrWhiteSpace(NameInput.Text))
+                {
+                    errorMessage = "No value was given in Name Input";
+                }
+                else if (string.IsNullOrWhiteSpace(CodeInput.Text))
+                {
+                    errorMessage = "No value was given in Code Input";
+                }
+                MessageBox.Show("Error: " + errorMessage, "Error in Creating Transaction", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 

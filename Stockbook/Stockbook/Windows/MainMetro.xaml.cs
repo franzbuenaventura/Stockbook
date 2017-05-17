@@ -11,6 +11,7 @@ namespace Stockbook.Windows
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -24,103 +25,180 @@ namespace Stockbook.Windows
     /// </summary>
     public partial class MainMetro
     {
+        // Private Instances
+
+        /// <summary>
+        /// The default value for location filter in products list view.
+        /// </summary>
+        private string locationFilterProduct = "All Location";
+
+        /// <summary>
+        /// The default value for principal filter in products list view.
+        /// </summary>
+        private string principalFilterProduct = "All Principal";
+
+        /// <summary>
+        /// The default value for category filter in products list view.
+        /// </summary>
+        private string categoryFilterProduct = "All Category";
+
+        /// <summary>
+        /// The default value for location filter in transactions list view.
+        /// </summary>
+        private string locationFilterTrans = "All Location";
+
+        /// <summary>
+        /// The default value for principal filter in transactions list view.
+        /// </summary>
+        private string principalFilterTrans = "All Principal";
+
+        /// <summary>
+        /// The default value for category filter in transactions list view.
+        /// </summary>
+        private string categoryFilterTrans = "All Category";
+
+        /// <summary>
+        /// The default value for transaction filter in transactions list view.
+        /// </summary>
+        private string transactionFilterTrans = "All Transactions";
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainMetro"/> class and initialize Product and Transaction views
+        /// </summary>
         public MainMetro()
         {
-            InitializeComponent();
-            InitializeProducts();
-            InitializeTrans();
+            this.InitializeComponent();
+            this.InitializeProductsView();
+            this.InitializeTransView();
         }
-        #region Inventory 
-        private string _locationFilter = "All Location";
-        private string _principalFilter = "All Principal";
-        private string _categoryFilter = "All Category";
-        public void InitializeProducts()
-        {
-            InitializeProductsFilter(_locationFilter,_principalFilter, _categoryFilter);
-            foreach (var dc in DataGrid.Columns)
-            {
-                if (dc.Header.ToString() == "Case Balance" || dc.Header.ToString() == "Pack Balance" || dc.Header.ToString() == "Piece Balance" || dc.Header.ToString() == "Case To Packs" || dc.Header.ToString() == "Packs To Pieces")
-                {
-                    DataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header).IsReadOnly = true;
-                }
-            }
-            foreach (var dc in DataGrid1.Columns)
-            {
-                if (dc.Header.ToString() == "Type" || dc.Header.ToString() == "Ref No." || dc.Header.ToString() == "Particular" || dc.Header.ToString() == "Principal List" || dc.Header.ToString() == "Prod Count" || dc.Header.ToString() == "Add Date")
-                {
-                    DataGrid1.Columns.FirstOrDefault(q => q.Header == dc.Header).IsReadOnly = true;
-                }
-            }
 
+        #region Inventory 
+
+        /// <summary>
+        /// Initialize products view by calling InitializeProductsFilter and making selected columns a read only
+        /// </summary>
+        public void InitializeProductsView()
+        {
+            this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
+            foreach (var dc in this.DataGrid.Columns)
+            {
+                if (dc.Header.ToString() == "Case Bal" || dc.Header.ToString() == "Pack Bal" || dc.Header.ToString() == "Piece Bal" 
+                    || dc.Header.ToString() == "Case To Packs" || dc.Header.ToString() == "Packs To Pieces")
+                {
+                    var firstOrDefault = this.DataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header);
+                    if (firstOrDefault != null)
+                    {
+                        firstOrDefault.IsReadOnly = true;
+                    }
+                }
+            }
         }
-        private void InitializeProductsFilter(string newValueLocation = "",string newValuePrincipal = "", string newValueCategory = "")
+
+        /// <summary>
+        ///  The initialize products filter determines the products that will be printed in View depending on the current filter parameters
+        /// </summary>
+        /// <param name="newValueLocation">
+        /// The parameter for a new location value or default empty if user did not put any
+        /// </param>
+        /// <param name="newValuePrincipal">
+        /// The parameter for a new principal value or default empty if user did not put any
+        /// </param>
+        /// <param name="newValueCategory">
+        /// The parameter for a new category value or default empty if user did not put any
+        /// </param>
+        private void InitializeProductsFilter(string newValueLocation = "", string newValuePrincipal = "", string newValueCategory = "")
         {
             var listProducts = Product.GetAllProducts();
-            LocationFilter.ItemsSource = null;
-            LocationFilter.Items.Clear();
-            LocationFilter.Items.Add("All Location");
-            PrincipalFilter.ItemsSource = null;
-            PrincipalFilter.Items.Clear();
-            PrincipalFilter.Items.Add("All Principal");
-            CategoryFilter.ItemsSource = null;
-            CategoryFilter.Items.Clear();
-            CategoryFilter.Items.Add("All Category");
-            DataGrid.CommitEdit();
+            this.LocationFilter.ItemsSource = null;
+            this.LocationFilter.Items.Clear();
+            this.LocationFilter.Items.Add("All Location");
+            this.PrincipalFilter.ItemsSource = null;
+            this.PrincipalFilter.Items.Clear();
+            this.PrincipalFilter.Items.Add("All Principal");
+            this.CategoryFilter.ItemsSource = null;
+            this.CategoryFilter.Items.Clear();
+            this.CategoryFilter.Items.Add("All Category");
+            this.DataGrid.CommitEdit();
             foreach (var prod in listProducts.Select(q => q.Location).Distinct())
             {
-                LocationFilter.Items.Add(prod);
+                this.LocationFilter.Items.Add(prod);
             }
-            if (_locationFilter != newValueLocation)
+
+            if (this.locationFilterProduct != newValueLocation)
             {
-                _principalFilter = "All Principal";
-                newValuePrincipal = _principalFilter;
-                _categoryFilter = "All Category";
-                newValueCategory = _categoryFilter;
+                this.principalFilterProduct = "All Principal";
+                newValuePrincipal = this.principalFilterProduct;
+                this.categoryFilterProduct = "All Category";
+                newValueCategory = this.categoryFilterProduct;
             }
-            if (_principalFilter != newValuePrincipal)
+
+            if (this.principalFilterProduct != newValuePrincipal)
             {
-                _categoryFilter = "All Category";
-                newValueCategory = _categoryFilter;
+                this.categoryFilterProduct = "All Category";
+                newValueCategory = this.categoryFilterProduct;
             }
 
             if (newValueLocation != "All Location")
             {
                 listProducts = listProducts.Where(q => q.Location == newValueLocation).ToList();
             }
+
             if (newValuePrincipal != "All Principal")
             {
                 listProducts = listProducts.Where(q => q.Principal == newValuePrincipal).ToList();
-            } 
+            }
+ 
             if (newValueCategory != "All Category")
             {
-                listProducts = listProducts.Where(q => q.Category== newValueCategory).ToList();
+                listProducts = listProducts.Where(q => q.Category == newValueCategory).ToList();
             }
+
             foreach (var prod in listProducts.Select(q => q.Principal).Distinct())
             {
-                PrincipalFilter.Items.Add(prod);
+                this.PrincipalFilter.Items.Add(prod);
             }
+
             foreach (var prod in listProducts.Select(q => q.Category).Distinct())
             {
-                CategoryFilter.Items.Add(prod);
+                this.CategoryFilter.Items.Add(prod);
             }
-            DataGrid.ItemsSource = listProducts.OrderBy(q=>q.Location).ToList();
-            LocationFilter.SelectedIndex = LocationFilter.Items.IndexOf(newValueLocation);
-            PrincipalFilter.SelectedIndex = PrincipalFilter.Items.IndexOf(newValuePrincipal);
-            CategoryFilter.SelectedIndex = CategoryFilter.Items.IndexOf(newValueCategory);
+
+            this.DataGrid.ItemsSource = listProducts.OrderBy(q => q.Location).ToList();
+            this.LocationFilter.SelectedIndex = this.LocationFilter.Items.IndexOf(newValueLocation);
+            this.PrincipalFilter.SelectedIndex = this.PrincipalFilter.Items.IndexOf(newValuePrincipal);
+            this.CategoryFilter.SelectedIndex = this.CategoryFilter.Items.IndexOf(newValueCategory);
         }
 
-        private void Add_Product_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The add product event button from Products View will create a new window for CreateProduct
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the cell, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the routed event arguments if applicable
+        /// </param>
+        private void AddProductClick(object sender, RoutedEventArgs e)
         { 
             CreateProduct create = new CreateProduct();
             create.Show();
         }
-          
-        private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+
+        /// <summary>
+        /// The data grid cell edit ending for product view columns that can be edited via cell editor
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the cell, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void DataGridCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         { 
-            Product prod = e.EditingElement.DataContext as Product;
-            var newValue = (e.EditingElement as TextBox).Text;
+            var prod = e.EditingElement.DataContext as Product;
+            var newValue = ((TextBox)e.EditingElement).Text;
             decimal temp = decimal.TryParse(newValue, out temp) ? temp : 0;
-            var oldValue = "";
+            var oldValue = string.Empty;
             switch (e.Column.Header.ToString())
             {
                 case "Principal":
@@ -143,227 +221,347 @@ namespace Stockbook.Windows
                     oldValue = prod.ProdCode;
                     prod.ProdCode = newValue;
                     break;
-                case "Case Value":
-                    oldValue = prod.CaseValue + "";
+                case "Case Val":
+                    oldValue = prod.CaseValue.ToString(CultureInfo.CurrentCulture);
                     prod.CaseValue = temp;
                     break;
-                case "Pack Value":
-                    oldValue = prod.PackValue + "";
+                case "Pack Val":
+                    oldValue = prod.PackValue.ToString(CultureInfo.CurrentCulture);
                     prod.PackValue = temp;
                     break;
-                case "Piece Value":
-                    oldValue = prod.PieceValue + "";
+                case "Piece Val":
+                    oldValue = prod.PieceValue.ToString(CultureInfo.CurrentCulture);
                     prod.PieceValue = temp;
-                    break;
-                case "Case Quantity":
-                    oldValue = prod.CaseBalance + "";
-                    prod.CaseBalance = temp;
-                    break;
-                case "Pack Quantity":
-                    oldValue = prod.PackBalance + "";
-                    prod.PackBalance = temp;
-                    break;
-                case "Piece Quantity":
-                    oldValue = prod.PieceBalance + "";
-                    prod.PieceBalance = temp;
-                    break;
-                //case "Case To Packs":
-                //    oldValue = prod.CaseToPacks + "";
-                //    prod.CaseToPacks = temp;
-                //    break;
-                //case "Pack To Pieces":
-                //    oldValue = prod.PackToPieces + "";
-                //    prod.PackToPieces = temp;
-                //    break;
+                    break;  
             }
+
             if (oldValue != newValue)
             {
-                if (MessageBox.Show("Are you want to Edit - " + prod.Name  +": "+ newValue+ " from "+oldValue+ " ?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (
+                    MessageBox.Show(
+                        "Are you want to Edit - " + prod.Name + " : " + " from " + oldValue + " to " + newValue + " ?",
+                        "Confirm",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    //prod = BalanceCaseToPackToPieces(e.Column.Header.ToString(), prod, oldValue);
                     Product.EditProduct(prod);
-                    DataGrid.CommitEdit();
-                    InitializeProducts();
+                    this.DataGrid.CommitEdit();
+                    this.InitializeProductsView();
                 }
             }
         }
 
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The delete click event if the user desire to delete a row, it will show a message box before deleting the value permanently
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the cell, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the routed event arguments if applicable
+        /// </param>
+        private void DeleteClick(object sender, RoutedEventArgs e)
         {
-            var prod = ((FrameworkElement)sender).DataContext as Product; 
-            if (MessageBox.Show("Are you want to Delete - " + prod.Name + "?" , "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            var prod = ((FrameworkElement)sender).DataContext as Product;
+            if (MessageBox.Show(
+                    "Are you want to Delete - " + prod.Name + "?",
+                    "Confirm",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Product.DeleteProduct(prod.Id);
             }
-            InitializeProducts();
+
+            this.InitializeProductsView();
         }
 
-        private void LocationFilter_DropDownClosed(object sender, EventArgs e)
+        /// <summary>
+        /// The location filter drop down closed event, will change the locationFilterProduct to the a new value
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void LocationFilterDropDownClosed(object sender, EventArgs e)
         {
+            var newValue = ((ComboBox)sender).SelectedItem;
+            if (newValue != null)
+            {
+                this.InitializeProductsFilter(newValue.ToString(), this.principalFilterProduct, this.categoryFilterProduct);
+                this.locationFilterProduct = newValue.ToString();   
+            }
+        }
 
-            var newValue = (sender as ComboBox).SelectedItem;
-            if (newValue != null)
-            {
-                InitializeProductsFilter(newValue.ToString(), _principalFilter, _categoryFilter);
-                _locationFilter = newValue.ToString();   
-            }
-        }
-        private void PrincipalFilter_DropDownClosed(object sender, EventArgs e)
+        /// <summary>
+        /// The principal filter drop down closed event, will change the locationFilterProduct to the a new value
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void PrincipalFilterDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeProductsFilter(_locationFilter, newValue.ToString(), _categoryFilter);
-                _principalFilter = newValue.ToString();
+                this.InitializeProductsFilter(this.locationFilterProduct, newValue.ToString(), this.categoryFilterProduct);
+                this.principalFilterProduct = newValue.ToString();
             }
         }
-        private void CategoryFilter_DropDownClosed(object sender, EventArgs e)
+
+        /// <summary>
+        /// The category filter drop down closed, will change the locationFilterProduct to the a new value
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void CategoryFilterDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeProductsFilter(_locationFilter, _principalFilter, newValue.ToString());
-                _categoryFilter = newValue.ToString();
+                this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, newValue.ToString());
+                this.categoryFilterProduct = newValue.ToString();
             }
         }
-        private void Export_to_Excel_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// The export to excel click, from Products View will create a new window for ExportExcel
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void ExportToExcelClick(object sender, RoutedEventArgs e)
         {
             ExportExcel export = new ExportExcel("Product");
             export.Show();
         }
+
         #endregion
 
         #region Transaction
 
-        private string _locationFilterTrans = "All Location";
-        private string _principalFilterTrans = "All Principal";
-        private string _categoryFilterTrans = "All Category";
-        private string _transactionFilterTrans = "All Transactions";
+        /// <summary>
+        /// Initialize transaction view by calling InitializeTransFilter and making selected columns a read only
+        /// </summary>
+        public void InitializeTransView()
+        {
+            this.TransactionFilterTrans.Items.Add("All Transactions");
+            this.TransactionFilterTrans.Items.Add("Sales");
+            this.TransactionFilterTrans.Items.Add("Purchased");
+            this.InitializeTransFilter("All Transactions", this.locationFilterTrans, this.principalFilterTrans, this.categoryFilterTrans);
 
-        public void InitializeTrans()
-        {
-            TransactionFilterTrans.Items.Add("All Transactions");
-            TransactionFilterTrans.Items.Add("Sales");
-            TransactionFilterTrans.Items.Add("Purchased");
-            InitializeTransFilter("All Transactions", _locationFilterTrans,_principalFilterTrans, _categoryFilterTrans);
+            foreach (var dc in this.TransactionDataGrid.Columns)
+            {
+                if (dc.Header.ToString() == "Type" || dc.Header.ToString() == "Ref No." || dc.Header.ToString() == "Particular" || dc.Header.ToString() == "Salesman" ||
+                    dc.Header.ToString() == "Principal List" || dc.Header.ToString() == "Prod Count" || dc.Header.ToString() == "Add Date")
+                {
+                    var firstOrDefault = this.TransactionDataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header);
+                    if (firstOrDefault != null)
+                    {
+                        firstOrDefault.IsReadOnly = true;
+                    }
+                }
+            }
         }
-        public void InitializeTransFilter(string newValueTransaction ="", string newValueLocation = "", string newValuePrincipal = "", string newValueCategory = "")
+
+        /// <summary>
+        /// The initialize transaction filter determines the products that will be printed in View depending on the current filter parameters
+        /// </summary>
+        /// <param name="newValueTransaction">
+        /// The parameter for a new transaction value or default empty if user did not put any
+        /// </param>
+        /// <param name="newValueLocation">
+        /// The parameter for a new location value or default empty if user did not put any
+        /// </param>
+        /// <param name="newValuePrincipal">
+        /// The parameter for a new principal value or default empty if user did not put any
+        /// </param>
+        /// <param name="newValueCategory">
+        /// The parameter for a new category value or default empty if user did not put any
+        /// </param>
+        public void InitializeTransFilter(
+            string newValueTransaction = "",
+            string newValueLocation = "",
+            string newValuePrincipal = "",
+            string newValueCategory = "")
         {
-            var listTrans = Class.TransactionOrder.GetAllTransactions();
-            //List<Transaction> listProductsInTrans =
-            //    listTrans.SelectMany(q => q.Transactions).ToList();
-            //var listProd = listProductsInTrans.GroupBy(q => q.Product.Name).Select(s=>s.First()).Select(q=>q.Product).ToList();
-            LocationFilterTrans.ItemsSource = null;
-            LocationFilterTrans.Items.Clear();
-            LocationFilterTrans.Items.Add("All Location");
-            PrincipalFilterTrans.ItemsSource = null;
-            PrincipalFilterTrans.Items.Clear();
-            PrincipalFilterTrans.Items.Add("All Principal");
-            CategoryFilterTrans.ItemsSource = null;
-            CategoryFilterTrans.Items.Clear();
-            CategoryFilterTrans.Items.Add("All Category");
+            var listTrans = TransactionOrder.GetAllTransactions();
+
+            this.LocationFilterTrans.ItemsSource = null;
+            this.LocationFilterTrans.Items.Clear();
+            this.LocationFilterTrans.Items.Add("All Location");
+            this.PrincipalFilterTrans.ItemsSource = null;
+            this.PrincipalFilterTrans.Items.Clear();
+            this.PrincipalFilterTrans.Items.Add("All Principal");
+            this.CategoryFilterTrans.ItemsSource = null;
+            this.CategoryFilterTrans.Items.Clear();
+            this.CategoryFilterTrans.Items.Add("All Category");
 
             if (newValueTransaction != "All Transactions")
             {
                 listTrans = listTrans.Where(q => q.TransactionType == newValueTransaction).ToList();
             }
-            if (_locationFilterTrans != newValueLocation)
+
+            if (this.locationFilterTrans != newValueLocation)
             {
-                _principalFilterTrans = "All Principal";
-                newValuePrincipal = _principalFilterTrans;
-                _categoryFilterTrans = "All Category";
-                newValueCategory = _categoryFilterTrans;
-            }
-            if (_principalFilterTrans != newValuePrincipal)
-            {
-                _categoryFilterTrans = "All Category";
-                newValueCategory = _categoryFilterTrans;
-            }
-            foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Location).Distinct())
-            {
-                LocationFilterTrans.Items.Add(prod);
-            }
-            if (newValueLocation != "All Location")
-            {
-                listTrans = listTrans.Where(q => q.Transactions.Exists(s=>s.Product.Location == newValueLocation)).ToList();
-            }
-            foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Principal).Distinct())
-            {
-                PrincipalFilterTrans.Items.Add(prod);
-            }
-            if (newValuePrincipal != "All Principal")
-            {
-                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Principal == newValuePrincipal)).ToList();
-            }
-            foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Category).Distinct())
-            {
-                CategoryFilterTrans.Items.Add(prod);
-            }
-            if (newValueCategory != "All Category")
-            {
-                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Category == newValueCategory)).ToList();
-            }
-            if (!string.IsNullOrWhiteSpace(startDate.Text))
-            {
-                listTrans = listTrans.Where(q => q.DateTransaction >= startDate.SelectedDate).ToList();
-            }
-            if (!string.IsNullOrWhiteSpace(endDate.Text))
-            {
-                listTrans = listTrans.Where(q => q.DateTransaction <= endDate.SelectedDate).ToList();
+                this.principalFilterTrans = "All Principal";
+                newValuePrincipal = this.principalFilterTrans;
+                this.categoryFilterTrans = "All Category";
+                newValueCategory = this.categoryFilterTrans;
             }
 
-            var transView = new List<TransactionView>(); 
+            if (this.principalFilterTrans != newValuePrincipal)
+            {
+                this.categoryFilterTrans = "All Category";
+                newValueCategory = this.categoryFilterTrans;
+            }
+
+            foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Location).Distinct())
+            {
+                this.LocationFilterTrans.Items.Add(prod);
+            }
+
+            if (newValueLocation != "All Location")
+            {
+                listTrans =
+                    listTrans.Where(q => q.Transactions.Exists(s => s.Product.Location == newValueLocation)).ToList();
+            }
+
+            foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Principal).Distinct())
+            {
+                this.PrincipalFilterTrans.Items.Add(prod);
+            }
+
+            if (newValuePrincipal != "All Principal")
+            {
+                listTrans =
+                    listTrans.Where(q => q.Transactions.Exists(s => s.Product.Principal == newValuePrincipal)).ToList();
+            }
+
+            foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Category).Distinct())
+            {
+                this.CategoryFilterTrans.Items.Add(prod);
+            }
+
+            if (newValueCategory != "All Category")
+            {
+                listTrans =
+                    listTrans.Where(q => q.Transactions.Exists(s => s.Product.Category == newValueCategory)).ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.startDate.Text))
+            {
+                listTrans = listTrans.Where(q => q.DateTransaction >= this.startDate.SelectedDate).ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.endDate.Text))
+            {
+                listTrans = listTrans.Where(q => q.DateTransaction <= this.endDate.SelectedDate).ToList();
+            }
+
+            var transView = new List<TransactionView>();
             foreach (var tran in listTrans)
             {
                 var temp = new TransactionView
-                {
-                    Id = tran.Id,
-                    TransactionType = tran.TransactionType,
-                    DateTransaction = tran.DateTransaction,
-                    Particular = tran.Particular,
-                    PrincipalList = string.Join(",", tran.Transactions.Select(q => q.Product).ToList().Select(q => q.Principal).Distinct().ToList()),
-                    RefNo = tran.RefNo,
-                    ItemCount = tran.Transactions.Count,
-                    SalesmanName = tran.SalesmanName,
-                    Transactions = tran.Transactions
-                };
+                               {
+                                   Id = tran.Id,
+                                   TransactionType = tran.TransactionType,
+                                   DateTransaction = tran.DateTransaction,
+                                   Particular = tran.Particular,
+                                   PrincipalList =
+                                       string.Join(
+                                           ",",
+                                           tran.Transactions.Select(q => q.Product)
+                                               .ToList()
+                                               .Select(q => q.Principal)
+                                               .Distinct()
+                                               .ToList()),
+                                   RefNo = tran.RefNo,
+                                   ItemCount = tran.Transactions.Count,
+                                   SalesmanName = tran.SalesmanName,
+                                   Transactions = tran.Transactions
+                               };
                 transView.Add(temp);
             }
-             DataGrid1.ItemsSource = transView;
-            _transactionFilterTrans = newValueTransaction;
-            _locationFilterTrans = newValueLocation;
-            _principalFilterTrans = newValuePrincipal;
-            _categoryFilterTrans = newValueCategory; 
-            TransactionFilterTrans.SelectedIndex = TransactionFilterTrans.Items.IndexOf(newValueTransaction);
-            LocationFilterTrans.SelectedIndex = LocationFilterTrans.Items.IndexOf(newValueLocation);
-            PrincipalFilterTrans.SelectedIndex = PrincipalFilterTrans.Items.IndexOf(newValuePrincipal);
-            CategoryFilterTrans.SelectedIndex = CategoryFilterTrans.Items.IndexOf(newValueCategory);
+
+            this.TransactionDataGrid.ItemsSource = transView;
+            this.transactionFilterTrans = newValueTransaction;
+            this.locationFilterTrans = newValueLocation;
+            this.principalFilterTrans = newValuePrincipal;
+            this.categoryFilterTrans = newValueCategory;
+            this.TransactionFilterTrans.SelectedIndex = this.TransactionFilterTrans.Items.IndexOf(newValueTransaction);
+            this.LocationFilterTrans.SelectedIndex = this.LocationFilterTrans.Items.IndexOf(newValueLocation);
+            this.PrincipalFilterTrans.SelectedIndex = this.PrincipalFilterTrans.Items.IndexOf(newValuePrincipal);
+            this.CategoryFilterTrans.SelectedIndex = this.CategoryFilterTrans.Items.IndexOf(newValueCategory);
         }
 
-        private void AddSales_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The add sales click, from Transaction View will create a new window for CreateSalesPurchased
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void AddSalesClick(object sender, RoutedEventArgs e)
         {  
             CreateSalesPurchased sales = new CreateSalesPurchased("Sales");
             sales.Show();
         }
 
-        private void AddPurchased_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The add purchased click, from Transaction View will create a new window for CreateSalesPurchased
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void AddPurchasedClick(object sender, RoutedEventArgs e)
         {  
             CreateSalesPurchased purchased = new CreateSalesPurchased("Purchased");
             purchased.Show();
         }
 
-        private void DataGrid1_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-           
-        }
-
-        private void ExportTrans_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The export transaction click, from Transaction View will create a window to export the invoice of a transaction 
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void ExportTransClick(object sender, RoutedEventArgs e)
         {
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
-            var trans = Class.TransactionOrder.GetTransaction(transView.Id);
+            var trans = TransactionOrder.GetTransaction(transView.Id);
             ExcelExport.ExcelInvoice.ExportTransactionInvoice(trans);
         }
-        private void DeleteTrans_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// The delete transaction click, from Transaction View will delete the row of transaction with a message box before it goes through
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void DeleteTransClick(object sender, RoutedEventArgs e)
         {
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
             if (MessageBox.Show("Are you want to Delete - " + transView.RefNo + "?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -379,81 +577,168 @@ namespace Stockbook.Windows
                     {
                         Product.BalanceCasePackPiece(trans, prod, "Purchased");
                     }
+
                     Product.EditProduct(prod);
                 }
-                Class.TransactionOrder.DeleteTransaction(transView.Id);
-            }
-            InitializeTrans();
-            InitializeProducts();
 
+                TransactionOrder.DeleteTransaction(transView.Id);
+            }
+
+            this.InitializeTransView();
+            this.InitializeProductsView();
         }
-        private void ExportGroup_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// The export group click, from Transaction View will create a new window for ExportExcel
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void ExportGroupClick(object sender, RoutedEventArgs e)
         {
             ExportExcel export = new ExportExcel("Transaction");
             export.Show();
         }
+
         #endregion
 
-        private void TransactionFilterTrans_DropDownClosed(object sender, EventArgs e)
+        /// <summary>
+        /// The transaction filter transaction drop down closed, from Transaction View will check if a new value is selected and will initialize again
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void TransactionFilterTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransFilter(newValue.ToString(), _locationFilterTrans, _principalFilterTrans, _categoryFilterTrans);
+                this.InitializeTransFilter(newValue.ToString(), this.locationFilterTrans, this.principalFilterTrans, this.categoryFilterTrans);
             }
         }
 
-        private void LocationFilterTrans_DropDownClosed(object sender, EventArgs e)
+        /// <summary>
+        /// The location filter trans drop down closed, from Transaction View will check if a new value is selected and will initialize again
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void LocationFilterTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransFilter(_transactionFilterTrans, newValue.ToString(), _principalFilterTrans, _categoryFilterTrans);
+                this.InitializeTransFilter(this.transactionFilterTrans, newValue.ToString(), this.principalFilterTrans, this.categoryFilterTrans);
             }
         }
 
-        private void PrincipalFilterTrans_DropDownClosed(object sender, EventArgs e)
+        /// <summary>
+        /// The principal filter trans drop down closed, from Transaction View will check if a new value is selected and will initialize again
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void PrincipalFilterTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransFilter(_transactionFilterTrans, _locationFilterTrans, newValue.ToString(), _categoryFilterTrans);
-            }
-        }
-        private void CategoryFilterTrans_DropDownClosed(object sender, EventArgs e)
-        {
-            var newValue = (sender as ComboBox).SelectedItem;
-            if (newValue != null)
-            {
-                InitializeTransFilter(_transactionFilterTrans, _locationFilterTrans, _principalFilterTrans, newValue.ToString());
-            }
-        }
-        private void startDate_CalendarClosed(object sender, RoutedEventArgs e)
-        {
-            var newValue = (sender as DatePicker).Text;
-            if (newValue != null)
-            {
-                InitializeTransFilter(_transactionFilterTrans, _locationFilterTrans, _principalFilter, _categoryFilterTrans);
+                this.InitializeTransFilter(this.transactionFilterTrans, this.locationFilterTrans, newValue.ToString(), this.categoryFilterTrans);
             }
         }
 
-        private void endDate_CalendarClosed(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The category filter trans drop down closed, from Transaction View will check if a new value is selected and will initialize again
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void CategoryFilterTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as DatePicker).Text;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransFilter(_transactionFilterTrans, _locationFilterTrans, _principalFilter, _categoryFilterTrans);
+                this.InitializeTransFilter(this.transactionFilterTrans, this.locationFilterTrans, this.principalFilterTrans, newValue.ToString());
             }
         }
 
-        private void DetailsTrans_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The start date calendar closed, from Transaction View will check if a new value is selected and will initialize again
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void StartDateCalendarClosed(object sender, RoutedEventArgs e)
+        {
+            var newValue = ((DatePicker)sender).Text;
+            if (newValue != null)
+            {
+                this.InitializeTransFilter(this.transactionFilterTrans, this.locationFilterTrans, this.principalFilterProduct, this.categoryFilterTrans);
+            }
+        }
+
+        /// <summary>
+        /// The end date calendar closed, from Transaction View will check if a new value is selected and will initialize again
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void EndDateCalendarClosed(object sender, RoutedEventArgs e)
+        {
+            var newValue = ((DatePicker)sender).Text;
+            if (newValue != null)
+            {
+                this.InitializeTransFilter(this.transactionFilterTrans, this.locationFilterTrans, this.principalFilterProduct, this.categoryFilterTrans);
+            }
+        }
+
+        /// <summary>
+        /// The details transaction click, from Transaction View will check if a new value is selected and will initialize again
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void DetailsTransClick(object sender, RoutedEventArgs e)
         {
             var transView = ((FrameworkElement)sender).DataContext as TransactionView;
             Details details = new Details(TransactionOrder.GetTransaction(transView.Id));
             details.Show();
         }
 
-        private void Setting_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The Settings click, from Transaction View will create a new window for Settings
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The e is the event arguments if applicable
+        /// </param>
+        private void SettingClick(object sender, RoutedEventArgs e)
         {
             Settings settings = new Settings();
             settings.Show();
