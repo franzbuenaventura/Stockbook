@@ -1,9 +1,12 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExcelExport.cs" company="">
-//   
+// <copyright file="ExcelExport.cs" company="Franz Buenaventura">
+//   Author: Franz Justin Buenaventura
+//   Website: www.franzbuenaventura.com 
+//   License: GNU Affero General Public License v3.0
 // </copyright>
+//  
 // <summary>
-//   Defines the ExcelExport type.
+//   The ExcelExport Class that contains the logic fo excel export in StockBook project.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 

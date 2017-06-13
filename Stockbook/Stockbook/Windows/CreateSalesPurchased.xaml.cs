@@ -1,80 +1,115 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using MahApps.Metro.Controls;
-using Stockbook.Class;
-using Stockbook.Model;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CreateSalesPurchased.xaml.cs" company="Franz Buenaventura">
+//   Author: Franz Justin Buenaventura
+//   Website: www.franzbuenaventura.com 
+//   License: GNU Affero General Public License v3.0
+// </copyright>
+//  
+// <summary>
+//   The CreateSalesPurchased Class that contains the backend for CreateSalesPurchased Window
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace Stockbook.Windows
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+
+    using Class;
+    using Model;
+
     /// <summary>
-    /// Interaction logic for CreateSalesPurchased.xaml
+    /// Interaction logic for CreateSalesPurchased
     /// </summary>
-    public partial class CreateSalesPurchased : MetroWindow
+    public partial class CreateSalesPurchased
     {
-        private List<Transaction> transList = new List<Transaction>();
-        private readonly string _transType;
-        private string _principalFilter = string.Empty;
-        private string _categoryFilter = string.Empty;
-        private string _locationFilter = string.Empty;
-        private string _nameFilter = string.Empty;
+        /// <summary>
+        /// The transaction list that are inputted by user
+        /// </summary>
+        private readonly List<Transaction> transList = new List<Transaction>();
+
+        /// <summary>
+        /// The transaction type of the window
+        /// </summary>
+        private readonly string transType;
+
+        /// <summary>
+        /// The principal filter of the window
+        /// </summary>
+        private string principalFilter = "All Principal";
+
+        /// <summary>
+        /// The category filter of the window
+        /// </summary>
+        private string categoryFilter = "All Category";
+
+        /// <summary>
+        /// The location filter of the window
+        /// </summary>
+        private string locationFilter = "All Location";
+
+        /// <summary>
+        /// The name filter of the window
+        /// </summary>
+        private string nameFilter = string.Empty;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateSalesPurchased"/> class and initialize transaction filters
+        /// </summary>
+        /// <param name="transType">
+        /// The type of transaction (Sales or Purchased)
+        /// </param>
         public CreateSalesPurchased(string transType)
         {
-            InitializeComponent();
-            _transType = transType;
-            Title.Text = "Add " + transType;
-            InitializeTransactionFilter();
+            this.InitializeComponent();
+            this.transType = transType;
+            this.Title.Text = "Add " + transType;
+            this.InitializeTransactionFilter(this.locationFilter, this.principalFilter, this.categoryFilter);
 
-            foreach (var dc in dataGrid.Columns)
+            foreach (var dc in this.dataGrid.Columns)
             {
                 if (dc.Header.ToString() == "Case" || dc.Header.ToString() == "Pack" || dc.Header.ToString() == "Piece" || dc.Header.ToString() == "Product")
                 {
-                    dataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header).IsReadOnly = true;
+                    this.dataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header).IsReadOnly = true;
                 }
             }
         }
 
-        //private void InitializeSalesPurchased()
-        //{
-        //    var listProducts = _db.GetAllProducts();
-        //    foreach (var item in listProducts.Select(q => q.Principal).Distinct())
-        //    {
-        //        PrincipalInput.Items.Add(item);
-        //    }
-        //    foreach (var item in listProducts.Select(q => q.Category).Distinct())
-        //    {
-        //        CategoryInput.Items.Add(item);
-        //    }
-        //    foreach (var item in listProducts.Select(q => q.Name).Distinct())
-        //    {
-        //        NameInput.Items.Add(item);
-        //    }
-        //    foreach (var item in listProducts.Select(q => q.Location).Distinct())
-        //    {
-        //        LocationInput.Items.Add(item);
-        //    }
-
-        //}
+        /// <summary>
+        /// The method will initialize the data grid by the current transaction list
+        /// </summary>
         private void InitializeDataGrid()
         {
-            dataGrid.Items.Clear();
-            foreach (var trans in transList)
+            this.dataGrid.Items.Clear();
+            foreach (var trans in this.transList)
             {
-                dataGrid.Items.Add(trans);
+                this.dataGrid.Items.Add(trans);
             }
         }
-        private void SubmitCreate_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// The submit create click event will add products for the transaction
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void SubmitCreateClick(object sender, RoutedEventArgs e)
         {
             var prod =
                 Product.GetAllProducts()
                     .FirstOrDefault(
                         q =>
-                            q.Name == NameInput.Text && q.Principal == PrincipalInput.Text &&
-                            q.Category == CategoryInput.Text);
-            decimal Case = 1, pack =1, piece =1;
-            if (decimal.TryParse(CaseInput.Text.Trim(), out Case) && decimal.TryParse(PackInput.Text.Trim(), out pack) && decimal.TryParse(PieceInput.Text.Trim(), out piece) && prod != null && !transList.Exists(q=>q.Product.Id == prod.Id))
+                            q.Name == this.NameInput.Text);
+            decimal Case = 1, pack = 1, piece = 1;
+            if (decimal.TryParse(this.CaseInput.Text.Trim(), out Case) && decimal.TryParse(this.PackInput.Text.Trim(), out pack)
+                && decimal.TryParse(this.PieceInput.Text.Trim(), out piece) && prod != null
+                && !this.transList.Exists(q => q.Product.Id == prod.Id))
             {
                 var trans = new Transaction
                 {
@@ -83,25 +118,25 @@ namespace Stockbook.Windows
                     PackTransact = pack,
                     PieceTransact = piece
                 };
-                transList.Add(trans);
-                CaseInput.Text = "0";
-                PackInput.Text = "0";
-                PieceInput.Text = "0";
-                NameInput.Text = string.Empty;
-                InitializeDataGrid();
+                this.transList.Add(trans);
+                this.CaseInput.Text = "0";
+                this.PackInput.Text = "0";
+                this.PieceInput.Text = "0";
+                this.NameInput.Text = string.Empty;
+                this.InitializeDataGrid();
             }
             else
             {
                 string errorMessage = string.Empty;
-                if (!decimal.TryParse(CaseInput.Text.Trim(), out Case))
+                if (!decimal.TryParse(this.CaseInput.Text.Trim(), out Case))
                 {
                     errorMessage = "Case Input has invalid characters or no value was given";
                 }
-                else if (!decimal.TryParse(PackInput.Text.Trim(), out pack))
+                else if (!decimal.TryParse(this.PackInput.Text.Trim(), out pack))
                 {
                     errorMessage = "Pack Input has invalid characters or no value was given";
                 }
-                else if (!decimal.TryParse(PieceInput.Text.Trim(), out piece))
+                else if (!decimal.TryParse(this.PieceInput.Text.Trim(), out piece))
                 {
                     errorMessage = "Piece Input has invalid characters or no value was given";
                 }
@@ -109,128 +144,222 @@ namespace Stockbook.Windows
                 {
                     errorMessage = "No product was chosen";
                 }
-                else if (transList.Exists(q => q.Product.Id == prod.Id))
+                else if (this.transList.Exists(q => q.Product.Id == prod.Id))
                 {
                     errorMessage = "The product was added already";
                 }
-                //else if (string.IsNullOrWhiteSpace(RefIdInput.Text))
-                //{
-                //    errorMessage = "No value was given in Ref No. Input";
-                //}
-                //else if (string.IsNullOrWhiteSpace(ParticularInput.Text))
-                //{
-                //    errorMessage = "No value was given in Particual Input";
-                //}
-                MessageBox.Show("Error: " + errorMessage, "Error in Creating Transaction", MessageBoxButton.OK,
+                 
+                MessageBox.Show(
+                    "Error: " + errorMessage,
+                    "Error in Creating Transaction",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
-          
         }
-        private void InitializeTransactionFilter(string newValueLocation = "", string newValuePrincipal = "", string newValueCategory = "",  string newValueName="")
+
+        /// <summary>
+        /// The method will initialize the transaction filter on the current window
+        /// </summary>
+        /// <param name="newValueLocation">
+        /// The new value location if user inputted
+        /// </param>
+        /// <param name="newValuePrincipal">
+        /// The new value principal if user inputted
+        /// </param>
+        /// <param name="newValueCategory">
+        /// The new value category if user inputted
+        /// </param>
+        /// <param name="newValueName">
+        /// The new value name if user inputted
+        /// </param>
+        private void InitializeTransactionFilter(
+            string newValueLocation = "",
+            string newValuePrincipal = "",
+            string newValueCategory = "",
+            string newValueName = "")
         {
-            var listProducts = Product.GetAllProducts();
-            LocationInput.Items.Clear();
-            PrincipalInput.Items.Clear();
-            CategoryInput.Items.Clear();
-            NameInput.Items.Clear();
-            foreach (var item in listProducts.Select(q => q.Location).Distinct())
+            var listProducts = Product.GetAllProducts(); 
+
+            this.LocationInput.ItemsSource = null;
+            this.LocationInput.Items.Clear();
+            this.LocationInput.Items.Add("All Location");
+            this.PrincipalInput.ItemsSource = null;
+            this.PrincipalInput.Items.Clear();
+            this.PrincipalInput.Items.Add("All Principal");
+            this.CategoryInput.ItemsSource = null;
+            this.CategoryInput.Items.Clear();
+            this.CategoryInput.Items.Add("All Category");
+            this.NameInput.ItemsSource = null;
+            this.NameInput.Items.Clear();
+
+
+            foreach (var prod in listProducts.Select(q => q.Location).Distinct())
             {
-                LocationInput.Items.Add(item);
+                this.LocationInput.Items.Add(prod);
             }
-            if (!String.IsNullOrWhiteSpace(newValueLocation))
+
+            if (this.locationFilter != newValueLocation)
+            {
+                this.principalFilter = "All Principal";
+                newValuePrincipal = this.principalFilter;
+                this.categoryFilter = "All Category";
+                newValueCategory = this.categoryFilter;
+            }
+
+            if (this.principalFilter != newValuePrincipal)
+            {
+                this.categoryFilter = "All Category";
+                newValueCategory = this.categoryFilter;
+            }
+
+            if (newValueLocation != "All Location")
             {
                 listProducts = listProducts.Where(q => q.Location == newValueLocation).ToList();
-                LocationInput.SelectedIndex = LocationInput.Items.IndexOf(newValueLocation);
-            } 
-            if (!String.IsNullOrWhiteSpace(newValueLocation))
-            { 
-                foreach (var item in listProducts.Select(q => q.Principal).Distinct())
-                {
-                    PrincipalInput.Items.Add(item);
-                }
-                PrincipalInput.SelectedIndex = PrincipalInput.Items.IndexOf(newValuePrincipal);
             }
-            if (!String.IsNullOrWhiteSpace(newValuePrincipal))
+
+
+            foreach (var prod in listProducts.Select(q => q.Principal).Distinct())
+            {
+                this.PrincipalInput.Items.Add(prod);
+            }
+
+            if (newValuePrincipal != "All Principal")
             {
                 listProducts = listProducts.Where(q => q.Principal == newValuePrincipal).ToList();
-                foreach (var item in listProducts.Select(q => q.Category).Distinct())
-                {
-                    CategoryInput.Items.Add(item);
-                }
-                CategoryInput.SelectedIndex = CategoryInput.Items.IndexOf(newValueCategory);
             }
-            if (!String.IsNullOrWhiteSpace(newValueCategory))
+
+            foreach (var prod in listProducts.Select(q => q.Category).Distinct())
+            {
+                this.CategoryInput.Items.Add(prod);
+            }
+
+            if (newValueCategory != "All Category")
             {
                 listProducts = listProducts.Where(q => q.Category == newValueCategory).ToList();
-                foreach (var item in listProducts.Select(q => q.Name).Distinct())
-                {
-                    NameInput.Items.Add(item);
-                }
-                NameInput.SelectedIndex = NameInput.Items.IndexOf(newValueName);
             }
-            _locationFilter = newValueLocation;
-            _principalFilter = newValuePrincipal;
-            _categoryFilter = newValueCategory;
-            _nameFilter = newValueName;
+
+
+            this.NameInput.ItemsSource = listProducts.Select(q => q.Name).ToList();
+            this.LocationInput.SelectedIndex = this.LocationInput.Items.IndexOf(newValueLocation);
+            this.PrincipalInput.SelectedIndex = this.PrincipalInput.Items.IndexOf(newValuePrincipal);
+            this.CategoryInput.SelectedIndex = this.CategoryInput.Items.IndexOf(newValueCategory);
+            this.NameInput.SelectedIndex = this.NameInput.Items.IndexOf(newValueName); 
         }
 
-        private void LocationInput_DropDownClosed(object sender, EventArgs e)
+        /// <summary>
+        /// The location input drop down closed event will filter out the products by location
+        /// </summary>  
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Data Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void LocationInputDropDownClosed(object sender, EventArgs e)
         {
-            var value = (sender as ComboBox).SelectedItem;
+            var value = ((ComboBox)sender).SelectedItem;
             if (value != null)
             {
-            InitializeTransactionFilter(value.ToString(), _principalFilter,_categoryFilter,_nameFilter);
+                this.InitializeTransactionFilter(value.ToString(), this.principalFilter, this.categoryFilter, this.nameFilter);
+                this.locationFilter = value.ToString();
+
             }
         }
 
-        private void PrincipalInput_DropDownClosed(object sender, EventArgs e)
+        /// <summary>
+        /// The principal input drop down closed event will filter out the products by principal
+        /// </summary>  
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void PrincipalInputDropDownClosed(object sender, EventArgs e)
         {
-            var value = (sender as ComboBox).SelectedItem;
-            if (value != null)
-            { InitializeTransactionFilter(_locationFilter, value.ToString(), _categoryFilter, _nameFilter); }
-        }
-
-        private void CategoryInput_DropDownClosed(object sender, EventArgs e)
-        {
-            var value = (sender as ComboBox).SelectedItem;
-            if (value != null)
-            {
-                InitializeTransactionFilter(_locationFilter, _principalFilter, value.ToString(), _nameFilter);
-            }
-        }
-
-        private void NameInput_DropDownClosed(object sender, EventArgs e)
-        {
-            var value = (sender as ComboBox).SelectedItem;
+            var value = ((ComboBox)sender).SelectedItem;
             if (value != null)
             {
-                InitializeTransactionFilter(_locationFilter, _principalFilter, _categoryFilter, value.ToString());
+                this.InitializeTransactionFilter(
+                    this.locationFilter,
+                    value.ToString(),
+                    this.categoryFilter,
+                    this.nameFilter);
+                this.principalFilter = value.ToString();
+
             }
         }
 
-        private void Submit_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The category input drop down closed will filter out the products by category
+        /// </summary>  
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void CategoryInputDropDownClosed(object sender, EventArgs e)
+        {
+            var value = ((ComboBox)sender).SelectedItem;
+            if (value != null)
+            {
+                this.InitializeTransactionFilter(this.locationFilter, this.principalFilter, value.ToString(), this.nameFilter);
+                this.categoryFilter = value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// The name input drop down closed will filter out the products by name
+        /// </summary>  
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void NameInputDropDownClosed(object sender, EventArgs e)
+        {
+            var value = ((ComboBox)sender).SelectedItem;
+            if (value != null)
+            {
+                this.InitializeTransactionFilter(this.locationFilter, this.principalFilter, this.categoryFilter, value.ToString());
+                this.nameFilter = value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// The submit create click event will finalize the transaction and store it in database
+        /// </summary>       
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void SubmitClick(object sender, RoutedEventArgs e)
         {
             decimal discount, terms;
-            string discountTemp = DiscountInput.Text.Replace("%",string.Empty);
-            if (!string.IsNullOrWhiteSpace(RefIdInput.Text) && !string.IsNullOrWhiteSpace(ParticularInput.Text) && !string.IsNullOrWhiteSpace(SalesmanInput.Text) && !string.IsNullOrWhiteSpace(AddressInput.Text) && decimal.TryParse(discountTemp.Trim(), out discount) && decimal.TryParse(TermsInput.Text.Trim(), out terms))
+            string discountTemp = this.DiscountInput.Text.Replace("%", string.Empty);
+            if (!string.IsNullOrWhiteSpace(this.RefIdInput.Text) && !string.IsNullOrWhiteSpace(this.ParticularInput.Text) && !string.IsNullOrWhiteSpace(this.SalesmanInput.Text) && !string.IsNullOrWhiteSpace(this.AddressInput.Text) && decimal.TryParse(discountTemp.Trim(), out discount) && decimal.TryParse(this.TermsInput.Text.Trim(), out terms))
             {
                 var order = new TransactionOrder
                 {
-                    TransactionType = _transType,
+                    TransactionType = this.transType,
                     DateTransaction = DateTime.Now,
-                    RefNo = RefIdInput.Text,
-                    Particular = ParticularInput.Text,
-                    Transactions = transList,
+                    RefNo = this.RefIdInput.Text,
+                    Particular = this.ParticularInput.Text,
+                    Transactions = this.transList,
                     DiscountPercentage = discount,
-                    ParticularAddress = ParticularInput.Text,
-                    SalesmanName = SalesmanInput.Text,
+                    ParticularAddress = this.ParticularInput.Text,
+                    SalesmanName = this.SalesmanInput.Text,
                     Terms = terms
                 };
                 TransactionOrder.CreateTransaction(order);
-                foreach (var trans in transList)
+                foreach (var trans in this.transList)
                 {
                     var prod = trans.Product;
-                    prod = Product.BalanceCasePackPiece(trans,prod,_transType);
+                    prod = Product.BalanceCasePackPiece(trans, prod, this.transType);
                     Product.EditProduct(prod);
                 }
 
@@ -238,28 +367,29 @@ namespace Stockbook.Windows
                 {
                     if (window.Title == "Main")
                     {
-                        (window as MainMetro).InitializeTransView();
-                        (window as MainMetro).InitializeProductsView();
+                        ((MainMetro)window).InitializeTransView();
+                        ((MainMetro)window).InitializeProductsView();
                     }
                 }
-                Close();
+
+                this.Close();
             }
             else
             {
             string errorMessage = string.Empty; 
-             if (string.IsNullOrWhiteSpace(RefIdInput.Text))
+             if (string.IsNullOrWhiteSpace(this.RefIdInput.Text))
             {
                 errorMessage = "No value was given in Ref No. Input";
             }
-            else if (string.IsNullOrWhiteSpace(ParticularInput.Text))
+            else if (string.IsNullOrWhiteSpace(this.ParticularInput.Text))
             {
-                errorMessage = "No value was given in Particual Input";
+                errorMessage = "No value was given in Particular Input";
             }
-            else if (string.IsNullOrWhiteSpace(SalesmanInput.Text))
+            else if (string.IsNullOrWhiteSpace(this.SalesmanInput.Text))
             {
                 errorMessage = "No value was given in Salesman Input";
             }
-            else if (string.IsNullOrWhiteSpace(AddressInput.Text))
+            else if (string.IsNullOrWhiteSpace(this.AddressInput.Text))
             {
                 errorMessage = "No value was given in Address Input";
             }
@@ -267,28 +397,50 @@ namespace Stockbook.Windows
             {
                 errorMessage = "Discount Input has invalid characters or no value was given";
             }
-            else if (!decimal.TryParse(TermsInput.Text.Trim(), out terms))
+            else if (!decimal.TryParse(this.TermsInput.Text.Trim(), out terms))
             {
                 errorMessage = "Terms Input has invalid characters or no value was given";
             }
-                MessageBox.Show("Error: " + errorMessage, "Error in Creating Transaction Order", MessageBoxButton.OK,
-                MessageBoxImage.Error);
+
+                MessageBox.Show(
+                    "Error: " + errorMessage,
+                    "Error in Creating Transaction Order",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
-        private void DeleteTrans_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The delete transaction click would delete a product on transaction
+        /// </summary>  
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void DeleteTransClick(object sender, RoutedEventArgs e)
         {
             var trans = ((FrameworkElement)sender).DataContext as Transaction;
-            transList.Remove(trans);
-            InitializeDataGrid();
+            this.transList.Remove(trans);
+            this.InitializeDataGrid();
         }
 
-        private void DiscountInput_TextChanged(object sender, TextChangedEventArgs e)
+        /// <summary>
+        /// The discount input text changed just put a % sign at the end if there is no %
+        /// </summary>  
+        /// <param name="sender">
+        /// The sender is the parent object of the button, which is the Grid 
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void DiscountInputTextChanged(object sender, TextChangedEventArgs e)
         {
-            var discountPercent = (sender as TextBox).Text;
+            var discountPercent = ((TextBox)sender).Text;
             if (!discountPercent.Contains("%"))
             {
-                (sender as TextBox).Text = discountPercent + "%";
+                ((TextBox)sender).Text = discountPercent + "%";
             }
         }
     }

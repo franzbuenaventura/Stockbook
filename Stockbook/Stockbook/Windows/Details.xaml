@@ -5,21 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="Details" Height="300" Width="500">
-    <Grid>
-        <DataGrid x:Name="dataGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Product Name" SortDirection="Ascending"
-                                    Binding="{Binding Product.Name}"/>
-                <DataGridTextColumn Header="Case"  
-                                    Binding="{Binding CaseTransact}"/>
-                <DataGridTextColumn Header="Pack"
-                                    Binding="{Binding PackTransact}"/>
-                <DataGridTextColumn Header="Piece"
-                                    Binding="{Binding PieceTransact}"/>
-            </DataGrid.Columns>
-           </DataGrid>
+        Title="Details" Height="300" Width="500" BorderThickness="2" BorderBrush="#FFCECECE">
+    <Viewbox>
+        <Grid Height="267" Width="489">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="81*"/>
+            </Grid.RowDefinitions>
+            <DataGrid x:Name="dataGrid" IsTextSearchEnabled="True" AutoGenerateColumns="False" GridLinesVisibility="All" CanUserAddRows="False" CanUserDeleteRows="False" Grid.Row="1">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Product Name" SortDirection="Ascending"
+                        Binding="{Binding Product.Name}"/>
+                    <DataGridTextColumn Header="Case"  
+                        Binding="{Binding CaseTransact}"/>
+                    <DataGridTextColumn Header="Pack"
+                        Binding="{Binding PackTransact}"/>
+                    <DataGridTextColumn Header="Piece"
+                        Binding="{Binding PieceTransact}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            
+            <Label x:Name="TitleLabel" Content="Details - " FontSize="13" FontWeight="Bold"/>
 
 
-    </Grid>
+        </Grid>
+    </Viewbox>
 </controls:MetroWindow>

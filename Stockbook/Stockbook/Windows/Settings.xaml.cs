@@ -10,9 +10,16 @@
 namespace Stockbook.Windows
 {
     using System;
+    using System.Diagnostics;
+    using System.IO;
     using System.Windows;
+    using System.Windows.Controls;
 
     using Class;
+
+    using Newtonsoft.Json;
+
+    using Stockbook.Model;
 
     /// <summary>
     /// Interaction logic for Settings
@@ -25,6 +32,44 @@ namespace Stockbook.Windows
         public Settings()
         {
             this.InitializeComponent();
+            this.InitializeSettings();
+        }
+
+        /// <summary>
+        /// The initialize settings.
+        /// </summary>
+        public void InitializeSettings()
+        {
+            
+            var config = StockbookWindows.OpenConfig();
+
+            this.LocationTextBox.Text = config.AutoBackupLocation;
+            this.AutoBackupCheckBox.IsChecked = config.IsAutoBackupOn;
+            this.RetainBackupCheckBox.IsChecked = config.IsRetainHistoryOn;
+            this.RetainCountTextBox.Text = config.RetainHistoryCount.ToString();
+            switch (config.TimeIntervalAutoBackup)
+            {
+                case "Weekly":
+                    this.WeeklyBackupRadioButton.IsChecked = true;
+                    break;
+                case "Daily":
+                    this.DailyBackupRadioButton.IsChecked = true;
+                    break;
+                case "Hourly":
+                    this.HourlyBackupRadioButton.IsChecked = true;
+                    break;
+            }
+
+            this.ProductCountTextBlock.Text = Product.GetAllProducts().Count.ToString();
+            this.TransactionCountTextBlock.Text = TransactionOrder.GetAllTransactions().Count.ToString();
+
+            this.CompanyNameTextBox.Text = config.CompanyName;
+
+            this.CurrencyComboBox.Items.Clear();
+            this.CurrencyComboBox.Items.Add("PHP - ₱");
+            this.CurrencyComboBox.Items.Add("USD - $");
+            this.CurrencyComboBox.Items.Add("YEN - ¥");
+            this.CurrencyComboBox.SelectedIndex = this.CurrencyComboBox.Items.IndexOf(config.Currency);
         }
 
         /// <summary>
@@ -169,7 +214,7 @@ namespace Stockbook.Windows
         /// </param>
         private void BackupDatabaseClick(object sender, RoutedEventArgs e)
         {
-            StockbookWindows.DatabaseBackup();
+            StockbookWindows.DatabaseBackup(true); 
         }
 
         /// <summary>
@@ -185,6 +230,38 @@ namespace Stockbook.Windows
         {
             StockbookWindows.RestoreBackup();
             StockbookWindows.RefreshMainWindow();
+        }
+
+        /// <summary>
+        /// The auto backup_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void AutoBackupClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// The location text box got focus.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void LocationTextBoxGotFocus(object sender, RoutedEventArgs e)
+        { 
+            var dialog = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog();
+            if (dialog.ShowDialog(this).GetValueOrDefault())
+            {
+                this.LocationTextBox.Text = dialog.SelectedPath;
+            }
         }
     }
 }

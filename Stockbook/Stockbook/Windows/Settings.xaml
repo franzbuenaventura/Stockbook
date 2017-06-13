@@ -5,12 +5,61 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="Settings" Height="300" Width="300">
+        Title="Settings" Height="400" Width="460" BorderThickness="2" BorderBrush="#FFCECECE">
     <Grid>
-        <Button x:Name="RestoreDatabase" Content="Restore Database" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="113" Click="RestoreDatabaseClick" />
-        <Button x:Name="DeleteProducts" Content="Delete Products" HorizontalAlignment="Left" Margin="10,86,0,0" VerticalAlignment="Top" Width="113" Click="DeleteProductsClick"/>
-        <Button x:Name="DeleteTransactions" Content="Delete Transactions" HorizontalAlignment="Left" Margin="153,86,0,0" VerticalAlignment="Top" Width="130" Click="DeleteTransactionsClick"/>
-        <Button x:Name="BackupDatabase" Content="Backup Database" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="113" Click="BackupDatabaseClick"  />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="292*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="159*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="24*"/>
+            <RowDefinition Height="140*"/>
+        </Grid.RowDefinitions>
+        <Button x:Name="RestoreDatabase" Content="Restore Database" HorizontalAlignment="Left" Margin="155.667,4,0,0" VerticalAlignment="Top" Width="113" Click="RestoreDatabaseClick" Grid.Row="4" Height="28" Grid.Column="1" />
+        <Button x:Name="DeleteProducts" Content="Delete Products" HorizontalAlignment="Left" Margin="4.667,19.667,0,0" VerticalAlignment="Top" Width="113" Click="DeleteProductsClick" Grid.Row="7" Height="27" Grid.Column="1"/>
+        <Button x:Name="DeleteTransactions" Content="Delete Transactions" HorizontalAlignment="Left" Margin="214.667,19.667,0,0" VerticalAlignment="Top" Width="130" Click="DeleteTransactionsClick" Grid.Row="7" Height="27" Grid.Column="1"/>
+        <Button x:Name="BackupDatabase" Content="Backup Database" HorizontalAlignment="Left" Margin="4.667,4,0,0" VerticalAlignment="Top" Width="113" Click="BackupDatabaseClick" Grid.Row="4" Height="28" Grid.Column="1"  />
+        <Separator HorizontalAlignment="Left" Height="55" Margin="7,0,0,0" VerticalAlignment="Top" Width="440" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="2"/>
+        <Label x:Name="SettingsLabel" Content="Settings" FontSize="15" FontWeight="Bold" Grid.ColumnSpan="2" Margin="7,0,0.333,4.333" Height="30" Grid.RowSpan="3" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="1.469"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="0.308"/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <Label x:Name="BackUpRestoreLabel" Content="Back-up and Restore" Grid.Row="3" FontWeight="Bold" FontSize="11" Grid.ColumnSpan="2" Margin="7,0.667,0.333,0"/>
+        <Label x:Name="label" Content="Last Backup: " HorizontalAlignment="Left" Margin="7,37,0,0" Grid.Row="4" VerticalAlignment="Top" Width="71" FontWeight="Bold" FontSize="10" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="LastBackup" Grid.Column="1" HorizontalAlignment="Left" Margin="70.667,42,0,0" Grid.Row="4" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" FontSize="10"/>
+        <CheckBox x:Name="AutoBackupCheckBox" Content="Enable auto-backup" Grid.Column="1" HorizontalAlignment="Left" Margin="4.667,65,0,0" Grid.Row="4" VerticalAlignment="Top" Width="131"/>
+        <TextBox x:Name="LocationTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="4.667,88,0,0" Grid.Row="4" Text="Select backup location..." VerticalAlignment="Top" Width="264" GotFocus="LocationTextBoxGotFocus" ToolTip="Select backup location"/>
+        <RadioButton x:Name="HourlyBackupRadioButton" Content="Hourly" Grid.Column="1" HorizontalAlignment="Left" Margin="352.667,82.333,0,0" Grid.Row="4" VerticalAlignment="Top"/>
+        <RadioButton x:Name="DailyBackupRadioButton" Content="Daily" Grid.Column="1" HorizontalAlignment="Left" Margin="352.667,105.333,0,0" Grid.Row="4" VerticalAlignment="Top"/>
+        <RadioButton x:Name="WeeklyBackupRadioButton" Content="Weekly" Grid.Column="1" HorizontalAlignment="Left" Margin="353.667,128.333,0,0" Grid.Row="4" VerticalAlignment="Top" Height="19"/>
+        <TextBlock x:Name="TimeIntervalLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="273.667,84.333,0,0" Grid.Row="4" TextWrapping="Wrap" Text="Time Interval:" VerticalAlignment="Top" FontWeight="Bold"/>
+        <CheckBox x:Name="RetainBackupCheckBox" Content="Enable retain backup history" Grid.Column="1" HorizontalAlignment="Left" Margin="4.667,119,0,0" Grid.Row="4" VerticalAlignment="Top" Width="176"/>
+        <TextBox x:Name="RetainCountTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="272.667,116,0,0" Grid.Row="4" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="53" ToolTip="The number of backup files that will be retain (-1 for infinity)"/>
+        <TextBlock x:Name="RetainCountLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="201.667,120,0,0" Grid.Row="4" TextWrapping="Wrap" Text="Retain count:" VerticalAlignment="Top"/>
+        <Label x:Name="DatabaseLabel" Content="Database" Grid.Row="6" FontWeight="Bold" Grid.Column="1" FontSize="11"/>
+        <TextBlock x:Name="ProductCountLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="4.667,23.667,0,0" Grid.Row="6" TextWrapping="Wrap" Text="Product count:" VerticalAlignment="Top" Grid.RowSpan="2"/>
+        <TextBlock x:Name="TransactionCountLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="214.667,23.667,0,0" Grid.Row="6" TextWrapping="Wrap" Text="Transaction count:" VerticalAlignment="Top" Grid.RowSpan="2"/>
+        <TextBlock x:Name="ProductCountTextBlock" Grid.Column="1" HorizontalAlignment="Left" Margin="82.667,2,0,0" Grid.Row="7" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="TransactionCountTextBlock" Grid.Column="1" HorizontalAlignment="Left" Margin="311.667,2,0,0" Grid.Row="7" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
+        <Button x:Name="UpdateSettingsButton" Content="Update Settings" HorizontalAlignment="Left" Margin="157.667,103,0,0" VerticalAlignment="Top" Width="113" Click="RestoreDatabaseClick" Grid.Row="7" Height="16" Grid.Column="1" />
+        <Label x:Name="PersonalizeLabel" Content="Personalize" Grid.Row="7" FontWeight="Bold" FontSize="11" Margin="7,47,365.333,56.667" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="CompanyNameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="97.667,68,0,0" Grid.Row="7" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBlock x:Name="CompanyNameLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="4.667,74,0,0" Grid.Row="7" TextWrapping="Wrap" Text="Company Name:" VerticalAlignment="Top"/>
+        <ComboBox x:Name="CurrencyComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="305.667,68,0,0" Grid.Row="7" VerticalAlignment="Top" Width="120">
+        </ComboBox>
+        <TextBlock x:Name="CurrencyLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="250.667,74,0,0" Grid.Row="7" TextWrapping="Wrap" Text="Currency:" VerticalAlignment="Top"/>
 
     </Grid>
 </controls:MetroWindow>

@@ -4,33 +4,101 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stockbook.Windows"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Test" Height="500" Width="500">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="2*"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding ElementName=datagrid1, Path=RowHeaderWidth}" />
-                <ColumnDefinition Width="{Binding ElementName=Column1, Path=ActualWidth}" />
-                <ColumnDefinition Width="{Binding ElementName=Column2, Path=ActualWidth}" />
-                <ColumnDefinition Width="{Binding ElementName=Column3, Path=ActualWidth}" />
-                <ColumnDefinition Width="{Binding ElementName=Column4, Path=ActualWidth}" />
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="1" Grid.ColumnSpan="3" BorderBrush="Black" HorizontalAlignment="Stretch" BorderThickness="2">
-                <Label>Super Header!!</Label>
-            </Border>
-        </Grid>
-        <DataGrid AutoGenerateColumns="False"
-                                Name="datagrid1" Grid.Row="1" RowHeaderWidth="10">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="column 1" Width="100" x:Name="Column1" />
-                <DataGridTextColumn Header="column 2" Width="80" x:Name="Column2"/>
-                <DataGridTextColumn Header="column 3" Width="80" x:Name="Column3"/>
-                <DataGridTextColumn Header="column 4" Width="*" x:Name="Column4"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <StackPanel>
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type xctk:AutoSelectTextBox}">
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="AutoSelectBehavior" Value="{Binding SelectedItem, ElementName=_autoSelectBehavior}"/>
+                    <Setter Property="AutoMoveFocus" Value="{Binding IsChecked, ElementName=_autoMoveFocus}"/>
+                </Style>
+            </StackPanel.Resources>
+
+            <!-- FEATURES GROUP BOX -->
+            <GroupBox Header="Features" >
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="AutoSelectBehavior: " VerticalAlignment="Center" />
+                        <ComboBox Grid.Row="0" Grid.Column="1" x:Name="_autoSelectBehavior" SelectedIndex="1" Width="100" VerticalAlignment="Center">
+                            <x:StaticExtension Member="xctk:AutoSelectBehavior.Never" />
+                            <x:StaticExtension Member="xctk:AutoSelectBehavior.OnFocus" />
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="AutoMoveFocus:  " VerticalAlignment="Center" />
+                        <CheckBox Grid.Row="0" Grid.Column="3" x:Name="_autoMoveFocus" IsChecked="True" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+
+            <StackPanel>
+                <TextBlock Text="Usage:" />
+                <RichTextBox IsReadOnly="True" BorderThickness="0">
+                    <FlowDocument>
+                        <Paragraph>
+                            <Bold>AutoSelectBehavior:</Bold>
+                            <LineBreak/>
+                            The value of the "AutoSelectBehavior" property determines whether the content of the AutoSelectTextBox will be selected or not when the control gets the focus.
+                            <LineBreak/>
+                            <LineBreak/>
+                            <Bold>AutoMoveFocus:</Bold>
+                            <LineBreak/>
+                            <Italic>Effect with "MaxLength" property:</Italic>
+                            <LineBreak/>
+                            <LineBreak/>
+                            Setting the "MaxLength" of the text box allows the focus to move from the AutoSelectTextBox once the max length has been reached.
+               In the following "Telephone Number" fields, the "MaxLength" properties of the controls have been set to 3, 3, and 4.
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+
+                <!-- PHONE NUMBER FIELDS -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="(" VerticalAlignment="Center"/>
+                    <xctk:AutoSelectTextBox MaxLength="3" Width="30" Text="555"/>
+                    <TextBlock Text=")" VerticalAlignment="Center"/>
+                    <xctk:AutoSelectTextBox MaxLength="3" Width="30" Text="555"/>
+                    <TextBlock Text="-" VerticalAlignment="Center"/>
+                    <xctk:AutoSelectTextBox MaxLength="4" Width="40" Text="5555"/>
+                </StackPanel>
+                <RichTextBox IsReadOnly="True" BorderThickness="0">
+                    <FlowDocument>
+                        <Paragraph>
+                            <Italic>Effect with Arrow keys</Italic>
+                            <LineBreak/>
+                            <LineBreak/>
+                            Setting "AutoMoveFocus" to true also allows navigating the focus through the controls using the arrow keys to move the focus up, down, left, or right. 
+               You are no longer limited to the "left-right" navigation of the "Tab, Shift-Tab" keys.
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+
+                <!-- TEXTBOX MATRIX -->
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <xctk:AutoSelectTextBox Text="Text1" Width="100" />
+                        <xctk:AutoSelectTextBox Text="Text2" Width="100"/>
+                        <xctk:AutoSelectTextBox Text="Text3" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <xctk:AutoSelectTextBox Text="Text4" Width="100"/>
+                        <xctk:AutoSelectTextBox Text="Text5" Width="100"/>
+                        <xctk:AutoSelectTextBox Text="Text6" Width="100"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <xctk:AutoSelectTextBox Text="Text7" Width="100"/>
+                        <xctk:AutoSelectTextBox Text="Text8" Width="100"/>
+                        <xctk:AutoSelectTextBox Text="Text9" Width="100"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

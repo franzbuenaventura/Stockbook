@@ -1,9 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainMetro.xaml.cs" company="">
-//   
+// <copyright file="MainMetro.xaml.cs" company="Franz Buenaventura">
+//   Author: Franz Justin Buenaventura
+//   Website: www.franzbuenaventura.com 
+//   License: GNU Affero General Public License v3.0
 // </copyright>
 // <summary>
-//   The main metro.
+//   The MainMetro Class that contains the backend for MainMetro Window
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -18,7 +20,6 @@ namespace Stockbook.Windows
 
     using Class;
     using Model;
-    using Products;
 
     /// <summary>
     /// The main metro.
@@ -70,8 +71,28 @@ namespace Stockbook.Windows
             this.InitializeComponent();
             this.InitializeProductsView();
             this.InitializeTransView();
+            StockbookWindows.AutoBackup();
+
+
+            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(this.DispatcherTimerTick);
+            dispatcherTimer.Interval = new TimeSpan(0, 5, 0);
+            dispatcherTimer.Start();
         }
 
+        /// <summary>
+        /// The dispatcher timer tick.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void DispatcherTimerTick(object sender, EventArgs e)
+        {
+            StockbookWindows.AutoBackup();
+        }
         #region Inventory 
 
         /// <summary>
@@ -119,6 +140,7 @@ namespace Stockbook.Windows
             this.CategoryFilter.Items.Clear();
             this.CategoryFilter.Items.Add("All Category");
             this.DataGrid.CommitEdit();
+
             foreach (var prod in listProducts.Select(q => q.Location).Distinct())
             {
                 this.LocationFilter.Items.Add(prod);
@@ -143,24 +165,24 @@ namespace Stockbook.Windows
                 listProducts = listProducts.Where(q => q.Location == newValueLocation).ToList();
             }
 
-            if (newValuePrincipal != "All Principal")
-            {
-                listProducts = listProducts.Where(q => q.Principal == newValuePrincipal).ToList();
-            }
- 
-            if (newValueCategory != "All Category")
-            {
-                listProducts = listProducts.Where(q => q.Category == newValueCategory).ToList();
-            }
-
             foreach (var prod in listProducts.Select(q => q.Principal).Distinct())
             {
                 this.PrincipalFilter.Items.Add(prod);
             }
 
+            if (newValuePrincipal != "All Principal")
+            {
+                listProducts = listProducts.Where(q => q.Principal == newValuePrincipal).ToList();
+            }
+
             foreach (var prod in listProducts.Select(q => q.Category).Distinct())
             {
                 this.CategoryFilter.Items.Add(prod);
+            }
+
+            if (newValueCategory != "All Category")
+            {
+                listProducts = listProducts.Where(q => q.Category == newValueCategory).ToList();
             }
 
             this.DataGrid.ItemsSource = listProducts.OrderBy(q => q.Location).ToList();

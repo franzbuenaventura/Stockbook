@@ -1,255 +1,441 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using MahApps.Metro.Controls;
-using Stockbook.Class;
-using Stockbook.Model;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ExportExcel.xaml.cs" company="Franz Buenaventura">
+//   Author: Franz Justin Buenaventura
+//   Website: www.franzbuenaventura.com 
+//   License: GNU Affero General Public License v3.0
+// </copyright>
+// <summary>
+//   The ExportExcel Class that contains the backend for ExportExcel Window
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 namespace Stockbook.Windows
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+
+    using Class;
+      
+    using Model;
+
     /// <summary>
-    /// Interaction logic for ExportExcel.xaml
+    /// Interaction logic for ExportExcel 
     /// </summary>
-    public partial class ExportExcel : MetroWindow
+    public partial class ExportExcel
     {
-        private string _locationFilter = "All Location";
-        private string _principalFilter = "All Principal";
-        private string _categoryFilter = "All Category";
+        /// <summary>
+        /// The location of the product window.
+        /// </summary>
+        private string locationFilter = "All Location";
+
+        /// <summary>
+        /// The principal of the product window.
+        /// </summary>
+        private string principalFilter = "All Principal";
+
+        /// <summary>
+        /// The category of the product window.
+        /// </summary>
+        private string categoryFilter = "All Category";
+
+        /// <summary>
+        /// The product list that will be exported
+        /// </summary>
         private List<Product> prodList = null;
+
+        /// <summary>
+        /// The location filter of the transaction window.
+        /// </summary>
+        private string locationTransFilter = "All Location";
+
+        /// <summary>
+        /// The principal filter of the transaction window.
+        /// </summary>
+        private string principalTransFilter = "All Principal";
+
+        /// <summary>
+        /// The category filter of the transaction window.
+        /// </summary>
+        private string categoryTransFilter = "All Category";
+
+        /// <summary>
+        /// The type filter of the transaction window.
+        /// </summary>
+        private string typeTransFilter = "All Transactions";
+
+        /// <summary>
+        /// The particular filter of the transaction window.
+        /// </summary>
+        private string particularTransFilter = "All Particular";
+
+        /// <summary>
+        /// The salesman filter of the transaction window.
+        /// </summary>
+        private string salesmanTransFilter = "All Salesman";
+
+        /// <summary>
+        /// The name filter of the transaction window.
+        /// </summary>
+        private string nameTransFilter = "All Product";
+
+        /// <summary>
+        /// The list transactions that will be exported.
+        /// </summary>
+        private List<TransactionOrder> listTransactions = new List<TransactionOrder>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportExcel"/> class and initialize the product and transactions
+        /// </summary>
+        /// <param name="tab">
+        /// The tab is either Product tab or Transaction tab that will be shown
+        /// </param>
         public ExportExcel(string tab)
         {
-            InitializeComponent(); 
-            InitializeProducts(_locationFilter, _principalFilter,_categoryFilter);
-            InitializeTransactions(_locationFilterTrans, _principalFilterTrans, _categoryFilterTrans,_nameFilterTrans, _typeFilterTrans,
-                _particularFilterTrans, _salesmanFilterTrans);
+            this.InitializeComponent();
+            this.InitializeProducts(this.locationFilter, this.principalFilter, this.categoryFilter);
+            this.InitializeTransactions(
+                this.locationTransFilter,
+                this.principalTransFilter,
+                this.categoryTransFilter,
+                this.nameTransFilter,
+                this.typeTransFilter,
+                this.particularTransFilter,
+                this.salesmanTransFilter);
             if (tab == "Product")
             {
-                tabControl.SelectedIndex = 0;
-                tabControl.SelectedItem = productTab;
+                this.tabControl.SelectedIndex = 0;
+                this.tabControl.SelectedItem = this.productTab;
             }
            else if (tab == "Transaction")
            {
-                tabControl.SelectedIndex = 1;
-                tabControl.SelectedItem = transactionTab;
+               this.tabControl.SelectedIndex = 1;
+               this.tabControl.SelectedItem = this.transactionTab;
             }
         }
 
         #region Products
+
+        /// <summary>
+        /// The method initialize the products and filter it with the input of the user
+        /// </summary>
+        /// <param name="newValueLocation">
+        /// The new value location filter if user changed it. 
+        /// </param>
+        /// <param name="newValuePrincipal">
+        /// The new value principal filter if user changed it.
+        /// </param>
+        /// <param name="newValueCategory">
+        /// The new value category filter if user changed it.
+        /// </param>
         private void InitializeProducts(string newValueLocation, string newValuePrincipal, string newValueCategory)
         {
             var listProducts = Product.GetAllProducts();
-            PrincipalInput.Items.Clear();
-            PrincipalInput.Items.Add("All Principal");
-            CategoryInput.Items.Clear();
-            CategoryInput.Items.Add("All Category");
-            LocationInput.Items.Clear();
-            LocationInput.Items.Add("All Location"); 
-            //Filter Items
+            this.PrincipalInput.Items.Clear();
+            this.PrincipalInput.Items.Add("All Principal");
+            this.CategoryInput.Items.Clear();
+            this.CategoryInput.Items.Add("All Category");
+            this.LocationInput.Items.Clear();
+            this.LocationInput.Items.Add("All Location");
+
             foreach (var item in listProducts.Select(q => q.Location).Distinct())
             {
-                LocationInput.Items.Add(item);
-            } 
+                this.LocationInput.Items.Add(item);
+            }
+
             if (newValueLocation == "All Location")
             {
                 foreach (var item in listProducts.Select(q => q.Principal).Distinct())
                 {
-                    PrincipalInput.Items.Add(item);
+                    this.PrincipalInput.Items.Add(item);
                 }
             }
             else
-            { 
-                foreach (var item in listProducts.Where(q => q.Location == newValueLocation).Select(q => q.Principal).Distinct())
+            {
+                foreach (
+                    var item in
+                    listProducts.Where(q => q.Location == newValueLocation).Select(q => q.Principal).Distinct())
                 {
-                    PrincipalInput.Items.Add(item);
+                    this.PrincipalInput.Items.Add(item);
                 }
-            } 
-            //Filter Category
-            var categoryList = Product.GetAllProducts(); 
-             if (newValuePrincipal != "All Principal")
+            }
+
+            // Filter Category
+            var categoryList = Product.GetAllProducts();
+            if (newValuePrincipal != "All Principal")
             {
                 categoryList = categoryList.Where(q => q.Principal == newValuePrincipal).ToList();
             }
-             if (newValueLocation != "All Location")
+
+            if (newValueLocation != "All Location")
             {
                 categoryList = categoryList.Where(q => q.Location == newValueLocation).ToList();
             }
+
             foreach (var item in categoryList.Select(q => q.Category).Distinct())
             {
-                CategoryInput.Items.Add(item);
+                this.CategoryInput.Items.Add(item);
             }
-            //Check if new Location or Principal
-            if (_locationFilter != newValueLocation)
+
+            // Check if new Location or Principal
+            if (this.locationFilter != newValueLocation)
             {
-                _principalFilter = "All Principal";
-                newValuePrincipal = _principalFilter;
-                _categoryFilter = "All Category";
-                newValueCategory = _categoryFilter;
+                this.principalFilter = "All Principal";
+                newValuePrincipal = this.principalFilter;
+                this.categoryFilter = "All Category";
+                newValueCategory = this.categoryFilter;
             }
-            else if (_principalFilter != newValuePrincipal)
+            else if (this.principalFilter != newValuePrincipal)
             {
-                _categoryFilter = "All Category";
-                newValueCategory = _categoryFilter;
-            } 
-            if (newValueCategory != "All Category" )
+                this.categoryFilter = "All Category";
+                newValueCategory = this.categoryFilter;
+            }
+
+            if (newValueCategory != "All Category")
             {
                 listProducts = listProducts.Where(q => q.Category == newValueCategory).ToList();
             }
+
             if (newValuePrincipal != "All Principal")
             {
                 listProducts = listProducts.Where(q => q.Principal == newValuePrincipal).ToList();
             }
+
             if (newValueLocation != "All Location")
             {
                 listProducts = listProducts.Where(q => q.Location == newValueLocation).ToList();
             }
-            DataGrid.ItemsSource = listProducts;
-            prodList = listProducts;
-            LocationInput.SelectedIndex = LocationInput.Items.IndexOf(newValueLocation);
-            PrincipalInput.SelectedIndex = PrincipalInput.Items.IndexOf(newValuePrincipal);
-            CategoryInput.SelectedIndex = CategoryInput.Items.IndexOf(newValueCategory);
-        }
-        private void LocationInput_DropDownClosed(object sender, System.EventArgs e)
-        {
-            var newValue = (sender as ComboBox).SelectedItem.ToString();
-            InitializeProducts(newValue, _principalFilter, _categoryFilter);
-            _locationFilter = newValue;
-        }
-        private void PrincipalInput_DropDownClosed(object sender, System.EventArgs e)
-        {
-            var newValue = (sender as ComboBox).SelectedItem.ToString();
-            InitializeProducts(_locationFilter, newValue, _categoryFilter);
-            _principalFilter = newValue;
 
+            this.DataGrid.ItemsSource = listProducts;
+            this.prodList = listProducts;
+            this.LocationInput.SelectedIndex = this.LocationInput.Items.IndexOf(newValueLocation);
+            this.PrincipalInput.SelectedIndex = this.PrincipalInput.Items.IndexOf(newValuePrincipal);
+            this.CategoryInput.SelectedIndex = this.CategoryInput.Items.IndexOf(newValueCategory);
         }
-        private void CategoryInput_DropDownClosed(object sender, System.EventArgs e)
+
+        /// <summary>
+        /// The location input drop down closed event when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void LocationInputDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem.ToString();
-            InitializeProducts(_locationFilter, _principalFilter, newValue);
-            _categoryFilter = newValue;
+            var newValue = ((ComboBox)sender).SelectedItem.ToString();
+            if (newValue != this.locationFilter)
+            {
+                this.InitializeProducts(newValue, this.principalFilter, this.categoryFilter);
+                this.locationFilter = newValue;
+            }
         }
-        private void ExportProducts_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// The principal input drop down closed event when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void PrincipalInputDropDownClosed(object sender, EventArgs e)
         {
-            ExcelExport.ExcelInvoice.ExportProducts(prodList, LocationInput.Text, PrincipalInput.Text,CategoryInput.Text);
+            var newValue = ((ComboBox)sender).SelectedItem.ToString();
+            if (newValue != this.principalFilter)
+            {
+                this.InitializeProducts(this.locationFilter, newValue, this.categoryFilter);
+                this.principalFilter = newValue;
+            }
         }
+
+        /// <summary>
+        /// The category input drop down closed event when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void CategoryInputDropDownClosed(object sender, EventArgs e)
+        {
+            var newValue = ((ComboBox)sender).SelectedItem.ToString();
+            if (newValue != this.categoryFilter)
+            {
+                this.InitializeProducts(this.locationFilter, this.principalFilter, newValue);
+                this.categoryFilter = newValue;
+            }
+        }
+
+        /// <summary>
+        /// The export products click event when user wants to export the product list to excel
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void ExportProductsClick(object sender, RoutedEventArgs e)
+        {
+            ExcelExport.ExcelInvoice.ExportProducts(this.prodList, this.LocationInput.Text, this.PrincipalInput.Text, this.CategoryInput.Text);
+        }
+
         #endregion
 
         #region Transactions
-        private string _locationFilterTrans = "All Location";
-        private string _principalFilterTrans = "All Principal";
-        private string _categoryFilterTrans = "All Category";
-        private string _typeFilterTrans = "All Transactions";
-        private string _particularFilterTrans = "All Particular";
-        private string _salesmanFilterTrans = "All Salesman";
-        private string _nameFilterTrans = "All Product";
-        private List<TransactionOrder> listTransactions = new List<TransactionOrder>();
 
-        private void InitializeTransactions(string newValLocation, string newValPrincipal, string newValCategory, string newValName, string newValType, string newValParticular, string newValSalesman)
+        /// <summary>
+        /// The method initialize the transactions and filter it with the input of the user
+        /// </summary>
+        /// <param name="newValueLocation">
+        /// The new value location filter if user changed it. 
+        /// </param>
+        /// <param name="newValuePrincipal">
+        /// The new value principal filter if user changed it. 
+        /// </param>
+        /// <param name="newValueCategory">
+        /// The new value category filter if user changed it. 
+        /// </param>
+        /// <param name="newValueName">
+        /// The new value name filter if user changed it. 
+        /// </param>
+        /// <param name="newValueType">
+        /// The new value type filter if user changed it. 
+        /// </param>
+        /// <param name="newValueParticular">
+        /// The new value particular filter if user changed it. 
+        /// </param>
+        /// <param name="newValueSalesman">
+        /// The new value salesman filter if user changed it. 
+        /// </param>
+        private void InitializeTransactions(string newValueLocation, string newValuePrincipal, string newValueCategory, string newValueName, string newValueType, string newValueParticular, string newValueSalesman)
         {
             var listTrans = TransactionOrder.GetAllTransactions();
-            PrincipalInputTrans.Items.Clear();
-            PrincipalInputTrans.Items.Add("All Principal");
-            CategoryInputTrans.Items.Clear();
-            CategoryInputTrans.Items.Add("All Category");
-            LocationInputTrans.Items.Clear();
-            LocationInputTrans.Items.Add("All Location");
-            TypeInputTrans.Items.Clear();
-            TypeInputTrans.Items.Add("All Transactions");
-            TypeInputTrans.Items.Add("Sales");
-            TypeInputTrans.Items.Add("Purchased");
-            ParticularInputTrans.Items.Clear();
-            ParticularInputTrans.Items.Add("All Particular");
-            SalesmanInputTrans.Items.Clear();
-            SalesmanInputTrans.Items.Add("All Salesman");
-            NameInputTrans.Items.Clear();
-            NameInputTrans.Items.Add("All Product");
+            this.PrincipalInputTrans.Items.Clear();
+            this.PrincipalInputTrans.Items.Add("All Principal");
+            this.CategoryInputTrans.Items.Clear();
+            this.CategoryInputTrans.Items.Add("All Category");
+            this.LocationInputTrans.Items.Clear();
+            this.LocationInputTrans.Items.Add("All Location");
+            this.TypeInputTrans.Items.Clear();
+            this.TypeInputTrans.Items.Add("All Transactions");
+            this.TypeInputTrans.Items.Add("Sales");
+            this.TypeInputTrans.Items.Add("Purchased");
+            this.ParticularInputTrans.Items.Clear();
+            this.ParticularInputTrans.Items.Add("All Particular");
+            this.SalesmanInputTrans.Items.Clear();
+            this.SalesmanInputTrans.Items.Add("All Salesman");
+            this.NameInputTrans.Items.Clear();
+            this.NameInputTrans.Items.Add("All Product");
 
-            //Remove This
+            // Remove This
             foreach (var prod in listTrans.Select(q => q.TransactionType).Distinct())
             {
-                TypeInputTrans.Items.Add(prod);
+                this.TypeInputTrans.Items.Add(prod);
             }
-            if (newValType != "All Transactions")
+
+            if (newValueType != "All Transactions")
             {
-                listTrans = listTrans.Where(q => q.TransactionType == newValType).ToList();
+                listTrans = listTrans.Where(q => q.TransactionType == newValueType).ToList();
             }
+
             foreach (var prod in listTrans.Select(q => q.Particular).Distinct())
             {
-                ParticularInputTrans.Items.Add(prod);
+                this.ParticularInputTrans.Items.Add(prod);
             }
-            if (newValParticular != "All Particular")
+
+            if (newValueParticular != "All Particular")
             {
-                listTrans = listTrans.Where(q => q.Particular == newValParticular).ToList();
+                listTrans = listTrans.Where(q => q.Particular == newValueParticular).ToList();
             }
+
             foreach (var prod in listTrans.Select(q => q.SalesmanName).Distinct())
             {
-                SalesmanInputTrans.Items.Add(prod);
+                this.SalesmanInputTrans.Items.Add(prod);
             }
-            if (newValSalesman != "All Salesman")
+
+            if (newValueSalesman != "All Salesman")
             {
-                listTrans = listTrans.Where(q => q.SalesmanName == newValSalesman).ToList();
-            } 
-            if (_locationFilterTrans != newValLocation)
-            {
-                _principalFilterTrans = "All Principal";
-                newValPrincipal = _principalFilterTrans;
-                _categoryFilterTrans = "All Category";
-                newValCategory = _categoryFilterTrans;
-                _nameFilterTrans = "All Product";
-                newValName = _nameFilterTrans;
+                listTrans = listTrans.Where(q => q.SalesmanName == newValueSalesman).ToList();
             }
-            if (_principalFilterTrans != newValPrincipal)
+ 
+            if (this.locationTransFilter != newValueLocation)
             {
-                _categoryFilterTrans = "All Category";
-                newValCategory = _categoryFilterTrans;
-                _nameFilterTrans = "All Product";
-                newValName = _nameFilterTrans;
+                this.principalTransFilter = "All Principal";
+                newValuePrincipal = this.principalTransFilter;
+                this.categoryTransFilter = "All Category";
+                newValueCategory = this.categoryTransFilter;
+                this.nameTransFilter = "All Product";
+                newValueName = this.nameTransFilter;
             }
-            if (_categoryFilterTrans != newValCategory)
+
+            if (this.principalTransFilter != newValuePrincipal)
             {
-                _nameFilterTrans = "All Product";
-                newValName = _nameFilterTrans;
+                this.categoryTransFilter = "All Category";
+                newValueCategory = this.categoryTransFilter;
+                this.nameTransFilter = "All Product";
+                newValueName = this.nameTransFilter;
             }
+
+            if (this.categoryTransFilter != newValueCategory)
+            {
+                this.nameTransFilter = "All Product";
+                newValueName = this.nameTransFilter;
+            }
+
             foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Location).Distinct())
             {
-                LocationInputTrans.Items.Add(prod);
+                this.LocationInputTrans.Items.Add(prod);
             }
-            if (newValLocation != "All Location")
+
+            if (newValueLocation != "All Location")
             {
-                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Location == newValLocation)).ToList();
+                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Location == newValueLocation)).ToList();
             }
+
             foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Principal).Distinct())
             {
-                PrincipalInputTrans.Items.Add(prod);
+                this.PrincipalInputTrans.Items.Add(prod);
             }
-            if (newValPrincipal != "All Principal")
+
+            if (newValuePrincipal != "All Principal")
             {
-                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Principal == newValPrincipal)).ToList();
+                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Principal == newValuePrincipal)).ToList();
             }
+
             foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Category).Distinct())
             {
-                CategoryInputTrans.Items.Add(prod);
+                this.CategoryInputTrans.Items.Add(prod);
             }
-            if (newValCategory != "All Category")
+
+            if (newValueCategory != "All Category")
             {
-                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Category == newValCategory)).ToList();
+                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Category == newValueCategory)).ToList();
             }
+
             foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Name).Distinct())
             {
-                NameInputTrans.Items.Add(prod);
+                this.NameInputTrans.Items.Add(prod);
             }
-            if (newValName != "All Product")
+
+            if (newValueName != "All Product")
             {
-                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Name == newValName)).ToList();
+                listTrans = listTrans.Where(q => q.Transactions.Exists(s => s.Product.Name == newValueName)).ToList();
             }
-            if (!string.IsNullOrWhiteSpace(DateFrom.Text))
+
+            if (!string.IsNullOrWhiteSpace(this.DateFrom.Text))
             {
-                listTrans = listTrans.Where(q => q.DateTransaction.Date >= DateFrom.SelectedDate).ToList();
+                listTrans = listTrans.Where(q => q.DateTransaction.Date >= this.DateFrom.SelectedDate).ToList();
             }
-            if (!string.IsNullOrWhiteSpace(DateTo.Text))
+
+            if (!string.IsNullOrWhiteSpace(this.DateTo.Text))
             {
-                listTrans = listTrans.Where(q => q.DateTransaction.Date <= DateTo.SelectedDate).ToList();
+                listTrans = listTrans.Where(q => q.DateTransaction.Date <= this.DateTo.SelectedDate).ToList();
             }
 
             var transView = new List<TransactionView>();
@@ -269,111 +455,226 @@ namespace Stockbook.Windows
                 };
                 transView.Add(temp);
             }
-            _typeFilterTrans = newValType;
-            _locationFilterTrans = newValLocation;
-            _principalFilterTrans = newValPrincipal;
-            _categoryFilterTrans = newValCategory;
-            _particularFilterTrans = newValParticular;
-            _salesmanFilterTrans = newValSalesman;
-            _nameFilterTrans = newValName;
-            TypeInputTrans.SelectedIndex = TypeInputTrans.Items.IndexOf(newValType);
-            LocationInputTrans.SelectedIndex = LocationInputTrans.Items.IndexOf(newValLocation);
-            PrincipalInputTrans.SelectedIndex = PrincipalInputTrans.Items.IndexOf(newValPrincipal);
-            CategoryInputTrans.SelectedIndex = CategoryInputTrans.Items.IndexOf(newValCategory);
-            ParticularInputTrans.SelectedIndex = ParticularInputTrans.Items.IndexOf(newValParticular);
-            SalesmanInputTrans.SelectedIndex = SalesmanInputTrans.Items.IndexOf(newValSalesman);
-            NameInputTrans.SelectedIndex = NameInputTrans.Items.IndexOf(newValName);
-            listTransactions = listTrans;
-            DataGrid1.ItemsSource = transView;
+
+            this.typeTransFilter = newValueType;
+            this.locationTransFilter = newValueLocation;
+            this.principalTransFilter = newValuePrincipal;
+            this.categoryTransFilter = newValueCategory;
+            this.particularTransFilter = newValueParticular;
+            this.salesmanTransFilter = newValueSalesman;
+            this.nameTransFilter = newValueName;
+            this.TypeInputTrans.SelectedIndex = this.TypeInputTrans.Items.IndexOf(newValueType);
+            this.LocationInputTrans.SelectedIndex = this.LocationInputTrans.Items.IndexOf(newValueLocation);
+            this.PrincipalInputTrans.SelectedIndex = this.PrincipalInputTrans.Items.IndexOf(newValuePrincipal);
+            this.CategoryInputTrans.SelectedIndex = this.CategoryInputTrans.Items.IndexOf(newValueCategory);
+            this.ParticularInputTrans.SelectedIndex = this.ParticularInputTrans.Items.IndexOf(newValueParticular);
+            this.SalesmanInputTrans.SelectedIndex = this.SalesmanInputTrans.Items.IndexOf(newValueSalesman);
+            this.NameInputTrans.SelectedIndex = this.NameInputTrans.Items.IndexOf(newValueName);
+            this.listTransactions = listTrans;
+            this.DataGrid1.ItemsSource = transView;
         }
-        private void LocationInputTrans_DropDownClosed(object sender, EventArgs e)
+
+        /// <summary>
+        /// The location input trans drop down closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void LocationInputTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransactions(newValue.ToString(), _principalFilterTrans,  _categoryFilterTrans,_nameFilterTrans, _typeFilterTrans,_particularFilterTrans,_salesmanFilterTrans);
+                this.InitializeTransactions(newValue.ToString(), this.principalTransFilter,  this.categoryTransFilter, this.nameTransFilter, this.typeTransFilter, this.particularTransFilter, this.salesmanTransFilter);
             }
         }
-        private void PrincipalInputTrans_DropDownClosed(object sender, EventArgs e)
+
+        /// <summary>
+        /// The principal input trans drop down closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void PrincipalInputTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransactions(_locationFilterTrans, newValue.ToString(), _categoryFilterTrans, _nameFilterTrans, _typeFilterTrans, _particularFilterTrans, _salesmanFilterTrans);
+                this.InitializeTransactions(this.locationTransFilter, newValue.ToString(), this.categoryTransFilter, this.nameTransFilter, this.typeTransFilter, this.particularTransFilter, this.salesmanTransFilter);
             }
         }
-        private void CategoryInputTrans_DropDownClosed(object sender, EventArgs e)
+
+        /// <summary>
+        /// The category input trans drop down closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void CategoryInputTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransactions(_locationFilterTrans, _principalFilterTrans, newValue.ToString(), _nameFilterTrans, _typeFilterTrans, _particularFilterTrans, _salesmanFilterTrans);
+                this.InitializeTransactions(this.locationTransFilter, this.principalTransFilter, newValue.ToString(), this.nameTransFilter, this.typeTransFilter, this.particularTransFilter, this.salesmanTransFilter);
             }
         }
-        private void NameInputTrans_DropDownClosed(object sender, EventArgs e)
+
+        /// <summary>
+        /// The name input trans drop down closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void NameInputTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransactions(_locationFilterTrans, _principalFilterTrans, _categoryFilterTrans,newValue.ToString(), _typeFilterTrans, _particularFilterTrans, _salesmanFilterTrans);
+                this.InitializeTransactions(this.locationTransFilter, this.principalTransFilter, this.categoryTransFilter, newValue.ToString(), this.typeTransFilter, this.particularTransFilter, this.salesmanTransFilter);
             }
 
         }
-        private void TypeInputTrans_DropDownClosed(object sender, EventArgs e)
+
+        /// <summary>
+        /// The type input trans drop down closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void TypeInputTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransactions(_locationFilterTrans, _principalFilterTrans, _categoryFilterTrans, _nameFilterTrans, newValue.ToString(), _particularFilterTrans, _salesmanFilterTrans);
+                this.InitializeTransactions(this.locationTransFilter, this.principalTransFilter, this.categoryTransFilter, this.nameTransFilter, newValue.ToString(), this.particularTransFilter, this.salesmanTransFilter);
             }
         }
-        private void ParticularInputTrans_DropDownClosed(object sender, EventArgs e)
+
+        /// <summary>
+        /// The particular input trans drop down closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void ParticularInputTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransactions(_locationFilterTrans, _principalFilterTrans, _categoryFilterTrans, _nameFilterTrans, _typeFilterTrans, newValue.ToString(), _salesmanFilterTrans);
+                this.InitializeTransactions(this.locationTransFilter, this.principalTransFilter, this.categoryTransFilter, this.nameTransFilter, this.typeTransFilter, newValue.ToString(), this.salesmanTransFilter);
             }
         }
-        private void SalesmanInputTrans_DropDownClosed(object sender, EventArgs e)
+
+        /// <summary>
+        /// The salesman input trans drop down closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the combo box
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void SalesmanInputTransDropDownClosed(object sender, EventArgs e)
         {
-            var newValue = (sender as ComboBox).SelectedItem;
+            var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                InitializeTransactions(_locationFilterTrans, _principalFilterTrans, _categoryFilterTrans, _nameFilterTrans, _typeFilterTrans,  _particularFilterTrans,newValue.ToString());
+                this.InitializeTransactions(this.locationTransFilter, this.principalTransFilter, this.categoryTransFilter, this.nameTransFilter, this.typeTransFilter,  this.particularTransFilter, newValue.ToString());
             }
         }
-        private void DateFrom_CalendarClosed(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// The date from calendar closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the date
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void DateFromCalendarClosed(object sender, RoutedEventArgs e)
         {
-            var newValue = (sender as DatePicker).Text;
+            var newValue = ((DatePicker)sender).Text;
             if (newValue != null)
             {
-                InitializeTransactions(_locationFilterTrans, _principalFilterTrans, _categoryFilterTrans, _nameFilterTrans, _typeFilterTrans,
-    _particularFilterTrans, _salesmanFilterTrans);
+                this.InitializeTransactions(
+                    this.locationTransFilter,
+                    this.principalTransFilter,
+                    this.categoryTransFilter,
+                    this.nameTransFilter,
+                    this.typeTransFilter,
+                    this.particularTransFilter,
+                    this.salesmanTransFilter);
             }
         }
-        private void DateTo_CalendarClosed(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// The date to calendar closed when user change the value.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the date
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void DateToCalendarClosed(object sender, RoutedEventArgs e)
         {
-            var newValue = (sender as DatePicker).Text;
+            var newValue = ((DatePicker)sender).Text;
             if (newValue != null)
             {
-                InitializeTransactions(_locationFilterTrans, _principalFilterTrans, _categoryFilterTrans, _nameFilterTrans, _typeFilterTrans,
-    _particularFilterTrans, _salesmanFilterTrans);
+                this.InitializeTransactions(
+                    this.locationTransFilter,
+                    this.principalTransFilter,
+                    this.categoryTransFilter,
+                    this.nameTransFilter,
+                    this.typeTransFilter,
+                    this.particularTransFilter,
+                    this.salesmanTransFilter);
             }
         }
-        private void ExportExcelTrans_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// The export excel trans click event when user wants to export the product list to excel
+        /// </summary>
+        /// <param name="sender">
+        /// The sender is the parent object of the button
+        /// </param>
+        /// <param name="e">
+        /// The event argument which contains the product that has been updated or will be updated
+        /// </param>
+        private void ExportExcelTransClick(object sender, RoutedEventArgs e)
         {
-            if (DateFrom.SelectedDate == null)
+            if (this.DateFrom.SelectedDate == null)
             {
-                DateFrom.SelectedDate = new DateTime(2000, 1, 1);
+                this.DateFrom.SelectedDate = new DateTime(2000, 1, 1);
             }
-            if (DateTo.SelectedDate == null)
+
+            if (this.DateTo.SelectedDate == null)
             {
-                DateTo.SelectedDate = DateTime.Now;
+                this.DateTo.SelectedDate = DateTime.Now;
             }
-            ExcelExport.ExcelInvoice.ExportTransactions(listTransactions, DateFrom.SelectedDate.Value, DateTo.SelectedDate.Value);
+             
+            ExcelExport.ExcelInvoice.ExportTransactions(this.listTransactions, this.DateFrom.SelectedDate.Value, this.DateTo.SelectedDate.Value);
         }
+
         #endregion
-         
     }
 }
