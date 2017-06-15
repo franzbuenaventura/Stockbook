@@ -41,7 +41,7 @@ namespace Stockbook.Class
         /// <summary>
         /// The file name.
         /// </summary>
-        private static readonly string ConfigFullPath = SettingsAbsolutePath + @"config.json";
+        protected static readonly string ConfigFullPath = SettingsAbsolutePath + @"config.json";
 
         /// <summary>
         /// The refresh main window.
@@ -94,6 +94,7 @@ namespace Stockbook.Class
             }
             else if (!string.IsNullOrWhiteSpace(location))
             {
+                Directory.CreateDirectory(location);
                 File.WriteAllText(location + backupName, JsonConvert.SerializeObject(databaseBackup));
             }
             else
@@ -102,7 +103,6 @@ namespace Stockbook.Class
             }
 
             return true;
-
         }
 
         /// <summary>
@@ -113,13 +113,6 @@ namespace Stockbook.Class
         /// </returns>
         public static bool AutoBackup()
         {
-            /**
-             * Settings: 
-             *  Time Interval
-             *  Location of file
-             *  Storage retain policy
-             *  
-             */
             var config = OpenConfig();
    
             var isBackup = false;
@@ -189,7 +182,6 @@ namespace Stockbook.Class
                         return;
                     }
                 }
-
                 backupFiles = Directory.GetFiles(autoBackupLocation, "*.stockbook").ToList();
             }
         }
@@ -239,7 +231,6 @@ namespace Stockbook.Class
         {
             try
             {
-
                 if (File.Exists(ConfigFullPath))
                 {
                     if (isInitialize)

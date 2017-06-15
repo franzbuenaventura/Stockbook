@@ -53,7 +53,7 @@
         <TextBlock x:Name="TransactionCountLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="214.667,23.667,0,0" Grid.Row="6" TextWrapping="Wrap" Text="Transaction count:" VerticalAlignment="Top" Grid.RowSpan="2"/>
         <TextBlock x:Name="ProductCountTextBlock" Grid.Column="1" HorizontalAlignment="Left" Margin="82.667,2,0,0" Grid.Row="7" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
         <TextBlock x:Name="TransactionCountTextBlock" Grid.Column="1" HorizontalAlignment="Left" Margin="311.667,2,0,0" Grid.Row="7" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
-        <Button x:Name="UpdateSettingsButton" Content="Update Settings" HorizontalAlignment="Left" Margin="157.667,103,0,0" VerticalAlignment="Top" Width="113" Click="RestoreDatabaseClick" Grid.Row="7" Height="16" Grid.Column="1" />
+        <Button x:Name="UpdateSettingsButton" Content="Update Settings" HorizontalAlignment="Left" Margin="157.667,103,0,0" VerticalAlignment="Top" Width="113" Click="UpdateSettingsButtonClick" Grid.Row="7" Height="16" Grid.Column="1" />
         <Label x:Name="PersonalizeLabel" Content="Personalize" Grid.Row="7" FontWeight="Bold" FontSize="11" Margin="7,47,365.333,56.667" Grid.ColumnSpan="2"/>
         <TextBox x:Name="CompanyNameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="97.667,68,0,0" Grid.Row="7" Text="" VerticalAlignment="Top" Width="120"/>
         <TextBlock x:Name="CompanyNameLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="4.667,74,0,0" Grid.Row="7" TextWrapping="Wrap" Text="Company Name:" VerticalAlignment="Top"/>

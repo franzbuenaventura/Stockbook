@@ -263,5 +263,66 @@ namespace Stockbook.Windows
                 this.LocationTextBox.Text = dialog.SelectedPath;
             }
         }
+
+        /// <summary>
+        /// The update settings button_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void UpdateSettingsButtonClick(object sender, RoutedEventArgs e)
+        {
+            var config = StockbookWindows.OpenConfig();
+            var isChecked = this.AutoBackupCheckBox.IsChecked;
+            if (isChecked != null)
+            {
+                config.IsAutoBackupOn = isChecked.Value;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.LocationTextBox.Text))
+            {
+                config.AutoBackupLocation = this.LocationTextBox.Text;
+            }
+
+            int retainCount;
+            if (string.IsNullOrWhiteSpace(this.RetainCountTextBox.Text) && int.TryParse(this.RetainCountTextBox.Text, out retainCount))
+            {
+                config.RetainHistoryCount = retainCount;
+            }
+
+            isChecked = this.RetainBackupCheckBox.IsChecked;
+            if (isChecked != null)
+            {
+                config.IsRetainHistoryOn = isChecked.Value;
+            }
+
+            if (this.WeeklyBackupRadioButton.IsChecked.Value)
+            {
+                config.TimeIntervalAutoBackup = "Weekly";
+            }
+            else if (this.DailyBackupRadioButton.IsChecked.Value)
+            {
+                config.TimeIntervalAutoBackup = "Daily";
+            }
+            else if (this.HourlyBackupRadioButton.IsChecked.Value)
+            {
+                config.TimeIntervalAutoBackup = "Hourly";
+            }
+
+            if (string.IsNullOrWhiteSpace(this.CompanyNameTextBox.Text))
+            {
+                config.CompanyName = this.CompanyNameTextBox.Text;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.CurrencyComboBox.SelectedValue.ToString()))
+            {
+                config.Currency = this.CurrencyComboBox.SelectedValue.ToString();
+            }
+
+            StockbookWindows.SaveConfig(config);
+        }
     }
 }
