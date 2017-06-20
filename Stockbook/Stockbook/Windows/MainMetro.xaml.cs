@@ -100,6 +100,22 @@ namespace Stockbook.Windows
         /// </summary>
         public void InitializeProductsView()
         {
+            var config = StockbookWindows.OpenConfig();
+            var currency = string.Empty;
+            switch (config.Currency)
+            {
+                case "PHP - ₱":
+                    currency = "₱#,###,##0.00";
+                    break;
+                case "USD - $":
+                    currency = "$#,###,##0.00";
+                    break;
+                case "YEN - ¥":
+                    currency = "¥#,###,##0.00";
+                    break;
+            }
+
+
             this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
             foreach (var dc in this.DataGrid.Columns)
             {
@@ -111,6 +127,10 @@ namespace Stockbook.Windows
                     {
                         firstOrDefault.IsReadOnly = true;
                     }
+                }
+                if (dc.Header.ToString() == "Case Val" || dc.Header.ToString() == "Pack Val" || dc.Header.ToString() == "Piece Val")
+                {
+                    ((DataGridTextColumn)dc).Binding.StringFormat = currency;
                 }
             }
         }
@@ -386,7 +406,7 @@ namespace Stockbook.Windows
             foreach (var dc in this.TransactionDataGrid.Columns)
             {
                 if (dc.Header.ToString() == "Type" || dc.Header.ToString() == "Ref No." || dc.Header.ToString() == "Particular" || dc.Header.ToString() == "Salesman" ||
-                    dc.Header.ToString() == "Principal List" || dc.Header.ToString() == "Prod Count" || dc.Header.ToString() == "Add Date")
+                    dc.Header.ToString() == "Principal List" || dc.Header.ToString() == "Prod Count" || dc.Header.ToString() == "Input Date")
                 {
                     var firstOrDefault = this.TransactionDataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header);
                     if (firstOrDefault != null)

@@ -1,25 +1,20 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Settings.xaml.cs" company="">
-//   
+// <copyright file="Settings.xaml.cs" company="Franz Buenaventura">
+//   Author: Franz Justin Buenaventura
+//   Website: www.franzbuenaventura.com 
+//   License: GNU Affero General Public License v3.0
 // </copyright>
 // <summary>
-//   Interaction logic for Settings.xaml
+//   The Settings Class that contains the backend for Settings Window
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace Stockbook.Windows
 {
     using System;
-    using System.Diagnostics;
-    using System.IO;
     using System.Windows;
-    using System.Windows.Controls;
 
     using Class;
-
-    using Newtonsoft.Json;
-
-    using Stockbook.Model;
 
     /// <summary>
     /// Interaction logic for Settings

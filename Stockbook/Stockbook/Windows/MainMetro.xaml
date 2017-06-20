@@ -12,13 +12,16 @@
             <TabControl x:Name="TabControl" Margin="0,0,-0.4,0.4">
                 <TabItem Header="Inventory">
                     <Grid Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25*"/>
                             <RowDefinition Height="25*"/>
                             <RowDefinition Height="18*"/>
                             <RowDefinition Height="254*"/>
                         </Grid.RowDefinitions>
-                        <Grid Margin="0" Grid.Row="2">
+                        <Grid Margin="0,0,-0.333,0" Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="{Binding ElementName=DataGrid, Path=RowHeaderWidth}" />
                                 <ColumnDefinition Width="{Binding ElementName=Location, Path=ActualWidth}" />
@@ -47,9 +50,9 @@
                             </Border>
                             <Border Grid.Column="12" Grid.ColumnSpan="2" BorderBrush="Black" HorizontalAlignment="Stretch" BorderThickness="1,2,2,2">
                                 <Label Content="Convertion" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontWeight="Bold"/>
-                            </Border> 
+                            </Border>
                         </Grid>
-                    <Grid Margin="0,0,0,0.4">
+                        <Grid Margin="0,0,-0.333,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*"/>
                                 <RowDefinition Height="20*"/>
@@ -91,34 +94,132 @@
                                 <ComboBoxItem x:Name="All_Principal2" Content="All Principal" Margin="0,0,8,0" d:LayoutOverrides="HorizontalAlignment"/>
                             </ComboBox>
                         </Grid>
-                        <DataGrid x:Name="DataGrid" IsTextSearchEnabled="True" AutoGenerateColumns="False" GridLinesVisibility="All" CanUserAddRows="False" CanUserDeleteRows="False" CellEditEnding="DataGridCellEditEnding" Grid.Row="3">
+                        <DataGrid x:Name="DataGrid" IsTextSearchEnabled="True" AutoGenerateColumns="False" GridLinesVisibility="All" CanUserAddRows="False" CanUserDeleteRows="False" CellEditEnding="DataGridCellEditEnding" Grid.Row="3" Margin="0,0,-0.333,0">
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="Location" Header="Location" SortDirection="Ascending"
-                                    Binding="{Binding Location}"/>
+                                    Binding="{Binding Location}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="Principal" Header="Principal"  
-                                    Binding="{Binding Principal}"/>
+                                    Binding="{Binding Principal}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="Category" Header="Category"
-                                    Binding="{Binding Category}"/>
+                                    Binding="{Binding Category}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="Name" Header="Name"
-                                    Binding="{Binding Name}"/>
+                                    Binding="{Binding Name}">
+
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="ProdCode" Header="Prod. Code"
-                                    Binding="{Binding ProdCode}"/>
+                                    Binding="{Binding ProdCode}">
+
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="CaseValue" Header="Case Val"
-                                    Binding="{Binding CaseValue}"/>
+                                    Binding="{Binding CaseValue}">
+
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PackValue" Header="Pack Val"
-                                    Binding="{Binding PackValue}"/>
+                                    Binding="{Binding PackValue}">
+
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PieceValue" Header="Piece Val"
-                                    Binding="{Binding PieceValue}"/>
+                                    Binding="{Binding PieceValue}">
+
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="CaseBalance" Header="Case Bal"
-                                    Binding="{Binding CaseBalance}"/>
+                                    Binding="{Binding CaseBalance}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PackBalance" Header="Pack Bal"
-                                    Binding="{Binding PackBalance}"/>
+                                    Binding="{Binding PackBalance}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PieceBalance" Header="Piece Bal"
-                                    Binding="{Binding PieceBalance}"/>
+                                    Binding="{Binding PieceBalance}">
+
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="CaseToPacks" Header="Case To Packs"
-                                    Binding="{Binding CaseToPacks}"/>
+                                    Binding="{Binding CaseToPacks}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PackToPieces" Header="Pack To Pieces"
-                                    Binding="{Binding PackToPieces}"/>
+                                    Binding="{Binding PackToPieces}">
+
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTemplateColumn x:Name="Delete" Header="Delete">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -128,7 +229,7 @@
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="1" Margin="0,0,-0.333,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*"/>
                                 <RowDefinition Height="20*"/>
@@ -170,18 +271,60 @@
                         <DataGrid x:Name="TransactionDataGrid" IsTextSearchEnabled="True" AutoGenerateColumns="False" GridLinesVisibility="All" CanUserAddRows="False" CanUserDeleteRows="False" Margin="0" Grid.Row="3">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Type"
-                                    Binding="{Binding TransactionType}"/>
+                                    Binding="{Binding TransactionType}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Ref No."
-                                    Binding="{Binding RefNo}"/>
+                                    Binding="{Binding RefNo}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Particular"
-                                    Binding="{Binding Particular}"/>
+                                    Binding="{Binding Particular}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Salesman"
-                                    Binding="{Binding SalesmanName}"/>
+                                    Binding="{Binding SalesmanName}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Principal List"
-                                    Binding="{Binding PrincipalList}"/>
+                                    Binding="{Binding PrincipalList}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Prod Count"
-                                    Binding="{Binding ItemCount}"/>
-                                <DataGridTextColumn Header="Add Date"
+                                    Binding="{Binding ItemCount}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Input Date"
                                     Binding="{Binding DateTransaction, StringFormat=MMMM dd yyyy}"/>
                                 <DataGridTemplateColumn Header="Details">
                                     <DataGridTemplateColumn.CellTemplate>
