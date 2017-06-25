@@ -94,15 +94,8 @@ namespace Stockbook.Windows
         public ExportExcel(string tab)
         {
             this.InitializeComponent();
-            this.InitializeProducts(this.locationFilter, this.principalFilter, this.categoryFilter);
-            this.InitializeTransactions(
-                this.locationTransFilter,
-                this.principalTransFilter,
-                this.categoryTransFilter,
-                this.nameTransFilter,
-                this.typeTransFilter,
-                this.particularTransFilter,
-                this.salesmanTransFilter);
+            this.InitializeProductsView();
+            this.InitializeTransView();
             if (tab == "Product")
             {
                 this.tabControl.SelectedIndex = 0;
@@ -112,6 +105,40 @@ namespace Stockbook.Windows
            {
                this.tabControl.SelectedIndex = 1;
                this.tabControl.SelectedItem = this.transactionTab;
+            }
+        }
+
+
+        /// <summary>
+        /// Initialize products view by calling InitializeProductsFilter and making selected columns a read only
+        /// </summary>
+        public void InitializeProductsView()
+        {
+            var config = StockbookWindows.OpenConfig();
+            var currency = string.Empty;
+            switch (config.Currency)
+            {
+                case "PHP - ₱":
+                    currency = "₱#,###,##0.00";
+                    break;
+                case "USD - $":
+                    currency = "$#,###,##0.00";
+                    break;
+                case "YEN - ¥":
+                    currency = "¥#,###,##0.00";
+                    break;
+            }
+
+
+            this.InitializeProducts(this.locationFilter, this.principalFilter, this.categoryFilter);
+            foreach (var dc in this.DataGrid.Columns)
+            {
+                dc.IsReadOnly = true;
+
+                if (dc.Header.ToString() == "Case Val" || dc.Header.ToString() == "Pack Val" || dc.Header.ToString() == "Piece Val")
+                {
+                    ((DataGridTextColumn)dc).Binding.StringFormat = currency;
+                }
             }
         }
 
@@ -288,6 +315,26 @@ namespace Stockbook.Windows
         #endregion
 
         #region Transactions
+
+        /// <summary>
+        /// Initialize transaction view by calling InitializeTransFilter and making selected columns a read only
+        /// </summary>
+        public void InitializeTransView()
+        {
+            this.InitializeTransactions(
+                this.locationTransFilter,
+                this.principalTransFilter,
+                this.categoryTransFilter,
+                this.nameTransFilter,
+                this.typeTransFilter,
+                this.particularTransFilter,
+                this.salesmanTransFilter);
+            foreach (var dc in this.TransactionDataGrid.Columns)
+            {
+                dc.IsReadOnly = true;
+            }
+        }
+
 
         /// <summary>
         /// The method initialize the transactions and filter it with the input of the user
@@ -471,7 +518,7 @@ namespace Stockbook.Windows
             this.SalesmanInputTrans.SelectedIndex = this.SalesmanInputTrans.Items.IndexOf(newValueSalesman);
             this.NameInputTrans.SelectedIndex = this.NameInputTrans.Items.IndexOf(newValueName);
             this.listTransactions = listTrans;
-            this.DataGrid1.ItemsSource = transView;
+            this.TransactionDataGrid.ItemsSource = transView;
         }
 
         /// <summary>

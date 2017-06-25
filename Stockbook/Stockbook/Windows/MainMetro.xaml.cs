@@ -46,7 +46,7 @@ namespace Stockbook.Windows
         /// <summary>
         /// The default value for location filter in transactions list view.
         /// </summary>
-        private string locationFilterTrans = "All Location";
+        private string particularFilterTrans = "All Particular";
 
         /// <summary>
         /// The default value for principal filter in transactions list view.
@@ -56,7 +56,7 @@ namespace Stockbook.Windows
         /// <summary>
         /// The default value for category filter in transactions list view.
         /// </summary>
-        private string categoryFilterTrans = "All Category";
+        private string salesmanFilterTrans = "All Salesman";
 
         /// <summary>
         /// The default value for transaction filter in transactions list view.
@@ -401,7 +401,7 @@ namespace Stockbook.Windows
             this.TransactionFilterTrans.Items.Add("All Transactions");
             this.TransactionFilterTrans.Items.Add("Sales");
             this.TransactionFilterTrans.Items.Add("Purchased");
-            this.InitializeTransFilter("All Transactions", this.locationFilterTrans, this.principalFilterTrans, this.categoryFilterTrans);
+            this.InitializeTransFilter("All Transactions", this.particularFilterTrans, this.principalFilterTrans, this.salesmanFilterTrans);
 
             foreach (var dc in this.TransactionDataGrid.Columns)
             {
@@ -423,61 +423,46 @@ namespace Stockbook.Windows
         /// <param name="newValueTransaction">
         /// The parameter for a new transaction value or default empty if user did not put any
         /// </param>
-        /// <param name="newValueLocation">
-        /// The parameter for a new location value or default empty if user did not put any
+        /// <param name="newValueParticular">
+        /// The parameter for a new particular value or default empty if user did not put any
         /// </param>
         /// <param name="newValuePrincipal">
         /// The parameter for a new principal value or default empty if user did not put any
         /// </param>
-        /// <param name="newValueCategory">
-        /// The parameter for a new category value or default empty if user did not put any
+        /// <param name="newValueSalesman">
+        /// The parameter for a new salesman value or default empty if user did not put any
         /// </param>
         public void InitializeTransFilter(
             string newValueTransaction = "",
-            string newValueLocation = "",
+            string newValueParticular = "",
             string newValuePrincipal = "",
-            string newValueCategory = "")
+            string newValueSalesman = "")
         {
             var listTrans = TransactionOrder.GetAllTransactions();
 
-            this.LocationFilterTrans.ItemsSource = null;
-            this.LocationFilterTrans.Items.Clear();
-            this.LocationFilterTrans.Items.Add("All Location");
+            this.ParticularFilterTrans.ItemsSource = null;
+            this.ParticularFilterTrans.Items.Clear();
+            this.ParticularFilterTrans.Items.Add("All Particular");
             this.PrincipalFilterTrans.ItemsSource = null;
             this.PrincipalFilterTrans.Items.Clear();
             this.PrincipalFilterTrans.Items.Add("All Principal");
-            this.CategoryFilterTrans.ItemsSource = null;
-            this.CategoryFilterTrans.Items.Clear();
-            this.CategoryFilterTrans.Items.Add("All Category");
+            this.SalesmanFilterTrans.ItemsSource = null;
+            this.SalesmanFilterTrans.Items.Clear();
+            this.SalesmanFilterTrans.Items.Add("All Salesman");
 
             if (newValueTransaction != "All Transactions")
             {
                 listTrans = listTrans.Where(q => q.TransactionType == newValueTransaction).ToList();
             }
-
-            if (this.locationFilterTrans != newValueLocation)
+             
+            foreach (var prod in listTrans.Select(q => q.Particular).Distinct())
             {
-                this.principalFilterTrans = "All Principal";
-                newValuePrincipal = this.principalFilterTrans;
-                this.categoryFilterTrans = "All Category";
-                newValueCategory = this.categoryFilterTrans;
+                this.ParticularFilterTrans.Items.Add(prod);
             }
 
-            if (this.principalFilterTrans != newValuePrincipal)
+            if (newValueParticular != "All Particular")
             {
-                this.categoryFilterTrans = "All Category";
-                newValueCategory = this.categoryFilterTrans;
-            }
-
-            foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Location).Distinct())
-            {
-                this.LocationFilterTrans.Items.Add(prod);
-            }
-
-            if (newValueLocation != "All Location")
-            {
-                listTrans =
-                    listTrans.Where(q => q.Transactions.Exists(s => s.Product.Location == newValueLocation)).ToList();
+                listTrans = listTrans.Where(q => q.Particular == newValueParticular).ToList();
             }
 
             foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Principal).Distinct())
@@ -491,15 +476,15 @@ namespace Stockbook.Windows
                     listTrans.Where(q => q.Transactions.Exists(s => s.Product.Principal == newValuePrincipal)).ToList();
             }
 
-            foreach (var prod in listTrans.SelectMany(q => q.Transactions).Select(s => s.Product.Category).Distinct())
+            foreach (var prod in listTrans.Select(q => q.SalesmanName).Distinct())
             {
-                this.CategoryFilterTrans.Items.Add(prod);
+                this.SalesmanFilterTrans.Items.Add(prod);
             }
 
-            if (newValueCategory != "All Category")
+            if (newValueSalesman != "All Salesman")
             {
                 listTrans =
-                    listTrans.Where(q => q.Transactions.Exists(s => s.Product.Category == newValueCategory)).ToList();
+                    listTrans.Where(q => q.SalesmanName == newValueSalesman).ToList();
             }
 
             if (!string.IsNullOrWhiteSpace(this.startDate.Text))
@@ -539,13 +524,13 @@ namespace Stockbook.Windows
 
             this.TransactionDataGrid.ItemsSource = transView;
             this.transactionFilterTrans = newValueTransaction;
-            this.locationFilterTrans = newValueLocation;
+            this.particularFilterTrans = newValueParticular;
             this.principalFilterTrans = newValuePrincipal;
-            this.categoryFilterTrans = newValueCategory;
+            this.salesmanFilterTrans = newValueSalesman;
             this.TransactionFilterTrans.SelectedIndex = this.TransactionFilterTrans.Items.IndexOf(newValueTransaction);
-            this.LocationFilterTrans.SelectedIndex = this.LocationFilterTrans.Items.IndexOf(newValueLocation);
+            this.ParticularFilterTrans.SelectedIndex = this.ParticularFilterTrans.Items.IndexOf(newValueParticular);
             this.PrincipalFilterTrans.SelectedIndex = this.PrincipalFilterTrans.Items.IndexOf(newValuePrincipal);
-            this.CategoryFilterTrans.SelectedIndex = this.CategoryFilterTrans.Items.IndexOf(newValueCategory);
+            this.SalesmanFilterTrans.SelectedIndex = this.SalesmanFilterTrans.Items.IndexOf(newValueSalesman);
         }
 
         /// <summary>
@@ -661,12 +646,12 @@ namespace Stockbook.Windows
             var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                this.InitializeTransFilter(newValue.ToString(), this.locationFilterTrans, this.principalFilterTrans, this.categoryFilterTrans);
+                this.InitializeTransFilter(newValue.ToString(), this.particularFilterTrans, this.principalFilterTrans, this.salesmanFilterTrans);
             }
         }
 
         /// <summary>
-        /// The location filter trans drop down closed, from Transaction View will check if a new value is selected and will initialize again
+        /// The particular filter trans drop down closed, from Transaction View will check if a new value is selected and will initialize again
         /// </summary>
         /// <param name="sender">
         /// The sender is the parent object of the combo box, which is the Data Grid 
@@ -674,12 +659,12 @@ namespace Stockbook.Windows
         /// <param name="e">
         /// The e is the event arguments if applicable
         /// </param>
-        private void LocationFilterTransDropDownClosed(object sender, EventArgs e)
+        private void ParticularFilterTransDropDownClosed(object sender, EventArgs e)
         {
             var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                this.InitializeTransFilter(this.transactionFilterTrans, newValue.ToString(), this.principalFilterTrans, this.categoryFilterTrans);
+                this.InitializeTransFilter(this.transactionFilterTrans, newValue.ToString(), this.principalFilterTrans, this.salesmanFilterTrans);
             }
         }
 
@@ -697,7 +682,7 @@ namespace Stockbook.Windows
             var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                this.InitializeTransFilter(this.transactionFilterTrans, this.locationFilterTrans, newValue.ToString(), this.categoryFilterTrans);
+                this.InitializeTransFilter(this.transactionFilterTrans, this.particularFilterTrans, newValue.ToString(), this.salesmanFilterTrans);
             }
         }
 
@@ -710,12 +695,12 @@ namespace Stockbook.Windows
         /// <param name="e">
         /// The e is the event arguments if applicable
         /// </param>
-        private void CategoryFilterTransDropDownClosed(object sender, EventArgs e)
+        private void SalesmanFilterTransDropDownClosed(object sender, EventArgs e)
         {
             var newValue = ((ComboBox)sender).SelectedItem;
             if (newValue != null)
             {
-                this.InitializeTransFilter(this.transactionFilterTrans, this.locationFilterTrans, this.principalFilterTrans, newValue.ToString());
+                this.InitializeTransFilter(this.transactionFilterTrans, this.particularFilterTrans, this.principalFilterTrans, newValue.ToString());
             }
         }
 
@@ -733,7 +718,7 @@ namespace Stockbook.Windows
             var newValue = ((DatePicker)sender).Text;
             if (newValue != null)
             {
-                this.InitializeTransFilter(this.transactionFilterTrans, this.locationFilterTrans, this.principalFilterProduct, this.categoryFilterTrans);
+                this.InitializeTransFilter(this.transactionFilterTrans, this.particularFilterTrans, this.principalFilterProduct, this.salesmanFilterTrans);
             }
         }
 
@@ -751,7 +736,7 @@ namespace Stockbook.Windows
             var newValue = ((DatePicker)sender).Text;
             if (newValue != null)
             {
-                this.InitializeTransFilter(this.transactionFilterTrans, this.locationFilterTrans, this.principalFilterProduct, this.categoryFilterTrans);
+                this.InitializeTransFilter(this.transactionFilterTrans, this.particularFilterTrans, this.principalFilterProduct, this.salesmanFilterTrans);
             }
         }
 
@@ -784,6 +769,6 @@ namespace Stockbook.Windows
         {
             Settings settings = new Settings();
             settings.Show();
-        }
+        } 
     }
 }

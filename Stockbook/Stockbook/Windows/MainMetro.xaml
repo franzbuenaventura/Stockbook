@@ -368,7 +368,7 @@
                             </Grid.ColumnDefinitions>
                             <Button x:Name="AddSales" Content="Add Sales" Grid.Row="1" Grid.Column="1" Click="AddSalesClick" FontSize="20"/>
                             <Button x:Name="AddPurchased" Content="Add Purchased" Grid.Column="3" Grid.Row="1" Click="AddPurchasedClick" FontSize="20"/>
-                            <ComboBox x:Name="LocationFilterTrans" Grid.Column="7" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" Margin="0" Grid.Row="1" DropDownClosed="LocationFilterTransDropDownClosed" FontSize="14"/>
+                            <ComboBox x:Name="ParticularFilterTrans" Grid.Column="7" AutomationProperties.HelpText="Particular Filter" Text="All Particular" SelectedIndex="0" Margin="0" Grid.Row="1" DropDownClosed="ParticularFilterTransDropDownClosed" FontSize="14"/>
                             <ComboBox x:Name="TransactionFilterTrans" Grid.Column="5" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Margin="0" DropDownClosed="TransactionFilterTransDropDownClosed" FontSize="14">
                                 <ComboBox.RenderTransform>
                                     <TransformGroup>
@@ -398,8 +398,8 @@
                                 <ColumnDefinition Width="22*"/>
                             </Grid.ColumnDefinitions>
                             <Button x:Name="ExportGroup" Content="Export Group" Grid.Column="1" Click="ExportGroupClick" Grid.ColumnSpan="3" Margin="98.6,0,97.6,0" Grid.Row="1" FontSize="20"/>
-                            <ComboBox x:Name="CategoryFilterTrans" Grid.Column="7" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" Margin="0" Grid.Row="1" DropDownClosed="CategoryFilterTransDropDownClosed" FontSize="14">
-                                <ComboBoxItem x:Name="All_Category1" Content="All Products" Margin="0,0,8,0" d:LayoutOverrides="HorizontalAlignment"/>
+                            <ComboBox x:Name="SalesmanFilterTrans" Grid.Column="7" AutomationProperties.HelpText="Salesman Filter" Text="All Salesman" SelectedIndex="0" Margin="0" Grid.Row="1" DropDownClosed="SalesmanFilterTransDropDownClosed" FontSize="14">
+                                <ComboBoxItem x:Name="AllSalesman" Content="All Salesman" Margin="0,0,8,0" d:LayoutOverrides="HorizontalAlignment"/>
                             </ComboBox>
                             <ComboBox x:Name="PrincipalFilterTrans" Grid.Column="5" AutomationProperties.HelpText="Category Filter" Text="All Category" SelectedIndex="0" RenderTransformOrigin="0.5,0.5" Margin="0" Grid.Row="1" DropDownClosed="PrincipalFilterTransDropDownClosed" FontSize="14">
                                 <ComboBox.RenderTransform>
