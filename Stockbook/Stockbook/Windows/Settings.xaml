@@ -27,7 +27,7 @@
             <Button x:Name="DeleteTransactions" Content="Delete Transactions" HorizontalAlignment="Left" Margin="214.667,19.667,0,0" VerticalAlignment="Top" Width="130" Click="DeleteTransactionsClick" Grid.Row="7" Height="27" Grid.Column="1"/>
             <Button x:Name="BackupDatabase" Content="Backup Database" HorizontalAlignment="Left" Margin="4.667,4,0,0" VerticalAlignment="Top" Width="113" Click="BackupDatabaseClick" Grid.Row="4" Height="28" Grid.Column="1"  />
             <Separator HorizontalAlignment="Left" Height="55" Margin="7,0,0,0" VerticalAlignment="Top" Width="440" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="2"/>
-            <Label x:Name="SettingsLabel" Content="Settings" FontSize="15" FontWeight="Bold" Grid.ColumnSpan="2" Margin="7,0,0.333,4.333" Height="30" Grid.RowSpan="3" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+            <Label x:Name="SettingsLabel" Content="Settings" FontSize="15" FontWeight="Bold" Grid.ColumnSpan="2" Margin="7,0,32.8,4.6" Height="30" Grid.RowSpan="3" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
                 <Label.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
