@@ -19,6 +19,7 @@ namespace Stockbook.Windows
     using System.Windows.Controls;
 
     using Class;
+
     using Model;
 
     /// <summary>
@@ -93,6 +94,7 @@ namespace Stockbook.Windows
         {
             StockbookWindows.AutoBackup();
         }
+
         #region Inventory 
 
         /// <summary>
@@ -100,6 +102,11 @@ namespace Stockbook.Windows
         /// </summary>
         public void InitializeProductsView()
         {
+            this.InitializeProductsFilter(
+                this.locationFilterProduct,
+                this.principalFilterProduct,
+                this.categoryFilterProduct);
+
             var config = StockbookWindows.OpenConfig();
             var currency = string.Empty;
             switch (config.Currency)
@@ -114,24 +121,27 @@ namespace Stockbook.Windows
                     currency = "¥#,###,##0.00";
                     break;
             }
-
-
-            this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
-            foreach (var dc in this.DataGrid.Columns)
+            try
             {
-                if (dc.Header.ToString() == "Case Bal" || dc.Header.ToString() == "Pack Bal" || dc.Header.ToString() == "Piece Bal" 
-                    || dc.Header.ToString() == "Case To Packs" || dc.Header.ToString() == "Packs To Pieces")
+                foreach (var dc in this.DataGrid.Columns)
                 {
-                    var firstOrDefault = this.DataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header);
-                    if (firstOrDefault != null)
+                    if (dc.Header.ToString() == "Case Bal" || dc.Header.ToString() == "Pack Bal" || dc.Header.ToString() == "Piece Bal"
+                        || dc.Header.ToString() == "Case To Packs" || dc.Header.ToString() == "Packs To Pieces")
                     {
-                        firstOrDefault.IsReadOnly = true;
+                        var firstOrDefault = this.DataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header);
+                        if (firstOrDefault != null)
+                        {
+                            firstOrDefault.IsReadOnly = true;
+                        }
+                    }
+                    if (dc.Header.ToString() == "Case Val" || dc.Header.ToString() == "Pack Val" || dc.Header.ToString() == "Piece Val")
+                    {
+                        ((DataGridTextColumn)dc).Binding.StringFormat = currency;
                     }
                 }
-                if (dc.Header.ToString() == "Case Val" || dc.Header.ToString() == "Pack Val" || dc.Header.ToString() == "Piece Val")
-                {
-                    ((DataGridTextColumn)dc).Binding.StringFormat = currency;
-                }
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -238,7 +248,7 @@ namespace Stockbook.Windows
         private void DataGridCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         { 
             var prod = e.EditingElement.DataContext as Product;
-            var newValue = ((TextBox)e.EditingElement).Text;
+            var newValue = ((TextBox)e.EditingElement).Text.Replace("$",string.Empty).Replace("¥", string.Empty).Replace("₱", string.Empty).Replace(",", string.Empty).Trim();
             decimal temp = decimal.TryParse(newValue, out temp) ? temp : 0;
             var oldValue = string.Empty;
             switch (e.Column.Header.ToString())
@@ -288,7 +298,7 @@ namespace Stockbook.Windows
                 {
                     Product.EditProduct(prod);
                     this.DataGrid.CommitEdit();
-                    this.InitializeProductsView();
+                    this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
                 }
             }
         }
@@ -314,7 +324,7 @@ namespace Stockbook.Windows
                 Product.DeleteProduct(prod.Id);
             }
 
-            this.InitializeProductsView();
+            this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
         }
 
         /// <summary>
@@ -612,7 +622,7 @@ namespace Stockbook.Windows
             }
 
             this.InitializeTransView();
-            this.InitializeProductsView();
+            this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
         }
 
         /// <summary>
