@@ -277,13 +277,13 @@ namespace Stockbook.Windows
                 config.IsAutoBackupOn = isChecked.Value;
             }
 
-            if (!string.IsNullOrWhiteSpace(this.LocationTextBox.Text))
+            if (string.IsNullOrWhiteSpace(this.LocationTextBox.Text))
             {
                 config.AutoBackupLocation = this.LocationTextBox.Text;
             }
 
             int retainCount;
-            if (!string.IsNullOrWhiteSpace(this.RetainCountTextBox.Text) && int.TryParse(this.RetainCountTextBox.Text, out retainCount))
+            if (string.IsNullOrWhiteSpace(this.RetainCountTextBox.Text) && int.TryParse(this.RetainCountTextBox.Text, out retainCount))
             {
                 config.RetainHistoryCount = retainCount;
             }
@@ -307,18 +307,17 @@ namespace Stockbook.Windows
                 config.TimeIntervalAutoBackup = "Hourly";
             }
 
-            if (!string.IsNullOrWhiteSpace(this.CompanyNameTextBox.Text))
+            if (string.IsNullOrWhiteSpace(this.CompanyNameTextBox.Text))
             {
                 config.CompanyName = this.CompanyNameTextBox.Text;
             }
 
-            if (!string.IsNullOrWhiteSpace(this.CurrencyComboBox.SelectedValue.ToString()))
+            if (string.IsNullOrWhiteSpace(this.CurrencyComboBox.SelectedValue.ToString()))
             {
                 config.Currency = this.CurrencyComboBox.SelectedValue.ToString();
             }
 
             StockbookWindows.SaveConfig(config);
-            this.Close();
         }
     }
 }
