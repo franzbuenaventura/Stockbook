@@ -19,6 +19,7 @@ namespace Stockbook.Windows
     using System.Windows.Controls;
 
     using Class;
+
     using Model;
 
     /// <summary>
@@ -69,7 +70,6 @@ namespace Stockbook.Windows
         public MainMetro()
         {
             this.InitializeComponent();
-            InitializeGUI();
             this.InitializeProductsView();
             this.InitializeTransView();
             StockbookWindows.AutoBackup();
@@ -79,40 +79,6 @@ namespace Stockbook.Windows
             dispatcherTimer.Tick += new EventHandler(this.DispatcherTimerTick);
             dispatcherTimer.Interval = new TimeSpan(0, 5, 0);
             dispatcherTimer.Start();
-        }
-
-        public void InitializeGUI() {
-            var config = StockbookWindows.OpenConfig();
-            var currency = string.Empty;
-            switch (config.Currency)
-            {
-                case "PHP - ₱":
-                    currency = "₱#,###,##0.00";
-                    break;
-                case "USD - $":
-                    currency = "$#,###,##0.00";
-                    break;
-                case "YEN - ¥":
-                    currency = "¥#,###,##0.00";
-                    break;
-            }
-
-            foreach (var dc in this.DataGrid.Columns)
-            {
-                if (dc.Header.ToString() == "Case Bal" || dc.Header.ToString() == "Pack Bal" || dc.Header.ToString() == "Piece Bal"
-                    || dc.Header.ToString() == "Case To Packs" || dc.Header.ToString() == "Packs To Pieces")
-                {
-                    var firstOrDefault = this.DataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header);
-                    if (firstOrDefault != null)
-                    {
-                        firstOrDefault.IsReadOnly = true;
-                    }
-                }
-                if (dc.Header.ToString() == "Case Val" || dc.Header.ToString() == "Pack Val" || dc.Header.ToString() == "Piece Val")
-                {
-                    ((DataGridTextColumn)dc).Binding.StringFormat = currency;
-                }
-            }
         }
 
         /// <summary>
@@ -128,6 +94,7 @@ namespace Stockbook.Windows
         {
             StockbookWindows.AutoBackup();
         }
+
         #region Inventory 
 
         /// <summary>
@@ -135,7 +102,47 @@ namespace Stockbook.Windows
         /// </summary>
         public void InitializeProductsView()
         {
-            this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
+            this.InitializeProductsFilter(
+                this.locationFilterProduct,
+                this.principalFilterProduct,
+                this.categoryFilterProduct);
+
+            var config = StockbookWindows.OpenConfig();
+            var currency = string.Empty;
+            switch (config.Currency)
+            {
+                case "PHP - ₱":
+                    currency = "₱#,###,##0.00";
+                    break;
+                case "USD - $":
+                    currency = "$#,###,##0.00";
+                    break;
+                case "YEN - ¥":
+                    currency = "¥#,###,##0.00";
+                    break;
+            }
+            try
+            {
+                foreach (var dc in this.DataGrid.Columns)
+                {
+                    if (dc.Header.ToString() == "Case Bal" || dc.Header.ToString() == "Pack Bal" || dc.Header.ToString() == "Piece Bal"
+                        || dc.Header.ToString() == "Case To Packs" || dc.Header.ToString() == "Packs To Pieces")
+                    {
+                        var firstOrDefault = this.DataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header);
+                        if (firstOrDefault != null)
+                        {
+                            firstOrDefault.IsReadOnly = true;
+                        }
+                    }
+                    if (dc.Header.ToString() == "Case Val" || dc.Header.ToString() == "Pack Val" || dc.Header.ToString() == "Piece Val")
+                    {
+                        ((DataGridTextColumn)dc).Binding.StringFormat = currency;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>
@@ -241,7 +248,7 @@ namespace Stockbook.Windows
         private void DataGridCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         { 
             var prod = e.EditingElement.DataContext as Product;
-            var newValue = ((TextBox)e.EditingElement).Text;
+            var newValue = ((TextBox)e.EditingElement).Text.Replace("$",string.Empty).Replace("¥", string.Empty).Replace("₱", string.Empty).Replace(",", string.Empty).Trim();
             decimal temp = decimal.TryParse(newValue, out temp) ? temp : 0;
             var oldValue = string.Empty;
             switch (e.Column.Header.ToString())
@@ -291,7 +298,7 @@ namespace Stockbook.Windows
                 {
                     Product.EditProduct(prod);
                     this.DataGrid.CommitEdit();
-                    this.InitializeProductsView();
+                    this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
                 }
             }
         }
@@ -317,7 +324,7 @@ namespace Stockbook.Windows
                 Product.DeleteProduct(prod.Id);
             }
 
-            this.InitializeProductsView();
+            this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
         }
 
         /// <summary>
@@ -615,7 +622,7 @@ namespace Stockbook.Windows
             }
 
             this.InitializeTransView();
-            this.InitializeProductsView();
+            this.InitializeProductsFilter(this.locationFilterProduct, this.principalFilterProduct, this.categoryFilterProduct);
         }
 
         /// <summary>
