@@ -160,9 +160,6 @@
     <Compile Include="Windows\CreateSalesPurchased.xaml.cs">
       <DependentUpon>CreateSalesPurchased.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\CreateSalesPurchased1.xaml.cs">
-      <DependentUpon>CreateSalesPurchased1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\Details.xaml.cs">
       <DependentUpon>Details.xaml</DependentUpon>
     </Compile>
@@ -187,10 +184,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\CreateSalesPurchased.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Windows\CreateSalesPurchased1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

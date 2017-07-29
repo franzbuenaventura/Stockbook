@@ -53,6 +53,7 @@ namespace Stockbook.Class
                 if (window.Title == "Main")
                 {
                     ((MainMetro)window).InitializeProductsView();
+                    ((MainMetro)window).InitializeTransView();
                 }
             }
         }
@@ -73,12 +74,16 @@ namespace Stockbook.Class
         {
             var backupName = "Backup - " + DateTime.Now.ToString("yyyy-MM-dd-HH-mm", CultureInfo.InvariantCulture)
                            + ".stockbook";
+
             var databaseBackup = new DatabaseBackupModel
                                                      {
                                                          Date = DateTime.Now,
                                                          Products = Product.GetAllProducts(),
-                                                         TransactionOrders = TransactionOrder.GetAllTransactions()
-                                                     };
+                                                         TransactionOrders = TransactionOrder.GetAllTransactions(),
+                                                         ProductIdCounter = Product.GetProductIdCounter(),
+                                                         TransactionIdCounter = TransactionOrder.GetTransactionIdCounter()
+            };
+
             if (saveDialog)
             {
                 var saveFileDialog = new SaveFileDialog
@@ -294,6 +299,9 @@ namespace Stockbook.Class
                 { 
                          var readAllText = File.ReadAllText(openFileDialog.FileName, Encoding.Default);
                          var databaseBackup = JsonConvert.DeserializeObject<DatabaseBackupModel>(readAllText);
+
+                        Product.EditProductIdCounter(databaseBackup.ProductIdCounter - databaseBackup.Products.Count);
+                        TransactionOrder.EditTransactionIdCounter(databaseBackup.TransactionIdCounter - databaseBackup.TransactionOrders.Count);
                         foreach (var prod in databaseBackup.Products)
                         {
                             Product.CreateProduct(prod);

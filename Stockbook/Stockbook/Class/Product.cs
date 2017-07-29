@@ -254,31 +254,33 @@ namespace Stockbook.Class
         /// </returns>
         public static bool EditProduct(Product product)
         {
-            if (!DeleteProduct(product.Id))
+            if (product != null)
             {
-                return false;
-            }
-
-            var fileName = ProductFolder() + product.Id + @".json";
-            try
-            {
-                if (File.Exists(fileName))
+                if (!DeleteProduct(product.Id))
                 {
-                    File.Delete(fileName);
+                    return false;
                 }
 
-                using (StreamWriter sw = File.CreateText(fileName))
+                var fileName = ProductFolder() + product.Id + @".json";
+                try
                 {
-                    sw.WriteLine(JsonConvert.SerializeObject(product));
+                    if (File.Exists(fileName))
+                    {
+                        File.Delete(fileName);
+                    }
+
+                    using (StreamWriter sw = File.CreateText(fileName))
+                    {
+                        sw.WriteLine(JsonConvert.SerializeObject(product));
+                    }
+
+                    return true;
                 }
-
-                return true;
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
             }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e);
-            }
-
             return false;
         }
 
@@ -299,51 +301,53 @@ namespace Stockbook.Class
         /// </returns>
         public static Product BalanceCasePackPiece(Transaction transaction, Product product, string transactionType = "Sales")
         {
-            if (product.PackToPieces > 0 && product.CaseToPacks > 0)
+            if (product != null)
             {
-                var tempTransaction = (transaction.CaseTransact * product.CaseToPacks + transaction.PackTransact) * product.PackToPieces + transaction.PieceTransact;
-                var tempTotalBalance = (product.CaseBalance * product.CaseToPacks + product.PackBalance) * product.PackToPieces + product.PieceBalance;
-                decimal finalBalance = 0;
-
-                switch (transactionType)
+                if (product.PackToPieces > 0 && product.CaseToPacks > 0)
                 {
-                    case "Sales":
-                        {
-                             finalBalance = tempTotalBalance - tempTransaction;
-                        }
+                    var tempTransaction = (transaction.CaseTransact * product.CaseToPacks + transaction.PackTransact) * product.PackToPieces + transaction.PieceTransact;
+                    var tempTotalBalance = (product.CaseBalance * product.CaseToPacks + product.PackBalance) * product.PackToPieces + product.PieceBalance;
+                    decimal finalBalance = 0;
 
-                        break;
-                    case "Purchased":
-                        {
-                             finalBalance = tempTotalBalance + tempTransaction;
-                        }
+                    switch (transactionType)
+                    {
+                        case "Sales":
+                            {
+                                finalBalance = tempTotalBalance - tempTransaction;
+                            }
 
-                        break;
+                            break;
+                        case "Purchased":
+                            {
+                                finalBalance = tempTotalBalance + tempTransaction;
+                            }
+
+                            break;
+                    }
+
+                    product.PieceBalance = finalBalance % product.PackToPieces;
+                    product.PackBalance = Math.Truncate(finalBalance / product.PackToPieces);
+                    product.CaseBalance = Math.Truncate(product.PackBalance / product.CaseToPacks);
+                    product.PackBalance = product.PackBalance % product.CaseToPacks;
+
                 }
-
-                product.PieceBalance = finalBalance % product.PackToPieces;
-                product.PackBalance = Math.Truncate(finalBalance / product.PackToPieces);
-                product.CaseBalance = Math.Truncate(product.PackBalance / product.CaseToPacks);
-                product.PackBalance = product.PackBalance % product.CaseToPacks;
-
-            }
-            else
-            {
-                switch (transactionType)
+                else
                 {
-                    case "Sales":
-                        product.CaseBalance -= transaction.CaseTransact;
-                        product.PackBalance -= transaction.PackTransact;
-                        product.PieceBalance -= transaction.PieceTransact;
-                        break;
-                    case "Purchased":
-                        product.CaseBalance += transaction.CaseTransact;
-                        product.PackBalance += transaction.PackTransact;
-                        product.PieceBalance += transaction.PieceTransact;
-                        break;
+                    switch (transactionType)
+                    {
+                        case "Sales":
+                            product.CaseBalance -= transaction.CaseTransact;
+                            product.PackBalance -= transaction.PackTransact;
+                            product.PieceBalance -= transaction.PieceTransact;
+                            break;
+                        case "Purchased":
+                            product.CaseBalance += transaction.CaseTransact;
+                            product.PackBalance += transaction.PackTransact;
+                            product.PieceBalance += transaction.PieceTransact;
+                            break;
+                    }
                 }
             }
-
             return product;
         }
 
@@ -359,6 +363,49 @@ namespace Stockbook.Class
             var absolutePath = Environment.CurrentDirectory + @"\ProductsDb\";
             Directory.CreateDirectory(absolutePath);
             return absolutePath;
+        }
+
+        public static int GetProductIdCounter()
+        {
+            var id = 1;
+            var fileName = ProductFolder() + "IdCounter" + @".json";
+            try
+            {
+                // Check if file already exists. If yes then get the id and add increment of one.
+                if (File.Exists(fileName))
+                {
+                    using (StreamReader sr = File.OpenText(fileName))
+                    {
+                        string textId;
+                        while ((textId = sr.ReadLine()) != null)
+                        {
+                            id = int.Parse(textId);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+
+            return id;
+        }
+
+        public static void EditProductIdCounter(int i)
+        {
+            var fileName = ProductFolder() + "IdCounter" + @".json";
+            try
+            {
+                using (StreamWriter sw = File.CreateText(fileName))
+                {
+                    sw.WriteLine(i);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
         }
 
         /// <summary>
@@ -398,5 +445,8 @@ namespace Stockbook.Class
 
             return id;
         }
+
+
+
     }
 }

@@ -617,8 +617,8 @@ namespace Stockbook.Windows
 
                     Product.EditProduct(prod);
                 }
-
                 TransactionOrder.DeleteTransaction(transView.Id);
+
             }
 
             this.InitializeTransView();

@@ -34,10 +34,9 @@ namespace Stockbook.Windows
         /// The initialize settings.
         /// </summary>
         public void InitializeSettings()
-        {
-            
+        { 
             var config = StockbookWindows.OpenConfig();
-
+            this.LastBackup.Text = config.LastBackup.ToLongDateString();
             this.LocationTextBox.Text = config.AutoBackupLocation;
             this.AutoBackupCheckBox.IsChecked = config.IsAutoBackupOn;
             this.RetainBackupCheckBox.IsChecked = config.IsRetainHistoryOn;
@@ -172,6 +171,7 @@ namespace Stockbook.Windows
                     MessageBoxImage.Asterisk);
             }
             StockbookWindows.RefreshMainWindow();
+            InitializeSettings();
         }
 
         /// <summary>
@@ -195,6 +195,7 @@ namespace Stockbook.Windows
                     MessageBoxImage.Asterisk);
             }
             StockbookWindows.RefreshMainWindow();
+            InitializeSettings();
         }
 
 
@@ -225,6 +226,7 @@ namespace Stockbook.Windows
         {
             StockbookWindows.RestoreBackup();
             StockbookWindows.RefreshMainWindow();
+            InitializeSettings();
         }
 
         /// <summary>

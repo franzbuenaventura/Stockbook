@@ -97,7 +97,7 @@
                         <DataGrid x:Name="DataGrid" IsTextSearchEnabled="True" AutoGenerateColumns="False" GridLinesVisibility="All" CanUserAddRows="False" CanUserDeleteRows="False" CellEditEnding="DataGridCellEditEnding" Grid.Row="3" Margin="0,0,-0.333,0">
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="Location" Header="Location" SortDirection="Ascending"
-                                    Binding="{Binding Location}">
+                                    Binding="{Binding Location}" Width="90" MinWidth="60" MaxWidth="90">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -106,7 +106,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="Principal" Header="Principal"  
-                                    Binding="{Binding Principal}">
+                                    Binding="{Binding Principal}" Width="80" MaxWidth="80" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -115,7 +115,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="Category" Header="Category"
-                                    Binding="{Binding Category}">
+                                    Binding="{Binding Category}" Width="90" MaxWidth="90" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -124,8 +124,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="Name" Header="Name"
-                                    Binding="{Binding Name}">
-
+                                    Binding="{Binding Name}" Width="150" MaxWidth="150" MinWidth="60">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -134,8 +133,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="ProdCode" Header="Prod. Code"
-                                    Binding="{Binding ProdCode}">
-
+                                    Binding="{Binding ProdCode}" Width="100" MaxWidth="100" MinWidth="70">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -144,8 +142,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="CaseValue" Header="Case Val"
-                                    Binding="{Binding CaseValue}">
-
+                                    Binding="{Binding CaseValue}" Width="75" MaxWidth="75" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -154,8 +151,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PackValue" Header="Pack Val"
-                                    Binding="{Binding PackValue}">
-
+                                    Binding="{Binding PackValue}" Width="75" MaxWidth="75" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -164,8 +160,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PieceValue" Header="Piece Val"
-                                    Binding="{Binding PieceValue}">
-
+                                    Binding="{Binding PieceValue}" Width="75" MaxWidth="75" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -174,7 +169,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="CaseBalance" Header="Case Bal"
-                                    Binding="{Binding CaseBalance}">
+                                    Binding="{Binding CaseBalance}" Width="80" MaxWidth="90" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -183,7 +178,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PackBalance" Header="Pack Bal"
-                                    Binding="{Binding PackBalance}">
+                                    Binding="{Binding PackBalance}" Width="80" MaxWidth="90" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -192,8 +187,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PieceBalance" Header="Piece Bal"
-                                    Binding="{Binding PieceBalance}">
-
+                                    Binding="{Binding PieceBalance}" Width="80" MaxWidth="90" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -202,7 +196,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="CaseToPacks" Header="Case To Packs"
-                                    Binding="{Binding CaseToPacks}">
+                                    Binding="{Binding CaseToPacks}" Width="100" MaxWidth="120" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -211,8 +205,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PackToPieces" Header="Pack To Pieces"
-                                    Binding="{Binding PackToPieces}">
-
+                                    Binding="{Binding PackToPieces}" Width="100" MaxWidth="120" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />

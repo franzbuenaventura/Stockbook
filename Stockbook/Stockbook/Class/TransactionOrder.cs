@@ -158,8 +158,29 @@ namespace Stockbook.Class
             var temp = TransactionFolder() + transactionId + @".json";
             if (File.Exists(temp))
             {
+
                 try
                 {
+                 /*   var trans = GetTransaction(transactionId);
+                    foreach (var transaction in trans.Transactions)
+                    {
+                        var product = Product.GetProduct(transaction.Product.Id);
+                        if (trans.TransactionType == "Purchased")
+                        {
+                            product.CaseBalance -= transaction.CaseTransact;
+                            product.PackBalance -= transaction.PackTransact;
+                            product.PieceBalance -= transaction.PieceTransact;
+                        }
+                        else
+                        {
+                            product.CaseBalance += transaction.CaseTransact;
+                            product.PackBalance += transaction.PackTransact;
+                            product.PieceBalance += transaction.PieceTransact;
+                        }
+                        Product.EditProduct(product);
+                    }*/
+
+
                     File.Delete(temp);
                     return true;
                 }
@@ -304,5 +325,49 @@ namespace Stockbook.Class
 
             return id;
         }
+
+        public static void EditTransactionIdCounter(int i)
+        {
+            var fileName = TransactionFolder() + "IdCounter" + @".json";
+            try
+            {
+                using (StreamWriter sw = File.CreateText(fileName))
+                {
+                    sw.WriteLine(i);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+        }
+
+        public static int GetTransactionIdCounter()
+        {
+            var id = 1;
+            var fileName = TransactionFolder() + "IdCounter" + @".json";
+            try
+            {
+                // Check if file already exists. If yes 
+                if (File.Exists(fileName))
+                {
+                    using (StreamReader sr = File.OpenText(fileName))
+                    {
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            id = int.Parse(line);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+
+            return id;
+        }
+
     }
 }
