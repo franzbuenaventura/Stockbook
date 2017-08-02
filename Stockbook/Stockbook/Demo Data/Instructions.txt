@@ -1,0 +1,10 @@
+﻿Demo Data for Stockbook
+1. Open "Demo Data.xlsx"
+2. Change the settings on Company Name and Currency 
+3. Input the "Products" tab, add each product 
+4. Add the "Purchased" tab
+5. After doing that, the "After Purchased" tab shows what the main window should look like
+6. Add the "Sales" and so on... 
+
+Note: I included the database (backup) that is called "demodatabase.stockbook" 
+that can be restored in the Settings tab

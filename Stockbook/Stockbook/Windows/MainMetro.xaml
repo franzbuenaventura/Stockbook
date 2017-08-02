@@ -205,7 +205,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn x:Name="PackToPieces" Header="Pack To Pieces"
-                                    Binding="{Binding PackToPieces}" Width="100" MaxWidth="120" MinWidth="50">
+                                    Binding="{Binding PackToPieces}" Width="130" MaxWidth="120" MinWidth="50">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />

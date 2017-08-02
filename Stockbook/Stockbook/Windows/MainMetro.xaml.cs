@@ -126,7 +126,7 @@ namespace Stockbook.Windows
                 foreach (var dc in this.DataGrid.Columns)
                 {
                     if (dc.Header.ToString() == "Case Bal" || dc.Header.ToString() == "Pack Bal" || dc.Header.ToString() == "Piece Bal"
-                        || dc.Header.ToString() == "Case To Packs" || dc.Header.ToString() == "Packs To Pieces")
+                        || dc.Header.ToString() == "Case To Packs" || dc.Header.ToString() == "Pack To Pieces")
                     {
                         var firstOrDefault = this.DataGrid.Columns.FirstOrDefault(q => q.Header == dc.Header);
                         if (firstOrDefault != null)
